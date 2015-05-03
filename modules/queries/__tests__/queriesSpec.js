@@ -4,8 +4,8 @@ var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
 var constants = require('../../constants');
 var MockDispatcher = require('./lib/mockDispatcher');
-var stubbedLogger = require('../../test/lib/stubbedLogger');
-var describeStyles = require('../../test/lib/describeStyles');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
+var describeStyles = require('../../../test/lib/describeStyles');
 
 describe('Queries', function () {
   var queries, dispatcher, actualResult, actualError, Marty;

@@ -4,7 +4,7 @@ var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
 var uuid = require('../../core/utils/uuid');
 var warnings = require('../../core/warnings')
-var describeStyles = require('../../test/lib/describeStyles');
+var describeStyles = require('../../../test/lib/describeStyles');
 
 require('es6-promise').polyfill();
 

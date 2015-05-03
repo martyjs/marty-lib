@@ -121,12 +121,14 @@ module.exports = function (config) {
         debug: true
       },
       files: [
-        './modules/**/*.js'
+        'test/browser/setup.js',
+        'modules/**/*.js'
       ],
       exclude: [
-        './modules/isomorphism/**/*.js'
+        'modules/isomorphism/**/*.js'
       ].concat(SCRIPTS),
       preprocessors: {
+        'test/browser/setup.js': ['browserify'],
         'modules/**/*.js': ['browserify']
       },
       port: 9876,

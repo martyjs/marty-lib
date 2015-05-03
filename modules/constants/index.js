@@ -1,4 +1,4 @@
-var constants = require('./lib/constants');
+var constants = require('./constants');
 
 module.exports = function (marty) {
   marty.register('createConstants', createConstants);

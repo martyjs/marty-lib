@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
-var stubbedLogger = require('../../test/lib/stubbedLogger');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
 
 describe('calling resolver warnings', function () {
   var Marty, logger;

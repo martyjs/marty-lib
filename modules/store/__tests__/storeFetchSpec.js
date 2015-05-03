@@ -5,7 +5,7 @@ var buildMarty = require('./buildMarty');
 var expect = require('chai').expect;
 var warnings = require('../../core/warnings')
 var Promise = require('es6-promise').Promise;
-var MockDispatcher = require('../../test/lib/mockDispatcher');
+var MockDispatcher = require('../../../test/lib/mockDispatcher');
 
 describe('Store#fetch()', function () {
   var listener, store, changeListener, endFetch, remoteFetch, fetchId, dispatcher;

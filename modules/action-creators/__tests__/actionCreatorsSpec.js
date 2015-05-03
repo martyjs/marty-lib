@@ -1,11 +1,11 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var autoDispatch = require('../lib/autoDispatch');
-var constants = require('../../constants').constants;
-var stubbedLogger = require('../../test/lib/stubbedLogger');
-var MockDispatcher = require('../../test/lib/mockDispatcher');
-var describeStyles = require('../../test/lib/describeStyles');
+var autoDispatch = require('../autoDispatch');
+var constants = require('../../constants/constants');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
+var MockDispatcher = require('../../../test/lib/mockDispatcher');
+var describeStyles = require('../../../test/lib/describeStyles');
 
 describe('ActionCreators', function () {
   var actionCreators, dispatcher, actualResult, actualError, Marty;

@@ -5,7 +5,7 @@ var when = require('../lib/when');
 var fetch = require('../lib/fetch');
 var expect = require('chai').expect;
 var TestUtils = require('react/addons').addons.TestUtils;
-var stubbedLogger = require('../../test/lib/stubbedLogger');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
 
 describe('when', function () {
   var handlers, logger, expectedResult1, expectedResult2, expectedError;

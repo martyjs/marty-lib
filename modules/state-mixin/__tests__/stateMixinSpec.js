@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var uuid = require('../../core/utils/uuid');
 var Diagnostics = require('../../core/diagnostics')
-var stubbedLogger = require('../../test/lib/stubbedLogger');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var ActionPayload = require('../../core/ActionPayload')
 var TestUtils = require('react/addons').addons.TestUtils;
 

@@ -3,8 +3,8 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var ActionPayload = require('../../core/ActionPayload')
-var stubbedLogger = require('../../test/lib/stubbedLogger');
-var describeStyles = require('../../test/lib/describeStyles');
+var stubbedLogger = require('../../../test/lib/stubbedLogger');
+var describeStyles = require('../../../test/lib/describeStyles');
 var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError')
 var ActionPredicateUndefinedError = require('../../errors/actionPredicateUndefinedError')
 

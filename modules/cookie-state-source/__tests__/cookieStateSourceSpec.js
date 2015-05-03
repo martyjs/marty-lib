@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var warnings = require('../../core/warnings')
-var describeStyles = require('../../test/lib/describeStyles');
+var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('CookieStateSource', function (styles) {
   var source, cookies, Marty;

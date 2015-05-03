@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var describeStyles = require('../../test/lib/describeStyles');
+var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('Marty#dehydrate()', function (styles) {
   var Marty, store1ExpectedState, storeSerializedState, serializedState, expectedFetchId;

@@ -1,6 +1,6 @@
-var autoDispatch = require('./lib/autoDispatch');
-var ActionCreators = require('./lib/actionCreators');
-var createActionCreatorsClass = require('./lib/createActionCreatorsClass');
+var autoDispatch = require('./autoDispatch');
+var ActionCreators = require('./actionCreators');
+var createActionCreatorsClass = require('./createActionCreatorsClass');
 
 module.exports = function (marty) {
   marty.register('autoDispatch', autoDispatch);

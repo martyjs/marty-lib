@@ -4,7 +4,7 @@ var buildMarty = require('./buildMarty');
 var cheerio = require('cheerio');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
-var describeStyles = require('../../test/lib/describeStyles');
+var describeStyles = require('../../../test/lib/describeStyles');
 var es6MessagesFixtures = require('./fixtures/es6Messages');
 var classicMessagesFixtures = require('./fixtures/classicMessages');
 
