@@ -1,4 +1,4 @@
-var LocationStateSource = require('./lib/location');
+var LocationStateSource = require('./location');
 
 module.exports = function (marty) {
   marty.registerStateSource(

@@ -1,4 +1,4 @@
-var LocalStorageStateSource = require('./lib/localStorage');
+var LocalStorageStateSource = require('./localStorage');
 
 module.exports = function (marty) {
   marty.registerStateSource(

@@ -1,5 +1,5 @@
-var Queries = require('./lib/queries');
-var createQueriesClass = require('./lib/createQueriesClass');
+var Queries = require('./queries');
+var createQueriesClass = require('./createQueriesClass');
 
 module.exports = function (marty) {
   marty.registerClass('Queries', Queries);

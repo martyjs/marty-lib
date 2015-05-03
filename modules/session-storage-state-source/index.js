@@ -1,4 +1,4 @@
-var SessionStorageStateSource = require('./lib/sessionStorage');
+var SessionStorageStateSource = require('./sessionStorage');
 
 module.exports = function (marty) {
   marty.registerStateSource(

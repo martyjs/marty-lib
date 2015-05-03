@@ -1,5 +1,5 @@
 var _ = require('../mindash');
-var StateMixin = require('./lib/stateMixin');
+var StateMixin = require('./stateMixin');
 
 module.exports = function (marty, React) {
   marty.register('createStateMixin', createStateMixin);

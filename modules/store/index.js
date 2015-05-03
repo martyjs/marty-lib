@@ -1,10 +1,10 @@
 var _ = require('../mindash');
-var when = require('./lib/when');
-var fetch = require('./lib/fetch');
-var Store = require('./lib/store');
-var state = require('./lib/state');
-var fetchConstants = require('./lib/fetchConstants');
-var createStoreClass = require('./lib/createStoreClass');
+var when = require('./when');
+var fetch = require('./fetch');
+var Store = require('./store');
+var state = require('./state');
+var fetchConstants = require('./fetchConstants');
+var createStoreClass = require('./createStoreClass');
 
 module.exports = function (marty) {
   marty.registerClass('Store', Store);

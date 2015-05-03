@@ -1,4 +1,4 @@
-var JSONStorageStateSource = require('./lib/jsonStorage');
+var JSONStorageStateSource = require('./jsonStorage');
 
 module.exports = function (marty) {
   marty.registerStateSource(

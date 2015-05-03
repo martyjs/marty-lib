@@ -1,5 +1,5 @@
-var Context = require('./lib/context');
-var renderToString = require('./lib/renderToString');
+var Context = require('./context');
+var renderToString = require('./renderToString');
 
 module.exports = function (marty, React) {
   marty.register('createContext', createContext);

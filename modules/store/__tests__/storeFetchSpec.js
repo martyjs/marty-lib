@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var sinon = require('sinon');
-var fetch = require('../lib/fetch');
+var fetch = require('../fetch');
 var buildMarty = require('./buildMarty');
 var expect = require('chai').expect;
 var warnings = require('../../core/warnings')

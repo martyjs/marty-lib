@@ -3,7 +3,7 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
-var fetch = require('../../store/lib/fetch');
+var fetch = require('../../store/fetch');
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Container', function () {
