@@ -1,6 +1,3 @@
-var _ = require('lodash');
-var sinon = require('sinon');
-var React = require('react');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 

@@ -46,7 +46,10 @@ class Store {
 
   for (obj) {
     if (warnings.appIsTheFuture) {
-      log.warn('Warning: Contexts are depreciated. Use application\'s instead http://martyjs.org/depreciated/contexts.html');
+      log.warn(
+        'Warning: Contexts are depreciated. ' +
+        'Use application\'s instead http://martyjs.org/depreciated/contexts.html'
+      );
     }
 
     return resolve(this, obj);
