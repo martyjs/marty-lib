@@ -1,4 +1,4 @@
-var log = require('../core/logger')
+var log = require('../core/logger');
 var _ = require('../mindash');
 var uuid = require('../core/utils/uuid');
 var StoreObserver = require('../core/storeObserver');

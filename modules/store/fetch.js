@@ -1,5 +1,5 @@
 var when = require('./when');
-var NotFoundError = require('../errors/notFoundError')
+var NotFoundError = require('../errors/notFoundError');
 
 module.exports = {
   done: done,

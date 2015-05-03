@@ -3,7 +3,7 @@ var uuid = require('../core/utils/uuid');
 var timeout = require('../core/utils/timeout');
 var deferred = require('../core/utils/deferred');
 var FetchDiagnostics = require('./fetchDiagnostics');
-var createDispatcher = require('../core/createDispatcher')
+var createDispatcher = require('../core/createDispatcher');
 
 var DEFAULT_TIMEOUT = 1000;
 

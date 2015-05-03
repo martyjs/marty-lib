@@ -1,16 +1,15 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var _ = require('../../mindash');
 var constants = require('../../constants');
-var MockDispatcher = require('./lib/mockDispatcher');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var describeStyles = require('../../../test/lib/describeStyles');
+var MockDispatcher = require('../../../test/lib/mockDispatcher');
 
 describe('Queries', function () {
-  var queries, dispatcher, actualResult, actualError, Marty;
+  var queries, dispatcher, actualResult, Marty;
   var expectedQueryType, expectedOtherArg, expectedArg;
-  var actualQuery, payload, expectedError, promise, logger;
+  var actualQuery, logger;
 
   beforeEach(function () {
     Marty = buildMarty();

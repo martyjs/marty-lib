@@ -1,10 +1,10 @@
-var log = require('../core/logger')
+var log = require('../core/logger');
 var _ = require('../mindash');
-var warnings = require('../core/warnings')
+var warnings = require('../core/warnings');
 var fetchResult = require('./fetch');
 var StoreEvents = require('./storeEvents');
-var CompoundError = require('../errors/compoundError')
-var NotFoundError = require('../errors/notFoundError')
+var CompoundError = require('../errors/compoundError');
+var NotFoundError = require('../errors/notFoundError');
 var FetchConstants = require('./fetchConstants');
 
 function fetch(id, local, remote) {

@@ -3,9 +3,9 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var uuid = require('../../core/utils/uuid');
-var Diagnostics = require('../../core/diagnostics')
+var Diagnostics = require('../../core/diagnostics');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
-var ActionPayload = require('../../core/ActionPayload')
+var ActionPayload = require('../../core/actionPayload');
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('StateMixin', function () {
@@ -361,10 +361,6 @@ describe('StateMixin', function () {
       store.dispose();
     });
   });
-
-  function getObserver(component) {
-    return component.__observer;
-  }
 
   function createStore(state) {
     return Marty.createStore({

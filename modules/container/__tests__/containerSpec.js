@@ -47,7 +47,7 @@ describe('Container', function () {
       },
       componentWillReceiveProps: updateProps,
       foo() {
-        return { bar: 'baz' }
+        return { bar: 'baz' };
       }
     });
   });
@@ -204,8 +204,6 @@ describe('Container', function () {
   });
 
   describe('when I pass in contextTypes', function () {
-    var expectedContextTypes;
-
     beforeEach(function () {
       element = wrap(InnerComponent, {
         contextTypes: {
@@ -336,7 +334,7 @@ describe('Container', function () {
             return fetch.done({ baz: 'bam' });
           }
         }
-      }))
+      }));
     });
 
     it('should pass that value through to the child', function () {
@@ -375,7 +373,7 @@ describe('Container', function () {
                 finishQuery = resolve;
               }.bind(this));
             }
-          })
+          });
         }
       });
     });
@@ -459,7 +457,7 @@ describe('Container', function () {
           }
         },
         done: handler
-      }))
+      }));
     });
 
     it('should call the handler with the results and component', function () {
@@ -486,7 +484,7 @@ describe('Container', function () {
           }
         },
         pending: handler
-      }))
+      }));
     });
 
     it('should call the handler with the fetches and component', function () {
@@ -539,8 +537,16 @@ describe('Container', function () {
   });
 
   describe('when a fetch failed and there is no failed handler', function () {
+    var fooError;
+
+    beforeEach(function () {
+      fooError = new Error('foo');
+    });
+
     it('should throw an error', function () {
-      expect(noFailedHandler).to.throw(Error);
+      expect(noFailedHandler).to.throw({
+        foo: fooError
+      });
 
       function noFailedHandler() {
         render(wrap(InnerComponent, {
@@ -604,7 +610,7 @@ describe('Container', function () {
     it('should allow me to call anything else in the config', function () {
       expect(failed).to.be.calledWith(expectedResult);
     });
-  })
+  });
 
   function wrap(InnerComponent, containerOptions) {
     return Marty.createContainer(InnerComponent, containerOptions);

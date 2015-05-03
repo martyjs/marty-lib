@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var warnings = require('../../core/warnings')
+var warnings = require('../../core/warnings');
 
 describe('Constants', function () {
   var input, actualResult, actionCreatorContext, Marty, constants;

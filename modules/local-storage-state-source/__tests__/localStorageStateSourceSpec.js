@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var warnings = require('../../core/warnings')
+var warnings = require('../../core/warnings');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('LocalStorageStateSource', function (styles) {

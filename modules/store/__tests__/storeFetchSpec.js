@@ -3,7 +3,7 @@ var sinon = require('sinon');
 var fetch = require('../fetch');
 var buildMarty = require('./buildMarty');
 var expect = require('chai').expect;
-var warnings = require('../../core/warnings')
+var warnings = require('../../core/warnings');
 var Promise = require('es6-promise').Promise;
 var MockDispatcher = require('../../../test/lib/mockDispatcher');
 
@@ -100,7 +100,7 @@ describe('Store#fetch()', function () {
 
     describe('#toPromise', function () {
       describe('when a fetch is done', function () {
-        var actualPromise, expectedState, localState, getState;
+        var actualPromise, expectedState, localState;
 
         beforeEach(function () {
           expectedState = { foo: 'bar' };
@@ -174,7 +174,7 @@ describe('Store#fetch()', function () {
     });
 
     describe('#dependsOn', function () {
-      var Store1, Store2, changeListener, fooQueryResult, barQueryResult, store2ChangeListener;
+      var Store1, Store2, fooQueryResult, barQueryResult, store2ChangeListener;
 
       beforeEach(function () {
         store2ChangeListener = sinon.spy();
@@ -195,7 +195,7 @@ describe('Store#fetch()', function () {
                   }, 1);
                 });
               }
-            })
+            });
           },
           pendingFetch: function () {
             return fetch.pending();
@@ -214,7 +214,7 @@ describe('Store#fetch()', function () {
                   }, 1);
                 });
               }
-            })
+            });
           },
         });
 
@@ -227,7 +227,7 @@ describe('Store#fetch()', function () {
               locally: function () {
                 return { bar: 'baz' };
               }
-            })
+            });
           },
           multipleDependencies: function () {
             return this.fetch({
@@ -236,7 +236,7 @@ describe('Store#fetch()', function () {
               locally: function () {
                 return { bar: 'baz' };
               }
-            })
+            });
           }
         });
 

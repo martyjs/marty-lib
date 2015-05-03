@@ -1,6 +1,6 @@
 var Queries = require('./queries');
 var _ = require('../mindash');
-var createClass = require('../core/createClass')
+var createClass = require('../core/createClass');
 
 var RESERVED_KEYWORDS = ['dispatch'];
 

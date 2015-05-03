@@ -64,7 +64,7 @@ module.exports = function (Marty) {
     listenTo: messageStore,
     fetch: {
       message() {
-        return messageStore.for(this).getMessage(this.props.id)
+        return messageStore.for(this).getMessage(this.props.id);
       }
     },
     pending() {
@@ -72,7 +72,7 @@ module.exports = function (Marty) {
         message: {
           text: 'pending'
         }
-      })
+      });
     },
     failed(errors) {
       return this.done({

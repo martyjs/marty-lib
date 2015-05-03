@@ -8,9 +8,9 @@ var MockDispatcher = require('../../../test/lib/mockDispatcher');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describe('ActionCreators', function () {
-  var actionCreators, dispatcher, actualResult, actualError, Marty;
+  var actionCreators, dispatcher, actualResult, Marty;
   var expectedActionType, expectedOtherArg, expectedArg;
-  var actualAction, payload, expectedError, promise, logger;
+  var actualAction, logger;
 
   beforeEach(function () {
     Marty = buildMarty();

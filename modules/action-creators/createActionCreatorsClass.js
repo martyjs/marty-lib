@@ -1,5 +1,5 @@
 var _ = require('../mindash');
-var createClass = require('../core/createClass')
+var createClass = require('../core/createClass');
 var ActionCreators = require('./actionCreators');
 var RESERVED_KEYWORDS = ['dispatch'];
 

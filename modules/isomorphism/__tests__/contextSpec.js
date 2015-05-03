@@ -29,13 +29,13 @@ describe('context', function () {
 
         Store1 = Marty.createStore({
           id: 'Store1',
-          foo: fetch('foo'),
-          bar: fetch('bar')
+          foo: fetchFunc('foo'),
+          bar: fetchFunc('bar')
         });
 
         Store2 = Marty.createStore({
           id: 'Store2',
-          baz: fetch('baz')
+          baz: fetchFunc('baz')
         });
 
         var context = Marty.createContext();
@@ -48,7 +48,7 @@ describe('context', function () {
         return context
           .fetch(fetchState, { timeout: timeout })
           .then(res => diagnostics = res);
-      })
+      });
 
       it('should return diagnostics about the fetches', function () {
         // Cannot reliably test time so just going to ignore
@@ -73,7 +73,7 @@ describe('context', function () {
         }]);
       });
 
-      function fetch(id) {
+      function fetchFunc(id) {
         return function () {
           var options = fetches[id];
 
@@ -94,7 +94,7 @@ describe('context', function () {
               });
             }
           });
-        }
+        };
       }
     });
   });

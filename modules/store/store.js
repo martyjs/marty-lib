@@ -1,11 +1,11 @@
-var log = require('../core/logger')
+var log = require('../core/logger');
 var fetch = require('./storeFetch');
 var _ = require('../mindash');
 var uuid= require('../core/utils/uuid');
-var warnings = require('../core/warnings')
+var warnings = require('../core/warnings');
 var resolve= require('../core/utils/resolve');
 var StoreEvents = require('./storeEvents');
-var Environment = require('../core/environment')
+var Environment = require('../core/environment');
 var handleAction = require('./handleAction');
 var EventEmitter = require('wolfy87-eventemitter');
 var validateHandlers = require('./validateHandlers');

@@ -5,7 +5,7 @@ var ActionPayload = require('../actionPayload');
 
 describe('ActionPayload', function () {
   var action, store, storeState, actionType, args, source, creator, internal;
-  var id, timestamp, name, nextState, view, viewHandler, storeHandler, lastState, expectedError;
+  var id, timestamp, name, nextState, viewHandler, storeHandler, lastState;
 
   beforeEach(function () {
     id = '123';

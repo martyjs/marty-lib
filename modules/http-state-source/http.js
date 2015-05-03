@@ -1,5 +1,5 @@
 var hooks = {};
-var log = require('../core/logger')
+var log = require('../core/logger');
 var _ = require('../mindash');
 var StateSource = require('../core/stateSource');
 var accepts = {

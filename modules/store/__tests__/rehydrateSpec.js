@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var UnknownStoreError = require('../../errors/unknownStoreError')
+var UnknownStoreError = require('../../errors/unknownStoreError');
 
 describe('Marty#rehydrate()', function () {
   var serverStores, browserStores, ServerMarty, BrowserMarty;

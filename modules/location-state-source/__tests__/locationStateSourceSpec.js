@@ -1,10 +1,9 @@
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var warnings = require('../../core/warnings')
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('LocationStateSource', function (styles) {
-  var source, cookies, Marty;
+  var source, Marty;
 
   beforeEach(function () {
     Marty = buildMarty();

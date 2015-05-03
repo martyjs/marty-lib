@@ -91,8 +91,8 @@ module.exports = function (config) {
       sauceLabs: {
         testName: 'Marty Tests'
       },
-      browserDisconnectTimeout : 10000,
-      browserDisconnectTolerance : 1,
+      browserDisconnectTimeout : 100000,
+      browserDisconnectTolerance : 2,
       browserNoActivityTimeout : 4 * 60 * 1000,
       captureTimeout : 4 * 60 * 1000,
       customLaunchers: customLaunchers,

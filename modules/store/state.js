@@ -1,6 +1,6 @@
-var log = require('../core/logger')
+var log = require('../core/logger');
 var _ = require('../mindash');
-var UnknownStoreError = require('../errors/unknownStoreError')
+var UnknownStoreError = require('../errors/unknownStoreError');
 
 var SERIALIZED_WINDOW_OBJECT = '__marty';
 

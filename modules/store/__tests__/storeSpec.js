@@ -2,11 +2,11 @@ var _ = require('lodash');
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var ActionPayload = require('../../core/ActionPayload')
+var ActionPayload = require('../../core/actionPayload');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var describeStyles = require('../../../test/lib/describeStyles');
-var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError')
-var ActionPredicateUndefinedError = require('../../errors/actionPredicateUndefinedError')
+var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError');
+var ActionPredicateUndefinedError = require('../../errors/actionPredicateUndefinedError');
 
 describeStyles('Store', function (styles, currentStyle) {
   var store, changeListener, listener, dispatcher, dispatchToken = 'foo', initialState = {};

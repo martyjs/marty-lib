@@ -1,8 +1,8 @@
-var log = require('../core/logger')
+var log = require('../core/logger');
 var Store = require('./store');
 var _ = require('../mindash');
-var warnings = require('../core/warnings')
-var createClass = require('../core/createClass')
+var warnings = require('../core/warnings');
+var createClass = require('../core/createClass');
 
 var RESERVED_FUNCTIONS = ['getState'];
 var VIRTUAL_FUNCTIONS = ['clear', 'dispose'];

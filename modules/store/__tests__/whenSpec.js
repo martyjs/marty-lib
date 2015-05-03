@@ -225,13 +225,13 @@ describe('when', function () {
           whatever: function () {
             return expectedResult;
           }
-        })
+        });
       });
 
       it('should inherit from the context', function () {
         expect(actualResult).to.equal(expectedResult);
       });
-    })
+    });
 
     describe('when one of the fetch results is pending', function () {
       beforeEach(function () {
