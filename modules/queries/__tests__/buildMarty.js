@@ -8,5 +8,7 @@ module.exports = function () {
   marty.use(require('../../application'));
   marty.use(require('../../isomorphism'));
 
+  marty.warnings.appIsTheFuture = false;
+
   return marty;
 };

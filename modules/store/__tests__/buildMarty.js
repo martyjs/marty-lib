@@ -8,5 +8,7 @@ module.exports = function () {
   marty.use(require('../../application'));
   marty.use(require('../../action-creators'));
 
+  marty.warnings.appIsTheFuture = false;
+
   return marty;
 };

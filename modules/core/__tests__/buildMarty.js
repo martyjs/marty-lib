@@ -11,5 +11,7 @@ module.exports = function () {
     marty.registerStateSource('TestSource', 'testSource', TestSource);
   });
 
+  marty.warnings.appIsTheFuture = false;
+
   return marty;
 };

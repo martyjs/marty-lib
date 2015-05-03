@@ -15,9 +15,7 @@ describe('Marty.isASingleton', () => {
     });
 
     it('should return an instance of the constructor you passed in', () => {
-      warnings.without('appIsTheFuture', () => {
-        expect(Marty.register(Marty.StateSource)).to.be.instanceof(Marty.StateSource);
-      });
+      expect(Marty.register(Marty.StateSource)).to.be.instanceof(Marty.StateSource);
     });
   });
 

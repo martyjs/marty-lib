@@ -7,5 +7,7 @@ module.exports = function () {
   marty.use(require('../../core'));
   marty.use(require('../../store'));
 
+  marty.warnings.appIsTheFuture = false;
+
   return marty;
 };
