@@ -91,8 +91,8 @@ module.exports = function (config) {
       sauceLabs: {
         testName: 'Marty Tests'
       },
-      browserDisconnectTimeout : 100000,
-      browserDisconnectTolerance : 2,
+      browserDisconnectTimeout : 10000,
+      browserDisconnectTolerance : 1,
       browserNoActivityTimeout : 4 * 60 * 1000,
       captureTimeout : 4 * 60 * 1000,
       customLaunchers: customLaunchers,
@@ -108,6 +108,8 @@ module.exports = function (config) {
       browsers: ['Chrome'],
       autoWatch: true,
       singleRun: false,
+      browserDisconnectTolerance : 2,
+      captureTimeout : 4 * 60 * 1000,
       colors: true
     });
   }

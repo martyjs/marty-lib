@@ -22,7 +22,7 @@
     "flux": "^2.0.1",
     "isomorphic-fetch": "1.6.0",
     "lodash": "^3.5.0",
-    "babelify": "^6.0.1",
+    "babelify": "^5.0.1",
     "wolfy87-eventemitter": "^4.2.11"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 BIN = ./node_modules/.bin
 
-.PHONY: bootstrap bootstrap-js bootstrap-ruby start test test-server test-browser docs release-docs build build-browser build-server server-watch;
+.PHONY: bootstrap test test-server test-browser;
 
 SRC = $(shell find ./modules -type f -name '*.js')
 
