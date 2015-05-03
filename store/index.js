@@ -2,7 +2,7 @@ var when = require('./lib/when');
 var fetch = require('./lib/fetch');
 var Store = require('./lib/store');
 var state = require('./lib/state');
-var _ = require('marty-core/lib/mindash');
+var _ = require('../../mindash');
 var fetchConstants = require('./lib/fetchConstants');
 var createStoreClass = require('./lib/createStoreClass');
 

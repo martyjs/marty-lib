@@ -5,6 +5,7 @@ module.exports = function () {
 
   marty.use(require('../index'));
   marty.use(require('../../core'));
+  marty.use(require('../../isomorphism'));
 
   return marty;
 };

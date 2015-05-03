@@ -1,4 +1,4 @@
-var DispatchCoordinator = require('../../core/lib/dispatchCoordinator');
+var DispatchCoordinator = require('../../core/dispatchCoordinator');
 
 class ActionCreators extends DispatchCoordinator {
   constructor(options) {

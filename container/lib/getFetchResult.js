@@ -1,6 +1,6 @@
 var log = require('../../core/logger')
 var _ = require('../../mindash');
-var fetch = require('marty-store/lib/fetch');
+var fetch = require('../../store/lib/fetch');
 
 function getFetchResult(component) {
   var errors = {};

@@ -1,4 +1,4 @@
-var _ = require('marty-core/lib/mindash');
+var _ = require('../../mindash');
 var StateMixin = require('./lib/stateMixin');
 
 module.exports = function (marty, React) {

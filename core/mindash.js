@@ -1,1 +1,1 @@
-module.exports = require('../../mindash');
+module.exports = require('../mindash');

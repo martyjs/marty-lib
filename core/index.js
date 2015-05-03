@@ -1,11 +1,11 @@
-var _ = require('./lib/mindash');
-var logger = require('./lib/logger');
-var warnings = require('./lib/warnings');
-var diagnostics = require('./lib/diagnostics');
-var environment = require('./lib/environment');
-var StateSource = require('./lib/stateSource');
-var getClassName = require('./lib/utils/getClassName');
-var createStateSourceClass = require('./lib/stateSource/createStateSourceClass');
+var _ = require('./mindash');
+var logger = require('./logger');
+var warnings = require('./warnings');
+var diagnostics = require('./diagnostics');
+var environment = require('./environment');
+var StateSource = require('./stateSource');
+var getClassName = require('./utils/getClassName');
+var createStateSourceClass = require('./stateSource/createStateSourceClass');
 
 module.exports = function (marty) {
   marty.registerClass('StateSource', StateSource);
@@ -69,5 +69,3 @@ module.exports = function (marty) {
     return this.registry.register(clazz);
   }
 };
-
-_.extend(module.exports, require('./lib'));

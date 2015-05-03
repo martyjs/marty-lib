@@ -1,4 +1,4 @@
-var StateSource = require('../../state-source');
+var StateSource = require('../../stateSource');
 
 class TestSource extends StateSource {
 }
