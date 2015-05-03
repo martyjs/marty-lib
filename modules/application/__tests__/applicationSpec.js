@@ -53,7 +53,7 @@ describe('Application', () => {
       });
 
       it('allows you to get all instances with that type', () => {
-        expect(application.getAll('Store')).to.eql({
+        expect(application.getAllStores()).to.eql({
           someStore: application.someStore,
           otherStore: application.otherStore
         });
@@ -68,7 +68,7 @@ describe('Application', () => {
         });
       });
 
-      it('creates instnaces of all those types', () => {
+      it('creates instances of all those types', () => {
         expect(application.someStore).to.be.instanceof(SomeStore);
         expect(application.otherStore).to.be.instanceof(SomeStore);
       });
@@ -79,18 +79,20 @@ describe('Application', () => {
       });
 
       it('allows you to get all instances with that type', () => {
-        expect(application.getAll('Store')).to.eql({
+        expect(application.getAllStores()).to.eql({
           someStore: application.someStore,
           otherStore: application.otherStore
         });
       });
     });
 
-    describe.skip('when you pass in an object literal where the values are also object literals', () => {
+    describe('when you pass in an object literal where the values are also object literals', () => {
       beforeEach(() => {
         application.register({
           some: {
-            store: SomeStore
+            cool: {
+              store: SomeStore
+            }
           },
           other: {
             store: SomeStore
@@ -98,20 +100,20 @@ describe('Application', () => {
         });
       });
 
-      it('creates instnaces of all those types', () => {
-        expect(application.some.store).to.be.instanceof(SomeStore);
+      it('creates instances of all those types', () => {
+        expect(application.some.cool.store).to.be.instanceof(SomeStore);
         expect(application.other.store).to.be.instanceof(SomeStore);
       });
 
       it('passes the application through to the instance', () => {
-        expect(application.some.store.app).to.equal(application);
-        expect(application.otherStore.app).to.equal(application);
+        expect(application.some.cool.store.app).to.equal(application);
+        expect(application.other.store.app).to.equal(application);
       });
 
       it('allows you to get all instances with that type', () => {
-        expect(application.getAll('Store')).to.eql({
-          'some.store': application.someStore,
-          'other.store': application.otherStore
+        expect(application.getAllStores()).to.eql({
+          'some.cool.store': application.some.cool.store,
+          'other.store': application.other.store
         });
       });
     });

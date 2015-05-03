@@ -82,17 +82,40 @@ module.exports = function (React) {
           this.__types[type][key] = obj;
         }
 
-        this[key] = obj;
+        if (key.indexOf('.') === -1) {
+          this[key] = obj;
+        } else {
+          var container = this;
+          var parts = key.split('.');
+
+          _.each(_.initial(parts), (part) => {
+            if (_.isUndefined(container[part])) {
+              container[part] = {};
+            }
+
+            container = container[part];
+          });
+
+          container[_.last(parts)] = obj;
+        }
       }
 
       if (_.isObject(key)) {
-        _.each(key, (ctor, key) => {
-          if (_.isFunction(ctor)) {
-            this.register(key, ctor);
-          } else {
-            throw new Error('Cannot pass in complex objects for registration at the moment.');
-          }
-        });
+        let registerObject = (obj, prefix) => {
+          _.each(obj, (ctor, key) => {
+            if (prefix) {
+              key = `${prefix}.${key}`;
+            }
+
+            if (_.isFunction(ctor)) {
+              this.register(key, ctor);
+            } else {
+              registerObject(ctor, key);
+            }
+          });
+        };
+
+        registerObject(key);
       }
     }
 
