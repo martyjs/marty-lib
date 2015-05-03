@@ -1,15 +1,15 @@
-var _ = require('../mindash');
+let _ = require('../mindash');
 
 function handleAction(action) {
   this.__validateHandlers();
 
-  var store = this;
-  var handlers = _.object(_.map(store.handlers, getHandlerWithPredicates));
+  let store = this;
+  let handlers = _.object(_.map(store.handlers, getHandlerWithPredicates));
 
   _.each(handlers, function (predicates, handlerName) {
     _.each(predicates, function (predicate) {
       if (predicate(action)) {
-        var rollbackHandler;
+        let rollbackHandler;
 
         try {
           store.action = action;
@@ -26,7 +26,7 @@ function handleAction(action) {
 function getHandlerWithPredicates(actionPredicates, handler) {
   _.isArray(actionPredicates) || (actionPredicates = [actionPredicates]);
 
-  var predicates = _.map(actionPredicates, toFunc);
+  let predicates = _.map(actionPredicates, toFunc);
 
   return [handler, predicates];
 
@@ -41,7 +41,7 @@ function getHandlerWithPredicates(actionPredicates, handler) {
       };
     }
 
-    var func = _.matches(actionPredicate);
+    let func = _.matches(actionPredicate);
 
     func.toJSON = function () {
       return actionPredicate;

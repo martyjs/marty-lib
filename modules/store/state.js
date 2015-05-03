@@ -1,8 +1,8 @@
-var log = require('../core/logger');
-var _ = require('../mindash');
-var UnknownStoreError = require('../errors/unknownStoreError');
+let log = require('../core/logger');
+let _ = require('../mindash');
+let UnknownStoreError = require('../errors/unknownStoreError');
 
-var SERIALIZED_WINDOW_OBJECT = '__marty';
+let SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = {
   rehydrate: rehydrate,
@@ -23,7 +23,7 @@ function clearState() {
 
 function replaceState(states) {
   _.each(getDefaultStores(this), function (store) {
-    var id = storeId(store);
+    let id = storeId(store);
 
     if (states[id]) {
       store.replaceState(states[id]);
@@ -32,12 +32,12 @@ function replaceState(states) {
 }
 
 function rehydrate(storeStates) {
-  var stores = indexById(getDefaultStores(this));
+  let stores = indexById(getDefaultStores(this));
   storeStates = storeStates || getStoreStatesFromWindow();
 
   _.each(storeStates, function (dehydratedStore, storeName) {
-    var store = stores[storeName];
-    var state = dehydratedStore.state;
+    let store = stores[storeName];
+    let state = dehydratedStore.state;
 
     if (!store) {
       throw new UnknownStoreError(storeName);
@@ -77,11 +77,11 @@ function rehydrate(storeStates) {
 }
 
 function dehydrate(context) {
-  var dehydratedStores = {};
-  var stores = context ? context.getAllStores() : getDefaultStores(this);
+  let dehydratedStores = {};
+  let stores = context ? context.getAllStores() : getDefaultStores(this);
 
   _.each(stores, function (store) {
-    var id = storeId(store);
+    let id = storeId(store);
 
     if (id) {
       dehydratedStores[id] = {

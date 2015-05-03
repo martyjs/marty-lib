@@ -1,5 +1,5 @@
-var noopStorage = require('../core/noopStorage');
-var StateSource = require('../core/stateSource');
+let noopStorage = require('../core/noopStorage');
+let StateSource = require('../core/stateSource');
 
 class SessionStorageStateSource extends StateSource {
   constructor(options) {

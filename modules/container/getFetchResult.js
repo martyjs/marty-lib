@@ -1,13 +1,13 @@
-var log = require('../core/logger');
-var _ = require('../mindash');
-var fetch = require('../store/fetch');
+let log = require('../core/logger');
+let _ = require('../mindash');
+let fetch = require('../store/fetch');
 
 function getFetchResult(component) {
-  var errors = {};
-  var results = {};
-  var isPending = false;
-  var hasFailed = false;
-  var fetches = invokeFetches(component);
+  let errors = {};
+  let results = {};
+  let isPending = false;
+  let hasFailed = false;
+  let fetches = invokeFetches(component);
 
   _.each(fetches, (fetch, key) => {
     if (fetch.done) {
@@ -32,10 +32,10 @@ function getFetchResult(component) {
 }
 
 function invokeFetches(component) {
-  var fetches = {};
+  let fetches = {};
 
   if (_.isFunction(component.fetch)) {
-    var result = component.fetch.call(component);
+    let result = component.fetch.call(component);
 
     if (result._isFetchResult) {
       throw new Error(
@@ -56,7 +56,7 @@ function invokeFetches(component) {
       if (!_.isFunction(getResult)) {
         log.warn(`The fetch ${key} was not a function and so ignoring`);
       } else {
-        var result = getResult.call(component);
+        let result = getResult.call(component);
 
         if (!result || !result._isFetchResult) {
           result = fetch.done(result);

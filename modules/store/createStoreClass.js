@@ -1,29 +1,29 @@
-var log = require('../core/logger');
-var Store = require('./store');
-var _ = require('../mindash');
-var warnings = require('../core/warnings');
-var createClass = require('../core/createClass');
+let log = require('../core/logger');
+let Store = require('./store');
+let _ = require('../mindash');
+let warnings = require('../core/warnings');
+let createClass = require('../core/createClass');
 
-var RESERVED_FUNCTIONS = ['getState'];
-var VIRTUAL_FUNCTIONS = ['clear', 'dispose'];
+let RESERVED_FUNCTIONS = ['getState'];
+let VIRTUAL_FUNCTIONS = ['clear', 'dispose'];
 
 function createStoreClass(properties) {
   properties = properties || {};
   validateStoreOptions(properties);
   addMixins(properties);
 
-  var overrideFunctions = getOverrideFunctions(properties);
-  var functionsToOmit = _.union(VIRTUAL_FUNCTIONS, RESERVED_FUNCTIONS);
-  var classProperties = _.extend(_.omit(properties, functionsToOmit), overrideFunctions);
+  let overrideFunctions = getOverrideFunctions(properties);
+  let functionsToOmit = _.union(VIRTUAL_FUNCTIONS, RESERVED_FUNCTIONS);
+  let classProperties = _.extend(_.omit(properties, functionsToOmit), overrideFunctions);
 
   return createClass(classProperties, classProperties, Store);
 }
 
 function getOverrideFunctions(properties) {
-  var overrideFunctions = _.pick(properties, VIRTUAL_FUNCTIONS);
+  let overrideFunctions = _.pick(properties, VIRTUAL_FUNCTIONS);
 
   _.each(_.functions(overrideFunctions), function (name) {
-    var override = overrideFunctions[name];
+    let override = overrideFunctions[name];
 
     overrideFunctions[name] = function () {
       Store.prototype[name].call(this);
@@ -35,11 +35,11 @@ function getOverrideFunctions(properties) {
 }
 
 function addMixins(properties) {
-  var handlers = _.map(properties.mixins, function (mixin) {
+  let handlers = _.map(properties.mixins, function (mixin) {
     return mixin.handlers;
   });
 
-  var mixins = _.map(properties.mixins, function (mixin) {
+  let mixins = _.map(properties.mixins, function (mixin) {
     return _.omit(mixin, 'handlers');
   });
 
@@ -48,7 +48,7 @@ function addMixins(properties) {
 }
 
 function validateStoreOptions(properties) {
-  var displayName = properties.displayName;
+  let displayName = properties.displayName;
 
   _.each(RESERVED_FUNCTIONS, function (functionName) {
     if (properties[functionName]) {

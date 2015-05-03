@@ -1,19 +1,19 @@
-var _ = require('../mindash');
-var uuid = require('./utils/uuid');
-var Dispatcher = require('flux').Dispatcher;
-var ActionPayload = require('./actionPayload');
-var EventEmitter = require('wolfy87-eventemitter');
+let _ = require('../mindash');
+let uuid = require('./utils/uuid');
+let Dispatcher = require('flux').Dispatcher;
+let ActionPayload = require('./actionPayload');
+let EventEmitter = require('wolfy87-eventemitter');
 
-var ACTION_DISPATCHED = 'ACTION_DISPATCHED';
+let ACTION_DISPATCHED = 'ACTION_DISPATCHED';
 
 function createDispatcher() {
-  var emitter = new EventEmitter();
-  var dispatcher = new Dispatcher();
+  let emitter = new EventEmitter();
+  let dispatcher = new Dispatcher();
 
   dispatcher.id = uuid.generate();
   dispatcher.isDefault = false;
   dispatcher.dispatchAction = function (options) {
-    var action = new ActionPayload(options);
+    let action = new ActionPayload(options);
 
     this.dispatch(action);
 

@@ -1,11 +1,11 @@
-var log = require('../core/logger');
-var _ = require('../mindash');
-var uuid = require('../core/utils/uuid');
-var StoreObserver = require('../core/storeObserver');
-var getFetchResult = require('./getFetchResult');
-var getClassName = require('../core/utils/getClassName');
+let log = require('../core/logger');
+let _ = require('../mindash');
+let uuid = require('../core/utils/uuid');
+let StoreObserver = require('../core/storeObserver');
+let getFetchResult = require('./getFetchResult');
+let getClassName = require('../core/utils/getClassName');
 
-var RESERVED_FUNCTIONS = [
+let RESERVED_FUNCTIONS = [
   'contextTypes',
   'componentDidMount',
   'onStoreChanged',
@@ -23,17 +23,17 @@ module.exports = function (React) {
       throw new Error('Must specify an inner component');
     }
 
-    var id = uuid.type('Component');
-    var innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
-    var contextTypes = _.extend({
+    let id = uuid.type('Component');
+    let innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
+    let contextTypes = _.extend({
       app: React.PropTypes.object,
       marty: React.PropTypes.object
     }, config.contextTypes);
 
-    var Container = React.createClass(_.extend({
+    let Container = React.createClass(_.extend({
       contextTypes: contextTypes,
       componentDidMount() {
-        var component = {
+        let component = {
           id: id,
           displayName: innerComponentDisplayName
         };
@@ -104,7 +104,7 @@ module.exports = function (React) {
         return this.refs.innerComponent;
       },
       render() {
-        var container = this;
+        let container = this;
 
         return this.state.result.when({
           done(results) {
@@ -148,7 +148,7 @@ module.exports = function (React) {
     }
 
     return _.filter(stores, function (store) {
-      var isStore = store.constructor.type === 'Store';
+      let isStore = store.constructor.type === 'Store';
 
       if (!isStore) {
         log.warn(

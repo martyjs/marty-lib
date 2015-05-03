@@ -1,11 +1,11 @@
-var _ = require('../mindash');
-var log = require('./logger');
-var warnings = require('./warnings');
-var classId = require('./utils/classId');
-var Environment = require('./environment');
-var humanStrings = require('./utils/humanStrings');
+let _ = require('../mindash');
+let log = require('./logger');
+let warnings = require('./warnings');
+let classId = require('./utils/classId');
+let Environment = require('./environment');
+let humanStrings = require('./utils/humanStrings');
 
-var FUNCTIONS_TO_NOT_WRAP = ['fetch'];
+let FUNCTIONS_TO_NOT_WRAP = ['fetch'];
 
 class Registry {
   constructor(options) {
@@ -21,7 +21,7 @@ class Registry {
   }
 
   getClassId(obj) {
-    var id = _.findKey(this.classes, (type) => obj instanceof type);
+    let id = _.findKey(this.classes, (type) => obj instanceof type);
 
     if (!id) {
       throw new Error('Unknown type');
@@ -51,10 +51,10 @@ class Registry {
   }
 
   register(clazz) {
-    var defaultInstance = new clazz({
+    let defaultInstance = new clazz({
       dispatcher: this.defaultDispatcher
     });
-    var type = this.getClassId(defaultInstance);
+    let type = this.getClassId(defaultInstance);
 
     defaultInstance.__isDefaultInstance = true;
 
@@ -66,7 +66,7 @@ class Registry {
       this.defaults[type] = {};
     }
 
-    var id = classId(clazz, type);
+    let id = classId(clazz, type);
 
     if (!id) {
       throw CannotRegisterClassError(clazz, type);
@@ -92,7 +92,7 @@ class Registry {
   }
 
   resolve(type, id, options) {
-    var clazz = (this.types[type] || {})[id];
+    let clazz = (this.types[type] || {})[id];
 
     if (!clazz) {
       throw CannotFindTypeWithId(type, id);
@@ -109,14 +109,14 @@ function wrapResolverFunctions(functionName) {
     return;
   }
 
-  var instance = this;
-  var originalFunc = instance[functionName];
+  let instance = this;
+  let originalFunc = instance[functionName];
 
   instance[functionName] = function () {
     if (warnings.callingResolverOnServer && Environment.isServer) {
-      var type = instance.__type;
-      var displayName = instance.displayName || instance.id;
-      var warningMessage =
+      let type = instance.__type;
+      let displayName = instance.displayName || instance.id;
+      let warningMessage =
         `Warning: You are calling \`${functionName}\` on the static instance of the ${type} ` +
         `'${displayName}'. You should resolve the instance for the current context`;
 
@@ -128,7 +128,7 @@ function wrapResolverFunctions(functionName) {
 }
 
 function addClassHelper(registry, classId) {
-  var pluralClassId = classId;
+  let pluralClassId = classId;
 
   if (pluralClassId[pluralClassId.length - 1] !== 's') {
     pluralClassId += 's';
@@ -142,7 +142,7 @@ function addClassHelper(registry, classId) {
 
   function partial(func, type) {
     return function () {
-      var args = _.toArray(arguments);
+      let args = _.toArray(arguments);
       args.unshift(type);
       return func.apply(this, args);
     };
@@ -154,9 +154,9 @@ function CannotFindTypeWithId(type, id) {
 }
 
 function CannotRegisterClassError(clazz, type) {
-  var displayName = clazz.displayName || clazz.id;
-  var typeDisplayName = humanStrings[type] || type;
-  var warningPrefix = `Cannot register the ${typeDisplayName}`;
+  let displayName = clazz.displayName || clazz.id;
+  let typeDisplayName = humanStrings[type] || type;
+  let warningPrefix = `Cannot register the ${typeDisplayName}`;
 
   if (displayName) {
     warningPrefix += ` '${displayName}'`;
@@ -166,9 +166,9 @@ function CannotRegisterClassError(clazz, type) {
 }
 
 function ClassAlreadyRegisteredWithId(clazz, type) {
-  var displayName = clazz.displayName || clazz.id;
-  var typeDisplayName = humanStrings[type] || type;
-  var warningPrefix = `Cannot register the ${typeDisplayName}`;
+  let displayName = clazz.displayName || clazz.id;
+  let typeDisplayName = humanStrings[type] || type;
+  let warningPrefix = `Cannot register the ${typeDisplayName}`;
 
   if (displayName) {
     warningPrefix += ` '${displayName}'`;

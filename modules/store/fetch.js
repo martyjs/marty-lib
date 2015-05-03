@@ -1,5 +1,5 @@
-var when = require('./when');
-var NotFoundError = require('../errors/notFoundError');
+let when = require('./when');
+let NotFoundError = require('../errors/notFoundError');
 
 module.exports = {
   done: done,
@@ -51,7 +51,7 @@ function fetchResult(initialResult, store) {
 
   function toPromise() {
     return new Promise(function (resolve, reject) {
-      var listener;
+      let listener;
 
       if (!tryResolveFetch(initialResult) && store) {
         listener = store.addFetchChangedListener(tryResolveFetch);

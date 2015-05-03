@@ -1,4 +1,4 @@
-var CookieStateSource = require('./cookie');
+let CookieStateSource = require('./cookie');
 
 module.exports = function (marty) {
   marty.registerStateSource(

@@ -1,4 +1,4 @@
-var HttpStateSource = require('./http');
+let HttpStateSource = require('./http');
 
 module.exports = function (marty) {
   marty.registerStateSource(

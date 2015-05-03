@@ -1,11 +1,11 @@
-var DEFAULT_CLASS_NAME = 'Class';
+let DEFAULT_CLASS_NAME = 'Class';
 
 function getClassName(clazz) {
-  var className = clazz.name || (clazz.constructor && clazz.constructor.name);
+  let className = clazz.name || (clazz.constructor && clazz.constructor.name);
 
   if (!className) {
-    var funcNameRegex = /function (.{1,})\(/;
-    var results = (funcNameRegex).exec(clazz.toString());
+    let funcNameRegex = /function (.{1,})\(/;
+    let results = (funcNameRegex).exec(clazz.toString());
     className = (results && results.length > 1) ? results[1] : '';
   }
 

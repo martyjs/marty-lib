@@ -1,4 +1,4 @@
-var DispatchCoordinator = require('../core/DispatchCoordinator');
+let DispatchCoordinator = require('../core/DispatchCoordinator');
 
 class Queries extends DispatchCoordinator {
   constructor(options) {

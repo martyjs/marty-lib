@@ -1,5 +1,5 @@
-var _ = require('../mindash');
-var Diagnostics = require('./diagnostics');
+let _ = require('../mindash');
+let Diagnostics = require('./diagnostics');
 
 if (console) {
   module.exports = console;

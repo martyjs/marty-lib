@@ -1,14 +1,14 @@
-var log = require('../core/logger');
-var fetch = require('./storeFetch');
-var _ = require('../mindash');
-var uuid= require('../core/utils/uuid');
-var warnings = require('../core/warnings');
-var resolve = require('../core/utils/resolve');
-var StoreEvents = require('./storeEvents');
-var Environment = require('../core/environment');
-var handleAction = require('./handleAction');
-var EventEmitter = require('wolfy87-eventemitter');
-var validateHandlers = require('./validateHandlers');
+let log = require('../core/logger');
+let fetch = require('./storeFetch');
+let _ = require('../mindash');
+let uuid= require('../core/utils/uuid');
+let warnings = require('../core/warnings');
+let resolve = require('../core/utils/resolve');
+let StoreEvents = require('./storeEvents');
+let Environment = require('../core/environment');
+let handleAction = require('./handleAction');
+let EventEmitter = require('wolfy87-eventemitter');
+let validateHandlers = require('./validateHandlers');
 
 class Store {
   constructor(options) {
@@ -31,7 +31,7 @@ class Store {
     this.__validateHandlers = _.once(() => validateHandlers(this));
     this.__dispatcher = this.__app ? this.__app.dispatcher : options.dispatcher;
 
-    var initialState = this.getInitialState();
+    let initialState = this.getInitialState();
 
     if (_.isUndefined(initialState)) {
       initialState = {};
@@ -80,17 +80,17 @@ class Store {
   }
 
   setState(state) {
-    var newState = _.extend({}, this.state, state);
+    let newState = _.extend({}, this.state, state);
 
     this.replaceState(newState);
   }
 
   replaceState(newState) {
-    var currentState = this.__state;
+    let currentState = this.__state;
 
     if (_.isUndefined(newState) || _.isNull(newState)) {
       if (warnings.stateIsNullOrUndefined) {
-        var displayName = this.displayName || this.id;
+        let displayName = this.displayName || this.id;
 
         log.warn(
           `Warning: Trying to replace the state of the store ${displayName} with null or undefined`
@@ -117,8 +117,8 @@ class Store {
   }
 
   dispose() {
-    var emitter = this.__emitter;
-    var dispatchToken = this.dispatchToken;
+    let emitter = this.__emitter;
+    let dispatchToken = this.dispatchToken;
 
     emitter.removeAllListeners(StoreEvents.CHANGE_EVENT);
     emitter.removeAllListeners(StoreEvents.FETCH_CHANGE_EVENT);
@@ -131,8 +131,8 @@ class Store {
   }
 
   hasChanged(eventArgs) {
-    var emitChange = () => {
-      var emitter = this.__emitter;
+    let emitChange = () => {
+      let emitter = this.__emitter;
 
       emitter.emit.call(emitter, StoreEvents.CHANGE_EVENT, this.state, this, eventArgs);
 
@@ -152,7 +152,7 @@ class Store {
   }
 
   addChangeListener(callback, context) {
-    var emitter = this.__emitter;
+    let emitter = this.__emitter;
 
     if (context) {
       callback = _.bind(callback, context);
@@ -176,7 +176,7 @@ class Store {
   }
 
   addFetchChangedListener(callback, context) {
-    var emitter = this.__emitter;
+    let emitter = this.__emitter;
 
     if (context) {
       callback = _.bind(callback, context);
@@ -192,7 +192,7 @@ class Store {
   }
 
   waitFor(stores) {
-    var dispatcher = this.__dispatcher;
+    let dispatcher = this.__dispatcher;
 
     if (!_.isArray(stores)) {
       stores = _.toArray(arguments);
@@ -201,7 +201,7 @@ class Store {
     dispatcher.waitFor(dispatchTokens(stores));
 
     function dispatchTokens(stores) {
-      var tokens = [];
+      let tokens = [];
 
       _.each(stores, function (store) {
         if (store.dispatchToken) {

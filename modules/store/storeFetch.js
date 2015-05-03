@@ -1,18 +1,18 @@
-var log = require('../core/logger');
-var _ = require('../mindash');
-var warnings = require('../core/warnings');
-var fetchResult = require('./fetch');
-var StoreEvents = require('./storeEvents');
-var CompoundError = require('../errors/compoundError');
-var NotFoundError = require('../errors/notFoundError');
-var FetchConstants = require('./fetchConstants');
+let log = require('../core/logger');
+let _ = require('../mindash');
+let warnings = require('../core/warnings');
+let fetchResult = require('./fetch');
+let StoreEvents = require('./storeEvents');
+let CompoundError = require('../errors/compoundError');
+let NotFoundError = require('../errors/notFoundError');
+let FetchConstants = require('./fetchConstants');
 
 function fetch(id, local, remote) {
-  var store = this;
-  var options, result, error, cacheError;
+  let store = this;
+  let options, result, error, cacheError;
 
   // Context has the same fetch API as Application
-  var app = this.app || this.context;
+  let app = this.app || this.context;
 
   if (_.isObject(id)) {
     options = id;
@@ -60,7 +60,7 @@ function fetch(id, local, remote) {
   return tryAndGetLocally() || tryAndGetRemotely();
 
   function tryAndGetLocally(remoteCalled) {
-    var result = options.locally.call(store);
+    let result = options.locally.call(store);
 
     if (_.isUndefined(result)) {
       return;
@@ -128,7 +128,7 @@ function fetch(id, local, remote) {
   }
 
   function promiseNotReturnedWarning() {
-    var inStore = '';
+    let inStore = '';
     if (store.displayName) {
       inStore = ' in ' + store.displayName;
     }
@@ -188,9 +188,9 @@ function fetch(id, local, remote) {
 }
 
 function dependencyResult(store, options) {
-  var pending = false;
-  var errors = [];
-  var dependencies = options.dependsOn;
+  let pending = false;
+  let errors = [];
+  let dependencies = options.dependsOn;
 
   if (!dependencies) {
     return;
@@ -212,7 +212,7 @@ function dependencyResult(store, options) {
   });
 
   if (errors.length) {
-    var error = errors.length === 1 ? errors[0] : new CompoundError(errors);
+    let error = errors.length === 1 ? errors[0] : new CompoundError(errors);
 
     return fetchResult.failed(error, options.id, store);
   }

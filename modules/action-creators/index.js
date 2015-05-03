@@ -1,6 +1,6 @@
-var autoDispatch = require('./autoDispatch');
-var ActionCreators = require('./actionCreators');
-var createActionCreatorsClass = require('./createActionCreatorsClass');
+let autoDispatch = require('./autoDispatch');
+let ActionCreators = require('./actionCreators');
+let createActionCreatorsClass = require('./createActionCreatorsClass');
 
 module.exports = function (marty) {
   marty.register('autoDispatch', autoDispatch);
@@ -8,8 +8,8 @@ module.exports = function (marty) {
   marty.register('createActionCreators', createActionCreators);
 
   function createActionCreators(properties) {
-    var ActionCreatorsClass = createActionCreatorsClass(properties);
-    var defaultInstance = this.register(ActionCreatorsClass);
+    let ActionCreatorsClass = createActionCreatorsClass(properties);
+    let defaultInstance = this.register(ActionCreatorsClass);
 
     return defaultInstance;
   }

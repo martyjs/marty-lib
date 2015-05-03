@@ -1,11 +1,11 @@
-var _ = require('../mindash');
-var Registry = require('./registry');
-var MartyBuilder = require('./martyBuilder');
-var createDispatcher = require('./createDispatcher');
+let _ = require('../mindash');
+let Registry = require('./registry');
+let MartyBuilder = require('./martyBuilder');
+let createDispatcher = require('./createDispatcher');
 
 class Marty {
   constructor(version, react) {
-    var builder = new MartyBuilder(this);
+    let builder = new MartyBuilder(this);
 
     this.version = version;
     this.dispatcher = createDispatcher();

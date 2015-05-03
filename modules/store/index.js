@@ -1,10 +1,10 @@
-var _ = require('../mindash');
-var when = require('./when');
-var fetch = require('./fetch');
-var Store = require('./store');
-var state = require('./state');
-var fetchConstants = require('./fetchConstants');
-var createStoreClass = require('./createStoreClass');
+let _ = require('../mindash');
+let when = require('./when');
+let fetch = require('./fetch');
+let Store = require('./store');
+let state = require('./state');
+let fetchConstants = require('./fetchConstants');
+let createStoreClass = require('./createStoreClass');
 
 module.exports = function (marty) {
   marty.registerClass('Store', Store);
@@ -15,8 +15,8 @@ module.exports = function (marty) {
   });
 
   function createStore(properties) {
-    var StoreClass = createStoreClass(properties);
-    var defaultInstance = this.register(StoreClass);
+    let StoreClass = createStoreClass(properties);
+    let defaultInstance = this.register(StoreClass);
 
     return defaultInstance;
   }

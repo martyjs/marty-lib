@@ -1,14 +1,14 @@
-var Context = require('./context');
-var _ = require('../mindash');
+let Context = require('./context');
+let _ = require('../mindash');
 
 // React is passed down to us so we can't require it in
 module.exports = function (React) {
   return function renderToString(options) {
     options = options || {};
 
-    var Marty = this;
-    var context = options.context;
-    var fetchOptions = { timeout: options.timeout };
+    let Marty = this;
+    let context = options.context;
+    let fetchOptions = { timeout: options.timeout };
 
     return new Promise(function (resolve, reject) {
       if (!options.type) {
@@ -31,14 +31,14 @@ module.exports = function (React) {
       function dehydrateAndRenderHtml(diagnostics) {
         context.fetch(function () {
           try {
-            var element = createElement();
+            let element = createElement();
 
             if (!element) {
               reject(new Error('createElement must return an element'));
               return;
             }
 
-            var html = React.renderToString(element);
+            let html = React.renderToString(element);
             html += dehydratedState(context);
             resolve({
               html: html,
@@ -55,7 +55,7 @@ module.exports = function (React) {
       function startFetches() {
         return context.fetch(function () {
           try {
-            var element = createElement();
+            let element = createElement();
 
             if (!element) {
               reject(new Error('createElement must return an element'));
@@ -70,7 +70,7 @@ module.exports = function (React) {
       }
 
       function createElement() {
-        var ContextContainer = React.createClass({
+        let ContextContainer = React.createClass({
           childContextTypes: {
             marty: React.PropTypes.object.isRequired
           },
@@ -80,7 +80,7 @@ module.exports = function (React) {
             };
           },
           render: function () {
-            var props = _.extend({}, options.props, { ref: 'subject' });
+            let props = _.extend({}, options.props, { ref: 'subject' });
 
             return React.createElement(options.type, props);
           }
@@ -90,7 +90,7 @@ module.exports = function (React) {
       }
 
       function dehydratedState(context) {
-        var state = Marty.dehydrate(context);
+        let state = Marty.dehydrate(context);
 
         return `<script id="__marty-state">${state}</script>`;
       }

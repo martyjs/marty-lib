@@ -1,8 +1,8 @@
-var Queries = require('./queries');
-var _ = require('../mindash');
-var createClass = require('../core/createClass');
+let Queries = require('./queries');
+let _ = require('../mindash');
+let createClass = require('../core/createClass');
 
-var RESERVED_KEYWORDS = ['dispatch'];
+let RESERVED_KEYWORDS = ['dispatch'];
 
 function createQueriesClass(properties) {
   properties = properties || {};
@@ -13,7 +13,7 @@ function createQueriesClass(properties) {
     }
   });
 
-  var classProperties = _.omit(properties, 'mixins', 'types');
+  let classProperties = _.omit(properties, 'mixins', 'types');
 
   return createClass(classProperties, properties, Queries);
 }

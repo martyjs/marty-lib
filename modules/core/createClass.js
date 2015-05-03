@@ -1,4 +1,4 @@
-var _ = require('../mindash');
+let _ = require('../mindash');
 
 function createClass(properties, defaultOptions, BaseType) {
   function Class(options) {
@@ -6,8 +6,8 @@ function createClass(properties, defaultOptions, BaseType) {
     this.id = properties.id;
     this.displayName = properties.displayName;
 
-    var base = get(Object.getPrototypeOf(Class.prototype), 'constructor', this);
-    var baseOptions = _.extend({}, defaultOptions, options, properties);
+    let base = get(Object.getPrototypeOf(Class.prototype), 'constructor', this);
+    let baseOptions = _.extend({}, defaultOptions, options, properties);
 
     if (defaultOptions.dispatcher) {
       baseOptions.dispatcher = defaultOptions.dispatcher;
@@ -29,9 +29,9 @@ function createClass(properties, defaultOptions, BaseType) {
 }
 
 function get(object, property, receiver) {
-  var desc = Object.getOwnPropertyDescriptor(object, property);
+  let desc = Object.getOwnPropertyDescriptor(object, property);
   if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
+    let parent = Object.getPrototypeOf(object);
     if (parent === null) {
       return undefined;
     } else {
@@ -40,7 +40,7 @@ function get(object, property, receiver) {
   } else if ('value' in desc && desc.writable) {
     return desc.value;
   } else {
-    var getter = desc.get;
+    let getter = desc.get;
     if (getter === undefined) {
       return undefined;
     }

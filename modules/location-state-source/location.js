@@ -1,6 +1,6 @@
-var _ = require('../mindash');
-var StateSource = require('../core/stateSource');
-var locationFactory = defaultLocationFactory;
+let _ = require('../mindash');
+let StateSource = require('../core/stateSource');
+let locationFactory = defaultLocationFactory;
 
 class LocationStateSource extends StateSource {
   constructor(options) {
@@ -20,7 +20,7 @@ class LocationStateSource extends StateSource {
 module.exports = LocationStateSource;
 
 function defaultLocationFactory(context, location) {
-  var l = location || window.location;
+  let l = location || window.location;
 
   return {
     url: l.url,
@@ -31,10 +31,10 @@ function defaultLocationFactory(context, location) {
   };
 
   function query(search) {
-    var result = {};
+    let result = {};
 
     _.each(search.substr(1).split('&'), function (part) {
-      var item = part.split('=');
+      let item = part.split('=');
       result[item[0]] = decodeURIComponent(item[1]);
     });
 

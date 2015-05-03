@@ -1,8 +1,8 @@
-var hooks = {};
-var log = require('../core/logger');
-var _ = require('../mindash');
-var StateSource = require('../core/stateSource');
-var accepts = {
+let hooks = {};
+let log = require('../core/logger');
+let _ = require('../mindash');
+let StateSource = require('../core/stateSource');
+let accepts = {
   html: 'text/html',
   text: 'text/plain',
   json: 'application/json',
@@ -74,7 +74,7 @@ HttpStateSource.addHook(require('./hooks/includeCredentials'));
 module.exports = HttpStateSource;
 
 function requestOptions(method, source, options) {
-  var baseUrl = source.baseUrl || HttpStateSource.defaultBaseUrl;
+  let baseUrl = source.baseUrl || HttpStateSource.defaultBaseUrl;
 
   if (_.isString(options)) {
     options = _.extend({
@@ -89,9 +89,9 @@ function requestOptions(method, source, options) {
   options.method = method.toLowerCase();
 
   if (baseUrl) {
-    var separator = '';
-    var firstCharOfUrl = options.url[0];
-    var lastCharOfBaseUrl = baseUrl[baseUrl.length - 1];
+    let separator = '';
+    let firstCharOfUrl = options.url[0];
+    let lastCharOfBaseUrl = baseUrl[baseUrl.length - 1];
 
     // Do some text wrangling to make sure concatenation of base url
     // stupid people (i.e. me)
@@ -109,7 +109,7 @@ function requestOptions(method, source, options) {
   }
 
   if (options.dataType) {
-    var contentType = accepts[options.dataType];
+    let contentType = accepts[options.dataType];
 
     if (!contentType) {
       log.warn('Unknown data type ' + options.dataType);
@@ -133,10 +133,10 @@ function beforeRequest(source, req) {
 }
 
 function afterRequest(source, res) {
-  var current;
+  let current;
 
   _.each(getHooks('after'), (hook) => {
-    var execute = function (res) {
+    let execute = function (res) {
       try {
         return hook.after.call(source, res);
       } catch (e) {

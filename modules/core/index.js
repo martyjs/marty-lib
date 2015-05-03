@@ -1,11 +1,11 @@
-var _ = require('../mindash');
-var logger = require('./logger');
-var warnings = require('./warnings');
-var diagnostics = require('./diagnostics');
-var environment = require('./environment');
-var StateSource = require('./stateSource');
-var getClassName = require('./utils/getClassName');
-var createStateSourceClass = require('./stateSource/createStateSourceClass');
+let _ = require('../mindash');
+let logger = require('./logger');
+let warnings = require('./warnings');
+let diagnostics = require('./diagnostics');
+let environment = require('./environment');
+let StateSource = require('./stateSource');
+let getClassName = require('./utils/getClassName');
+let createStateSourceClass = require('./stateSource/createStateSourceClass');
 
 module.exports = function (marty) {
   marty.registerClass('StateSource', StateSource);
@@ -44,14 +44,14 @@ module.exports = function (marty) {
   }
 
   function createStateSource(properties) {
-    var BaseType = properties.type ? marty.stateSources[properties.type] : StateSource;
+    let BaseType = properties.type ? marty.stateSources[properties.type] : StateSource;
 
     if (!BaseType) {
       throw new Error('Unknown state source ' + properties.type);
     }
 
-    var StateSourceClass = createStateSourceClass(properties, BaseType);
-    var defaultInstance = this.register(StateSourceClass);
+    let StateSourceClass = createStateSourceClass(properties, BaseType);
+    let defaultInstance = this.register(StateSourceClass);
 
     return defaultInstance;
   }
@@ -69,7 +69,7 @@ module.exports = function (marty) {
     //   );
     // }
 
-    var className = getClassName(clazz);
+    let className = getClassName(clazz);
 
     if (!clazz.id) {
       clazz.id = id || className;

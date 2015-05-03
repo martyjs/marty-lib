@@ -1,5 +1,5 @@
-var cookieFactory = defaultCookieFactory;
-var StateSource = require('../core/stateSource');
+let cookieFactory = defaultCookieFactory;
+let StateSource = require('../core/stateSource');
 
 class CookieStateSource extends StateSource {
   constructor(options) {

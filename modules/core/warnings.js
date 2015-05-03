@@ -1,6 +1,6 @@
-var _ = require('../mindash');
+let _ = require('../mindash');
 
-var warnings = {
+let warnings = {
   without: without,
   invokeConstant: true,
   appIsTheFuture: true,

@@ -1,11 +1,11 @@
-var CONTENT_TYPE = 'Content-Type';
-var JSON_CONTENT_TYPE = 'application/json';
-var _ = require('../../mindash');
+let CONTENT_TYPE = 'Content-Type';
+let JSON_CONTENT_TYPE = 'application/json';
+let _ = require('../../mindash');
 
 module.exports = {
   id: 'stringifyJSON',
   before: function (req) {
-    var contentType = req.headers[CONTENT_TYPE] || JSON_CONTENT_TYPE;
+    let contentType = req.headers[CONTENT_TYPE] || JSON_CONTENT_TYPE;
 
     if (typeof FormData !== 'undefined' && req.body instanceof FormData) {
       return;

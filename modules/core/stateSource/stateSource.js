@@ -1,8 +1,8 @@
-var log = require('../logger');
-var uuid = require('../utils/uuid');
-var warnings = require('../warnings');
-var resolve = require('../utils/resolve');
-var Environment = require('../environment');
+let log = require('../logger');
+let uuid = require('../utils/uuid');
+let warnings = require('../warnings');
+let resolve = require('../utils/resolve');
+let Environment = require('../environment');
 
 class StateSource {
   constructor(options) {

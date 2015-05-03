@@ -1,13 +1,13 @@
-var _ = require('../mindash');
-var uuid = require('../core/utils/uuid');
-var logger = require('../core/logger');
-var warnings = require('../core/warnings');
-var timeout = require('../core/utils/timeout');
-var deferred = require('../core/utils/deferred');
-var FetchDiagnostics = require('./fetchDiagnostics');
-var createDispatcher = require('../core/createDispatcher');
+let _ = require('../mindash');
+let uuid = require('../core/utils/uuid');
+let logger = require('../core/logger');
+let warnings = require('../core/warnings');
+let timeout = require('../core/utils/timeout');
+let deferred = require('../core/utils/deferred');
+let FetchDiagnostics = require('./fetchDiagnostics');
+let createDispatcher = require('../core/createDispatcher');
 
-var DEFAULT_TIMEOUT = 1000;
+let DEFAULT_TIMEOUT = 1000;
 
 class Context {
   constructor(registry) {
@@ -17,7 +17,7 @@ class Context {
     this.dispatcher = createDispatcher();
 
     _.each((registry || {}).types, (classes, type) => {
-      var options = {
+      let options = {
         context: this,
         dispatcher: this.dispatcher
       };
@@ -35,7 +35,7 @@ class Context {
   }
 
   fetch(cb, options) {
-    var fetchFinished;
+    let fetchFinished;
 
     options = _.defaults(options || {}, {
       timeout: DEFAULT_TIMEOUT
@@ -63,7 +63,7 @@ class Context {
   }
 
   fetchStarted(storeId, fetchId) {
-    var diagnostics = this.__diagnostics;
+    let diagnostics = this.__diagnostics;
 
     diagnostics.fetchStarted(storeId, fetchId);
   }
@@ -77,7 +77,7 @@ class Context {
   }
 
   fetchFinished(storeId, fetchId, status, options) {
-    var diagnostics = this.__diagnostics;
+    let diagnostics = this.__diagnostics;
 
     diagnostics.fetchFinished(storeId, fetchId, status, options);
 
@@ -104,8 +104,8 @@ class Context {
       throw new Error('Cannot resolve object');
     }
 
-    var id = obj.constructor.id;
-    var type = obj.constructor.type;
+    let id = obj.constructor.id;
+    let type = obj.constructor.type;
 
     if (!this.instances[type]) {
       throw new Error(`Context does not have any instances of ${type}`);

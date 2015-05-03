@@ -1,6 +1,6 @@
-var _ = require('../mindash');
-var log = require('../core/logger');
-var warnings = require('../core/warnings');
+let _ = require('../mindash');
+let log = require('../core/logger');
+let warnings = require('../core/warnings');
 
 function constants(obj) {
   return toConstant(obj);
@@ -28,10 +28,10 @@ function constants(obj) {
   }
 
   function arrayToConstants(array) {
-    var constants = {};
+    let constants = {};
 
     _.each(array, function (actionType) {
-      var types = [
+      let types = [
         actionType,
         actionType + '_STARTING',
         actionType + '_DONE',
@@ -47,7 +47,7 @@ function constants(obj) {
   }
 
   function createActionCreator(actionType) {
-    var constantActionCreator = function (actionCreator) {
+    let constantActionCreator = function (actionCreator) {
       if (warnings.invokeConstant) {
         log.warn(
           'Warning: Invoking constants has been depreciated. ' +
@@ -61,14 +61,14 @@ function constants(obj) {
       }
 
       return function () {
-        var context = actionContext(this);
+        let context = actionContext(this);
 
         actionCreator.apply(context, arguments);
 
         function actionContext(creators) {
           return _.extend({}, creators, {
             dispatch: function () {
-              var args = _.toArray(arguments);
+              let args = _.toArray(arguments);
 
               args.unshift(actionType);
 

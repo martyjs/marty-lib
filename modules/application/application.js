@@ -1,18 +1,18 @@
-var _ = require('../mindash');
-var log = require('../core/logger');
-var timeout = require('../core/utils/timeout');
-var deferred = require('../core/utils/deferred');
-var createDispatcher = require('../core/createDispatcher');
-var UnknownStoreError = require('../errors/unknownStoreError');
-var FetchDiagnostics = require('../isomorphism/fetchDiagnostics');
+let _ = require('../mindash');
+let log = require('../core/logger');
+let timeout = require('../core/utils/timeout');
+let deferred = require('../core/utils/deferred');
+let createDispatcher = require('../core/createDispatcher');
+let UnknownStoreError = require('../errors/unknownStoreError');
+let FetchDiagnostics = require('../isomorphism/fetchDiagnostics');
 
-var DEFAULT_TIMEOUT = 1000;
-var SERIALIZED_WINDOW_OBJECT = '__marty';
+let DEFAULT_TIMEOUT = 1000;
+let SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = function (React) {
   class Application {
     constructor() {
-      var dispatcher = createDispatcher();
+      let dispatcher = createDispatcher();
 
       // Needed because we don't have access to actual Application type
       this.__isApplication = true;
@@ -27,7 +27,7 @@ module.exports = function (React) {
     }
 
     bindTo(InnerComponent) {
-      var app = this;
+      let app = this;
 
       if (!InnerComponent) {
         throw new Error('Must specify an inner component');
@@ -68,11 +68,11 @@ module.exports = function (React) {
           throw new Error('Must pass in a instantiable object');
         }
 
-        var obj = new ctor({
+        let obj = new ctor({
           app: this
         });
 
-        var type = obj.__type;
+        let type = obj.__type;
 
         if (type) {
           if (!this.__types[type]) {
@@ -97,7 +97,7 @@ module.exports = function (React) {
     }
 
     fetch(cb, options) {
-      var fetchFinished;
+      let fetchFinished;
 
       options = _.defaults(options || {}, {
         timeout: DEFAULT_TIMEOUT
@@ -125,7 +125,7 @@ module.exports = function (React) {
     }
 
     fetchStarted(storeId, fetchId) {
-      var diagnostics = this.__diagnostics;
+      let diagnostics = this.__diagnostics;
 
       if (diagnostics) {
         diagnostics.fetchStarted(storeId, fetchId);
@@ -133,7 +133,7 @@ module.exports = function (React) {
     }
 
     fetchFinished(storeId, fetchId, status, options) {
-      var diagnostics = this.__diagnostics;
+      let diagnostics = this.__diagnostics;
 
       if (diagnostics) {
         diagnostics.fetchFinished(storeId, fetchId, status, options);
@@ -157,13 +157,13 @@ module.exports = function (React) {
     }
 
     rehydrate(storeStates) {
-      var stores = this.getAllStores();
+      let stores = this.getAllStores();
 
       storeStates = storeStates || getStoreStatesFromWindow();
 
       _.each(storeStates, (dehydratedStore, storeId) => {
-        var store = stores[storeId];
-        var state = dehydratedStore.state;
+        let store = stores[storeId];
+        let state = dehydratedStore.state;
 
         if (!store) {
           throw new UnknownStoreError(storeId);
@@ -197,8 +197,8 @@ module.exports = function (React) {
     }
 
     dehydrate() {
-      var dehydratedStores = {};
-      var stores = this.getAllStores();
+      let dehydratedStores = {};
+      let stores = this.getAllStores();
 
       _.each(stores, (store, id) => {
         dehydratedStores[id] = {

@@ -1,8 +1,8 @@
-var _ = require('../mindash');
+let _ = require('../mindash');
 
 function autoDispatch(constant) {
   return function () {
-    var args = _.toArray(arguments);
+    let args = _.toArray(arguments);
 
     args.unshift(constant);
 

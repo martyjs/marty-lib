@@ -1,10 +1,10 @@
-var _ = require('../../mindash');
-var createClass = require('../createClass');
+let _ = require('../../mindash');
+let createClass = require('../createClass');
 
 function createStateSourceClass(properties, baseType) {
   properties = properties || {};
 
-  var merge = [{}, properties].concat(properties.mixins || []);
+  let merge = [{}, properties].concat(properties.mixins || []);
 
   properties = _.extend.apply(_, merge);
 

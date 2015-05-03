@@ -1,4 +1,4 @@
-var _ = require('../mindash');
+let _ = require('../mindash');
 
 class FetchDiagnostics {
   constructor() {
@@ -17,7 +17,7 @@ class FetchDiagnostics {
   }
 
   fetchFinished(storeId, fetchId, status, options) {
-    var fetch  = _.find(this.fetches, {
+    let fetch  = _.find(this.fetches, {
       storeId: storeId,
       fetchId: fetchId
     });

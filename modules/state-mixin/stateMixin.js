@@ -1,16 +1,16 @@
-var _ = require('../mindash');
-var uuid = require('../core/utils/uuid');
-var StoreObserver = require('../core/storeObserver');
-var reservedKeys = ['listenTo', 'getState', 'getInitialState'];
+let _ = require('../mindash');
+let uuid = require('../core/utils/uuid');
+let StoreObserver = require('../core/storeObserver');
+let reservedKeys = ['listenTo', 'getState', 'getInitialState'];
 
 function StateMixin(options) {
-  var config, instanceMethods;
+  let config, instanceMethods;
 
   if (!options) {
     throw new Error('The state mixin is expecting some options');
   }
 
-  var React = options.React;
+  let React = options.React;
 
   if (isStore(options)) {
     config = storeMixinConfig(options);
@@ -19,12 +19,12 @@ function StateMixin(options) {
     instanceMethods = _.omit(options, reservedKeys);
   }
 
-  var mixin = _.extend({
+  let mixin = _.extend({
     contextTypes: {
       marty: React.PropTypes.object
     },
     componentDidMount: function () {
-      var component = {
+      let component = {
         id: this.__id,
         displayName: this.displayName || this.constructor.displayName,
       };
@@ -44,10 +44,10 @@ function StateMixin(options) {
       }
     },
     componentWillReceiveProps: function (nextProps) {
-      var oldProps = this.props;
+      let oldProps = this.props;
       this.props = nextProps;
 
-      var newState = this.getState();
+      let newState = this.getState();
 
       this.props = oldProps;
       this.setState(newState);
@@ -56,7 +56,7 @@ function StateMixin(options) {
       return config.getState(this);
     },
     getInitialState: function () {
-      var el = this._currentElement;
+      let el = this._currentElement;
 
       if (!this.displayName && el && el.type) {
         this.displayName = el.type.displayName;
@@ -87,8 +87,8 @@ function StateMixin(options) {
   }
 
   function simpleMixinConfig(options) {
-    var stores = (options.listenTo || []);
-    var storesToGetStateFrom = findStoresToGetStateFrom(options);
+    let stores = (options.listenTo || []);
+    let storesToGetStateFrom = findStoresToGetStateFrom(options);
 
     if (!_.isArray(stores)) {
       stores = [stores];
@@ -106,7 +106,7 @@ function StateMixin(options) {
     };
 
     function getState(view) {
-      var state = _.object(_.map(storesToGetStateFrom, getStateFromStore));
+      let state = _.object(_.map(storesToGetStateFrom, getStateFromStore));
 
       if (options.getState) {
         state = _.extend(state, options.getState.call(view));
@@ -120,7 +120,7 @@ function StateMixin(options) {
     }
 
     function findStoresToGetStateFrom(options) {
-      var storesToGetStateFrom = {};
+      let storesToGetStateFrom = {};
       _.each(options, function (value, key) {
         if (reservedKeys.indexOf(key) === -1 && isStore(value)) {
           storesToGetStateFrom[key] = value;
@@ -132,7 +132,7 @@ function StateMixin(options) {
   }
 
   function areStores(stores) {
-    for (var i = stores.length - 1; i >= 0; i--) {
+    for (let i = stores.length - 1; i >= 0; i--) {
       if (!isStore(stores[i])) {
         return false;
       }
