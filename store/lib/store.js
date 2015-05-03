@@ -1,9 +1,9 @@
 var log = require('../../core/logger')
 var fetch = require('./storeFetch');
 var _ = require('../../mindash');
-var uuid = var Marty = require('../../core/utils/uuid');
+var uuid= require('../../core/utils/uuid');
 var warnings = require('../../core/warnings')
-var resolve = var Marty = require('../../core/utils/resolve');
+var resolve= require('../../core/utils/resolve');
 var StoreEvents = require('./storeEvents');
 var Environment = require('../../core/environment')
 var handleAction = require('./handleAction');

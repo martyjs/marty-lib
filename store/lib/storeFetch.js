@@ -3,8 +3,8 @@ var _ = require('../../mindash');
 var warnings = require('../../core/warnings')
 var fetchResult = require('./fetch');
 var StoreEvents = require('./storeEvents');
-var CompoundError = require('../../core/errors.CompoundError')
-var NotFoundError = require('../../core/errors.NotFoundError')
+var CompoundError = require('../../errors/compoundError')
+var NotFoundError = require('../../errors/notFoundError')
 var FetchConstants = require('./fetchConstants');
 
 function fetch(id, local, remote) {

@@ -1,9 +1,9 @@
 var log = require('../../core/logger')
 var _ = require('../../mindash');
-var uuid = var Marty = require('../../core/utils/uuid');
+var uuid = require('../../core/utils/uuid');
 var StoreObserver = require('../../core/storeObserver');
 var getFetchResult = require('./getFetchResult');
-var getClassName = var Marty = require('../../core/utils/getClassName');
+var getClassName = require('../../core/utils/getClassName');
 
 var RESERVED_FUNCTIONS = [
   'contextTypes',

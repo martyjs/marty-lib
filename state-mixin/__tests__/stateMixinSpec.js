@@ -2,7 +2,7 @@ var React = require('react');
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var uuid = var Marty = require('../../core/utils/uuid');
+var uuid = require('../../core/utils/uuid');
 var Diagnostics = require('../../core/diagnostics')
 var stubbedLogger = require('../../test/lib/stubbedLogger');
 var ActionPayload = require('../../core/ActionPayload')

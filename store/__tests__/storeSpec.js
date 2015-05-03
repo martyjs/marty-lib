@@ -5,8 +5,8 @@ var buildMarty = require('./buildMarty');
 var ActionPayload = require('../../core/ActionPayload')
 var stubbedLogger = require('../../test/lib/stubbedLogger');
 var describeStyles = require('../../test/lib/describeStyles');
-var ActionHandlerNotFoundError = require('../../core/errors.ActionHandlerNotFoundError')
-var ActionPredicateUndefinedError = require('../../core/errors.ActionPredicateUndefinedError')
+var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError')
+var ActionPredicateUndefinedError = require('../../errors/actionPredicateUndefinedError')
 
 describeStyles('Store', function (styles, currentStyle) {
   var store, changeListener, listener, dispatcher, dispatchToken = 'foo', initialState = {};

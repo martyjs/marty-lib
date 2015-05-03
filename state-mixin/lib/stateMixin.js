@@ -1,5 +1,5 @@
 var _ = require('../../mindash');
-var uuid = var Marty = require('../../core/utils/uuid');
+var uuid = require('../../core/utils/uuid');
 var StoreObserver = require('../../core/storeObserver');
 var reservedKeys = ['listenTo', 'getState', 'getInitialState'];
 

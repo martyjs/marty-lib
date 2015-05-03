@@ -7,6 +7,19 @@ var SCRIPTS = [
   './http-state-source/__tests__/lib/mockServer.js'
 ];
 
+var EXCLUDED_DIR = [
+  '.git',
+  'build',
+  'isomorphism',
+  'node_modules'
+];
+
+var MODULES = _.difference(
+  fs.readdirSync('./').filter(isDirectory),
+  EXCLUDED_DIR
+);
+
+
 module.exports = function (config) {
   process.env.NODE_ENV = 'test';
 
@@ -113,6 +126,14 @@ module.exports = function (config) {
   }
 
   function base() {
+    var moduleFiles = MODULES.map(function (module) {
+      return module + '/**/*.js'
+    });
+
+    var modulePreprocessors = _.object(moduleFiles.map(function (module) {
+      return [module, ['browserify']]
+    }));
+
     return {
       basePath: '',
       frameworks: ['mocha', 'browserify'],
@@ -121,17 +142,16 @@ module.exports = function (config) {
         debug: true
       },
       files: [
-        'test/setup.js',
-        '**/*.js'
-      ],
+        'test/setup.js'
+      ].concat(moduleFiles),
       exclude: [
         './build',
-        './isomorphism'
+        './isomorphism',
+        './node_modules'
       ],
-      preprocessors: {
-        'test/setup.js': ['browserify'],
-        '**/*.js': ['browserify']
-      },
+      preprocessors: _.extend({
+        'test/setup.js': ['browserify']
+      }, modulePreprocessors),
       port: 9876,
       proxies: {
         '/stub': 'http://localhost:8956/stub'
@@ -157,3 +177,7 @@ module.exports = function (config) {
     }
   }
 };
+
+function isDirectory(path) {
+  return fs.statSync(path).isDirectory();
+}

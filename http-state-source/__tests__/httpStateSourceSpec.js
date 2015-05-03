@@ -2,7 +2,7 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
-var uuid = var Marty = require('../../core/utils/uuid');
+var uuid = require('../../core/utils/uuid');
 var warnings = require('../../core/warnings')
 var describeStyles = require('../../test/lib/describeStyles');
 

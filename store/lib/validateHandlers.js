@@ -1,6 +1,6 @@
 var _ = require('../../mindash');
-var ActionHandlerNotFoundError = require('../../core/errors.ActionHandlerNotFoundError')
-var ActionPredicateUndefinedError = require('../../core/errors.ActionPredicateUndefinedError')
+var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError')
+var ActionPredicateUndefinedError = require('../../errors/actionPredicateUndefinedError')
 
 function validateHandlers(store) {
   _.each(store.handlers, function (actionPredicate, handlerName) {
