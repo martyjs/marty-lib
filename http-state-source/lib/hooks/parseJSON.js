@@ -1,6 +1,6 @@
 var CONTENT_TYPE = 'Content-Type';
 var JSON_CONTENT_TYPE = 'application/json';
-var _ = require('../../mindash');
+var _ = require('../../../mindash');
 
 module.exports = {
   id: 'parseJSON',

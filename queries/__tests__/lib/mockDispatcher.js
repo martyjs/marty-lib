@@ -1,5 +1,5 @@
-var _ = require('../../mindash');
-var ActionPayload = require('../../core/ActionPayload')
+var _ = require('../../../mindash');
+var ActionPayload = require('../../../core/actionPayload')
 
 function MockDispatcher() {
   this.id = 'MockDispatcher';

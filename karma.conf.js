@@ -148,7 +148,7 @@ module.exports = function (config) {
         './build',
         './isomorphism',
         './node_modules'
-      ],
+      ].concat(SCRIPTS),
       preprocessors: _.extend({
         'test/setup.js': ['browserify']
       }, modulePreprocessors),

@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var buildMarty = require('./buildMarty');
-var Dispatcher = require('./lib/mockDispatcher');
 var TestSource = require('./fixtures/testSource');
-var describeStyles = require('./lib/describeStyles');
+var Dispatcher = require('../../test/lib/mockDispatcher');
+var describeStyles = require('../../test/lib/describeStyles');
 
 describe('StateSource', function () {
   var stateSource, Marty;
