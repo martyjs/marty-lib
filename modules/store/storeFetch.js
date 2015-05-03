@@ -9,7 +9,10 @@ var FetchConstants = require('./fetchConstants');
 
 function fetch(id, local, remote) {
   var store = this;
-  var options, result, error, cacheError, context = this.context;
+  var options, result, error, cacheError;
+
+  // Context has the same fetch API as Application
+  var app = this.app || this.context;
 
   if (_.isObject(id)) {
     options = id;
@@ -50,8 +53,8 @@ function fetch(id, local, remote) {
     return fetchResult.pending(options.id, store);
   }
 
-  if (context) {
-    context.fetchStarted(store.id, options.id);
+  if (app) {
+    app.fetchStarted(store.id, options.id);
   }
 
   return tryAndGetLocally() || tryAndGetRemotely();
@@ -71,7 +74,7 @@ function fetch(id, local, remote) {
       finished();
     }
 
-    return fetchDone(result);
+    return fetchFinished(result);
   }
 
   function tryAndGetRemotely() {
@@ -86,7 +89,7 @@ function fetch(id, local, remote) {
           result = tryAndGetLocally(true);
 
           if (result) {
-            fetchDone();
+            fetchFinished();
             store.hasChanged();
           } else {
             fetchNotFound();
@@ -146,11 +149,11 @@ function fetch(id, local, remote) {
     return fetchResult.pending(options.id, store);
   }
 
-  function fetchDone(result) {
+  function fetchFinished(result) {
     finished();
 
-    if (context && result) {
-      context.fetchDone(store.id, options.id, 'DONE', {
+    if (app && result) {
+      app.fetchFinished(store.id, options.id, 'DONE', {
         result: result
       });
     }
@@ -165,8 +168,8 @@ function fetch(id, local, remote) {
 
     finished();
 
-    if (context) {
-      context.fetchDone(store.id, options.id, 'FAILED', {
+    if (app) {
+      app.fetchFinished(store.id, options.id, 'FAILED', {
         error: error
       });
     }

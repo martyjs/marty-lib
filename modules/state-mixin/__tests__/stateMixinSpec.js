@@ -13,6 +13,7 @@ describe('StateMixin', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     logger = stubbedLogger();
     sandbox = sinon.sandbox.create();
     initialState = {

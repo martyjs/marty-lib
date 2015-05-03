@@ -14,12 +14,38 @@ describe('ActionCreators', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     logger = stubbedLogger();
     dispatcher = new MockDispatcher();
   });
 
   afterEach(function () {
     logger.restore();
+  });
+
+  describe('when you pass in an application', function () {
+    var application;
+
+    beforeEach(function () {
+      Marty.isASingleton = false;
+
+      class App extends Marty.Application {
+        constructor() {
+          super();
+          this.register('creators', class AC extends Marty.ActionCreators {});
+        }
+      }
+
+      application = new App();
+    });
+
+    afterEach(function () {
+      Marty.isASingleton = true;
+    });
+
+    it('should be accessible on the object', function () {
+      expect(application.creators.app).to.equal(application);
+    });
   });
 
   describe('autoDispatch(constant)', function () {

@@ -26,6 +26,7 @@ module.exports = function (React) {
     var id = uuid.type('Component');
     var innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
     var contextTypes = _.extend({
+      app: React.PropTypes.object,
       marty: React.PropTypes.object
     }, config.contextTypes);
 
@@ -83,6 +84,12 @@ module.exports = function (React) {
         }
       },
       getInitialState() {
+        Object.defineProperty(this, 'app', {
+          get: () => {
+            return this.context.app;
+          }
+        });
+
         return this.getState();
       },
       getState() {

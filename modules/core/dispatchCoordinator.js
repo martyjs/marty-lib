@@ -13,6 +13,8 @@ class DispatchCoordinator {
     options = options || {};
 
     this.__type = type;
+    this.__isCoreType = true;
+    this.__app = options.app;
     this.__context = options.context;
     this.__id = uuid.type(this.__type);
     this.__dispatcher = options.dispatcher;
@@ -27,6 +29,10 @@ class DispatchCoordinator {
 
   for (obj) {
     return resolve(this, obj);
+  }
+
+  get app() {
+    return this.__app;
   }
 
   get context() {

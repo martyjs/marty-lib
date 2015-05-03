@@ -8,6 +8,7 @@ describe('calling resolver warnings', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     logger = stubbedLogger();
   });
 

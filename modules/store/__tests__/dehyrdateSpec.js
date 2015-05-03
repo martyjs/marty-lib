@@ -8,6 +8,7 @@ describeStyles('Marty#dehydrate()', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     expectedFetchId = 'FETCH';
     storeSerializedState = { bar: 'bar' };
     store1ExpectedState = { initial: 'store1' };

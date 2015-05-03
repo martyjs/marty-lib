@@ -13,6 +13,7 @@ describe('Store#fetch()', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     warnings.stateIsNullOrUndefined = false;
     warnings.promiseNotReturnedFromRemotely = false;
 

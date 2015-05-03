@@ -3,7 +3,7 @@ var fetch = require('./storeFetch');
 var _ = require('../mindash');
 var uuid= require('../core/utils/uuid');
 var warnings = require('../core/warnings');
-var resolve= require('../core/utils/resolve');
+var resolve = require('../core/utils/resolve');
 var StoreEvents = require('./storeEvents');
 var Environment = require('../core/environment');
 var handleAction = require('./handleAction');
@@ -21,13 +21,15 @@ class Store {
     this.__type = 'Store';
     this.__id = uuid.type(this.__type);
     this.__state = {};
+    this.__app = options.app;
+    this.__isCoreType = true;
     this.__fetchHistory = {};
     this.__failedFetches = {};
     this.__fetchInProgress = {};
     this.__context = options.context;
     this.__emitter = new EventEmitter();
-    this.__dispatcher = options.dispatcher;
     this.__validateHandlers = _.once(() => validateHandlers(this));
+    this.__dispatcher = this.__app ? this.__app.dispatcher : options.dispatcher;
 
     var initialState = this.getInitialState();
 
@@ -43,7 +45,15 @@ class Store {
   }
 
   for (obj) {
+    if (warnings.appIsTheFuture) {
+      log.warn('Warning: Contexts are depreciated. Use application\'s instead http://martyjs.org/depreciated/contexts.html');
+    }
+
     return resolve(this, obj);
+  }
+
+  get app() {
+    return this.__app;
   }
 
   get context() {

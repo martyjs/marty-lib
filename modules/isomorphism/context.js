@@ -1,5 +1,7 @@
 var _ = require('../mindash');
 var uuid = require('../core/utils/uuid');
+var logger = require('../core/logger');
+var warnings = require('../core/warnings');
 var timeout = require('../core/utils/timeout');
 var deferred = require('../core/utils/deferred');
 var FetchDiagnostics = require('./fetchDiagnostics');
@@ -33,30 +35,30 @@ class Context {
   }
 
   fetch(cb, options) {
-    var fetchDone;
+    var fetchFinished;
 
     options = _.defaults(options || {}, {
       timeout: DEFAULT_TIMEOUT
     });
 
-    this.__deferredFetchDone = deferred();
+    this.__deferredFetchFinished = deferred();
     this.__diagnostics = new FetchDiagnostics();
-    fetchDone = this.__deferredFetchDone.promise;
+    fetchFinished = this.__deferredFetchFinished.promise;
 
     try {
       cb.call(this);
     } catch (e) {
-      this.__deferredFetchDone.reject(e);
+      this.__deferredFetchFinished.reject(e);
 
-      return fetchDone;
+      return fetchFinished;
     }
 
     if (!this.__diagnostics.hasPendingFetches) {
-      this.__deferredFetchDone.resolve();
+      this.__deferredFetchFinished.resolve();
     }
 
     return Promise
-      .race([fetchDone, timeout(options.timeout)])
+      .race([fetchFinished, timeout(options.timeout)])
       .then(() => this.__diagnostics.toJSON());
   }
 
@@ -67,12 +69,20 @@ class Context {
   }
 
   fetchDone(storeId, fetchId, status, options) {
+    if (warnings.fetchDoneRenamedFetchFailed) {
+      logger.warn('Warning: fetchDone has been renamed fetchFinished');
+    }
+
+    return this.fetchFinished(storeId, fetchId, status, options);
+  }
+
+  fetchFinished(storeId, fetchId, status, options) {
     var diagnostics = this.__diagnostics;
 
-    diagnostics.fetchDone(storeId, fetchId, status, options);
+    diagnostics.fetchFinished(storeId, fetchId, status, options);
 
     if (!diagnostics.hasPendingFetches) {
-      this.__deferredFetchDone.resolve();
+      this.__deferredFetchFinished.resolve();
     }
   }
 

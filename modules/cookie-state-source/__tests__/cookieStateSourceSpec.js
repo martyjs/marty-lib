@@ -7,6 +7,7 @@ describeStyles('CookieStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     cookies = require('cookies-js');
     source = styles({
       classic: function () {

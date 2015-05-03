@@ -8,6 +8,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     warnings.classDoesNotHaveAnId = false;
     sessionStorage.clear();
     source = styles({

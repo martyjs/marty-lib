@@ -6,11 +6,11 @@ var _ = require('../../mindash');
 var fetch = require('../../store/fetch');
 var TestUtils = require('react/addons').addons.TestUtils;
 
-describe('Container', function () {
+describe('Container', () => {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context;
-  var initialProps, updateProps, Store, handler, handlerContext, fetchContext;
+  var initialProps, updateProps, Store, handler, handlerContext, fetchContext, initialContext;
 
-  beforeEach(function () {
+  beforeEach(() => {
     context = {
       foo: 'bar'
     };
@@ -22,6 +22,7 @@ describe('Container', function () {
     });
 
     Marty = buildMarty();
+    Marty.isASingleton = true;
 
     Store = Marty.createStore({
       id: 'ContainerStore',
@@ -38,11 +39,13 @@ describe('Container', function () {
     });
 
     InnerComponent = React.createClass({
+      contextTypes: Marty.contextTypes,
       render() {
         return React.createElement('div');
       },
       getInitialState() {
         initialProps = this.props;
+        initialContext = this.context;
         return {};
       },
       componentWillReceiveProps: updateProps,
@@ -52,8 +55,8 @@ describe('Container', function () {
     });
   });
 
-  describe('when I dont pass in an inner component', function () {
-    it('should throw an error', function () {
+  describe('when I dont pass in an inner component', () => {
+    it('should throw an error', () => {
       expect(createContainerWithNoInnerComponent).to.throw(Error);
 
       function createContainerWithNoInnerComponent() {
@@ -62,7 +65,7 @@ describe('Container', function () {
     });
   });
 
-  describe('component lifestyle', function () {
+  describe('component lifestyle', () => {
     var ParentComponent;
     var componentWillReceiveProps;
     var componentWillUpdate;
@@ -71,7 +74,7 @@ describe('Container', function () {
     var componentWillUnmount;
     var componentWillMount;
 
-    beforeEach(function () {
+    beforeEach(() => {
       componentWillReceiveProps = sinon.spy();
       componentWillUpdate = sinon.spy();
       componentDidUpdate = sinon.spy();
@@ -108,49 +111,49 @@ describe('Container', function () {
       React.unmountComponentAtNode(element.getDOMNode().parentNode);
     });
 
-    it('should call componentWillReceiveProps if passed in', function () {
+    it('should call componentWillReceiveProps if passed in', () => {
       expect(componentWillReceiveProps).to.be.calledOnce;
     });
 
-    it('should call componentWillUpdate if passed in', function () {
+    it('should call componentWillUpdate if passed in', () => {
       expect(componentWillUpdate).to.be.calledOnce;
     });
 
-    it('should call componentDidUpdate if passed in', function () {
+    it('should call componentDidUpdate if passed in', () => {
       expect(componentDidUpdate).to.be.calledOnce;
     });
 
-    it('should call componentDidMount if passed in', function () {
+    it('should call componentDidMount if passed in', () => {
       expect(componentDidMount).to.be.calledOnce;
     });
 
-    it('should call componentWillUnmount if passed in', function () {
+    it('should call componentWillUnmount if passed in', () => {
       expect(componentWillUnmount).to.be.calledOnce;
     });
 
-    it('should call componentWillMount if passed in', function () {
+    it('should call componentWillMount if passed in', () => {
       expect(componentWillMount).to.be.calledOnce;
     });
   });
 
-  describe('when I pass in a simple component', function () {
-    beforeEach(function () {
+  describe('when I pass in a simple component', () => {
+    beforeEach(() => {
       ContainerComponent = Marty.createContainer(InnerComponent);
     });
 
-    it('should return a renderable component', function () {
+    it('should return a renderable component', () => {
       render(ContainerComponent);
     });
 
-    it('should make the original component accessible at InnerComponent', function () {
+    it('should make the original component accessible at InnerComponent', () => {
       expect(ContainerComponent.InnerComponent).to.equal(InnerComponent);
     });
 
-    it('should set the display name on classical React components', function () {
+    it('should set the display name on classical React components', () => {
       expect(render(ContainerComponent).refs.subject.constructor.displayName).to.eql('InnerComponentContainer');
     });
 
-    it('should set the display name on ES6 React components', function () {
+    it('should set the display name on ES6 React components', () => {
       class ES6InnerComponent extends React.Component {
         render() {
           return React.createElement('div');
@@ -162,8 +165,8 @@ describe('Container', function () {
     });
   });
 
-  describe('when fetch is a function', function () {
-    beforeEach(function () {
+  describe('when fetch is a function', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch() {
           return {
@@ -174,7 +177,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should pass each of them to the inner component via props', function () {
+    it('should pass each of them to the inner component via props', () => {
       expect(initialProps).to.eql({
         foo: 'bar',
         bar: {
@@ -184,8 +187,8 @@ describe('Container', function () {
     });
   });
 
-  describe('#getInnerComponent()', function () {
-    beforeEach(function () {
+  describe('#getInnerComponent()', () => {
+    beforeEach(() => {
       ContainerComponent = wrap(InnerComponent, {
         something() {
           return this.getInnerComponent();
@@ -194,17 +197,17 @@ describe('Container', function () {
       element = TestUtils.renderIntoDocument(<ContainerComponent />);
     });
 
-    it('should return the inner component', function () {
+    it('should return the inner component', () => {
       expect(element.getInnerComponent()).to.equal(element.refs.innerComponent);
     });
 
-    it('should be accessible inside other functions', function () {
+    it('should be accessible inside other functions', () => {
       expect(element.something()).to.equal(element.refs.innerComponent);
     });
   });
 
-  describe('when I pass in contextTypes', function () {
-    beforeEach(function () {
+  describe('when I pass in contextTypes', () => {
+    beforeEach(() => {
       element = wrap(InnerComponent, {
         contextTypes: {
           foo: React.PropTypes.object
@@ -212,24 +215,24 @@ describe('Container', function () {
       });
     });
 
-    it('should include them in the containers contextTypes', function () {
+    it('should include them in the containers contextTypes', () => {
       expect(element.contextTypes.foo).to.eql(React.PropTypes.object);
     });
   });
 
-  describe('when I pass props to the container component', function () {
-    beforeEach(function () {
+  describe('when I pass props to the container component', () => {
+    beforeEach(() => {
       expectedProps = { foo: 'bar' };
       element = render(wrap(InnerComponent), expectedProps);
     });
 
-    it('should pass them through to the inner component', function () {
+    it('should pass them through to the inner component', () => {
       expect(initialProps).to.eql(expectedProps);
     });
   });
 
-  describe('when I fetch a simple value', function () {
-    beforeEach(function () {
+  describe('when I fetch a simple value', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch: {
           foo() {
@@ -240,19 +243,19 @@ describe('Container', function () {
       }));
     });
 
-    it('should pass that value to the inner component via props', function () {
+    it('should pass that value to the inner component via props', () => {
       expect(initialProps).to.eql({ foo: 'bar' });
     });
 
-    it('should make the marty context available in the current context', function () {
+    it('should make the marty context available in the current context', () => {
       expect(fetchContext.context.marty).to.eql(context);
     });
   });
 
-  describe('when the parent updates its props then it should update its childrens', function () {
+  describe('when the parent updates its props then it should update its childrens', () => {
     var ParentComponent, fetch;
 
-    beforeEach(function () {
+    beforeEach(() => {
       fetch = sinon.spy();
       ContainerComponent = wrap(InnerComponent, {
         fetch: {
@@ -281,22 +284,22 @@ describe('Container', function () {
       });
     });
 
-    it('should update the inner components props', function () {
+    it('should update the inner components props', () => {
       expect(updateProps).to.be.calledWith({
         foo: 'baz',
         bar: 'bam'
       });
     });
 
-    it('should refresh the props', function () {
+    it('should refresh the props', () => {
       expect(fetch).to.be.calledWith({
         foo: 'baz'
       });
     });
   });
 
-  describe('when I fetch multiple values', function () {
-    beforeEach(function () {
+  describe('when I fetch multiple values', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch: {
           foo() {
@@ -309,7 +312,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should pass each of them to the inner component via props', function () {
+    it('should pass each of them to the inner component via props', () => {
       expect(initialProps).to.eql({
         foo: 'bar',
         bar: {
@@ -318,13 +321,13 @@ describe('Container', function () {
       });
     });
 
-    it('should make the marty context available in the current context', function () {
+    it('should make the marty context available in the current context', () => {
       expect(fetchContext.context.marty).to.eql(context);
     });
   });
 
-  describe('when all of the fetchs are done and a done handler is not implemented', function () {
-    beforeEach(function () {
+  describe('when all of the fetchs are done and a done handler is not implemented', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch: {
           foo() {
@@ -337,7 +340,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should pass that value through to the child', function () {
+    it('should pass that value through to the child', () => {
       expect(initialProps).to.eql({
         foo: 'bar',
         bar: {
@@ -347,10 +350,10 @@ describe('Container', function () {
     });
   });
 
-  describe('when you are fetching from a store', function () {
+  describe('when you are fetching from a store', () => {
     var BarStore, finishQuery, expectedId;
 
-    beforeEach(function () {
+    beforeEach(() => {
       expectedId = 456;
       BarStore = Marty.createStore({
         id: 'BarContainerStore',
@@ -378,7 +381,7 @@ describe('Container', function () {
       });
     });
 
-    describe('when the store is resolved to a context', function () {
+    describe('when the store is resolved to a context', () => {
       beforeEach(function (done) {
         ContainerComponent = wrap(InnerComponent, {
           listenTo: BarStore,
@@ -396,14 +399,14 @@ describe('Container', function () {
         setTimeout(done, 1);
       });
 
-      it('should render the inner component when the fetch is complete', function () {
+      it('should render the inner component when the fetch is complete', () => {
         expect(initialProps).to.eql({
           bar: { id: expectedId }
         });
       });
     });
 
-    describe('when calling the store directly', function () {
+    describe('when calling the store directly', () => {
       beforeEach(function (done) {
         ContainerComponent = wrap(InnerComponent, {
           listenTo: BarStore,
@@ -421,7 +424,7 @@ describe('Container', function () {
         setTimeout(done, 1);
       });
 
-      it('should render the inner component when the fetch is complete', function () {
+      it('should render the inner component when the fetch is complete', () => {
         expect(initialProps).to.eql({
           bar: { id: expectedId }
         });
@@ -429,8 +432,8 @@ describe('Container', function () {
     });
   });
 
-  describe('when you pass in other functions', function () {
-    beforeEach(function () {
+  describe('when you pass in other functions', () => {
+    beforeEach(() => {
       ContainerComponent = wrap(InnerComponent, {
         something() {
           return [this, 'foo'];
@@ -440,13 +443,36 @@ describe('Container', function () {
       element = TestUtils.renderIntoDocument(<ContainerComponent />);
     });
 
-    it('should expose the function with the element as the context', function () {
+    it('should expose the function with the element as the context', () => {
       expect(element.something()).to.eql([element, 'foo']);
     });
   });
 
-  describe('when all of the fetchs are done and a done handler is implemented', function () {
-    beforeEach(function () {
+  describe('when the component is bound to an application', () => {
+    var application, actualApplication;
+
+    beforeEach(() => {
+      application = new Marty.Application();
+      ContainerComponent = application.bindTo(wrap(InnerComponent, {
+        fetch: {
+          foo() {
+            actualApplication = this.app;
+
+            return {};
+          }
+        }
+      }));
+
+      element = TestUtils.renderIntoDocument(<ContainerComponent />);
+    });
+
+    it('should make the application accessible on `this.app`', () => {
+      expect(actualApplication).to.equal(application);
+    });
+  });
+
+  describe('when all of the fetchs are done and a done handler is implemented', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch: {
           foo() {
@@ -460,7 +486,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should call the handler with the results and component', function () {
+    it('should call the handler with the results and component', () => {
       var expectedResults = {
         foo: 'bar',
         bar: {
@@ -472,8 +498,8 @@ describe('Container', function () {
     });
   });
 
-  describe('when a fetch is pending and there is a pending handler', function () {
-    beforeEach(function () {
+  describe('when a fetch is pending and there is a pending handler', () => {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         fetch: {
           foo() {
@@ -487,19 +513,19 @@ describe('Container', function () {
       }));
     });
 
-    it('should call the handler with the fetches and component', function () {
+    it('should call the handler with the fetches and component', () => {
       expect(handler).to.be.calledOnce;
     });
 
-    it('should make the marty context available in the current context', function () {
+    it('should make the marty context available in the current context', () => {
       expect(fetchContext.context.marty).to.eql(context);
     });
   });
 
-  describe('when a fetch failed and there is a failed handler', function () {
+  describe('when a fetch failed and there is a failed handler', () => {
     var fooError, barError;
 
-    beforeEach(function () {
+    beforeEach(() => {
       fooError = new Error('foo');
       barError = new Error('bar');
 
@@ -522,7 +548,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should call the handler with the errors and component', function () {
+    it('should call the handler with the errors and component', () => {
       var expectedErrors = {
         foo: fooError,
         bar: barError
@@ -531,19 +557,19 @@ describe('Container', function () {
       expect(handler).to.be.calledWith(expectedErrors);
     });
 
-    it('should make the marty context available in the current context', function () {
+    it('should make the marty context available in the current context', () => {
       expect(fetchContext.context.marty).to.eql(context);
     });
   });
 
-  describe('when a fetch failed and there is no failed handler', function () {
+  describe('when a fetch failed and there is no failed handler', () => {
     var fooError;
 
-    beforeEach(function () {
+    beforeEach(() => {
       fooError = new Error('foo');
     });
 
-    it('should throw an error', function () {
+    it('should throw an error', () => {
       expect(noFailedHandler).to.throw({
         foo: fooError
       });
@@ -560,10 +586,10 @@ describe('Container', function () {
     });
   });
 
-  describe('when I listen to a store', function () {
+  describe('when I listen to a store', () => {
     var expectedResult;
 
-    beforeEach(function () {
+    beforeEach(() => {
       element = render(wrap(InnerComponent, {
         listenTo: Store,
         fetch: {
@@ -577,17 +603,17 @@ describe('Container', function () {
       Store.addFoo(expectedResult);
     });
 
-    it('should update the inner components props when the store changes', function () {
+    it('should update the inner components props when the store changes', () => {
       expect(updateProps).to.be.calledWith({
         foo: expectedResult
       });
     });
   });
 
-  describe('when calling a fetch handler', function () {
+  describe('when calling a fetch handler', () => {
     var expectedResult, failed;
 
-    beforeEach(function () {
+    beforeEach(() => {
       failed = sinon.spy();
       expectedResult = { id: 123 };
       element = render(wrap(InnerComponent, {
@@ -607,7 +633,7 @@ describe('Container', function () {
       }));
     });
 
-    it('should allow me to call anything else in the config', function () {
+    it('should allow me to call anything else in the config', () => {
       expect(failed).to.be.calledWith(expectedResult);
     });
   });

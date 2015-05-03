@@ -8,6 +8,7 @@ var RESERVED_FUNCTIONS = ['getState'];
 var VIRTUAL_FUNCTIONS = ['clear', 'dispose'];
 
 function createStoreClass(properties) {
+  properties = properties || {};
   validateStoreOptions(properties);
   addMixins(properties);
 

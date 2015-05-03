@@ -6,6 +6,7 @@ describe('Marty#clearState()', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     Store1 = Marty.createStore({
       id: 'clearState1',
       getInitialState: function () {

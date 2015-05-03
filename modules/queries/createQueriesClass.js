@@ -5,6 +5,7 @@ var createClass = require('../core/createClass');
 var RESERVED_KEYWORDS = ['dispatch'];
 
 function createQueriesClass(properties) {
+  properties = properties || {};
   _.extend.apply(_, [properties].concat(properties.mixins));
   _.each(RESERVED_KEYWORDS, function (keyword) {
     if (properties[keyword]) {

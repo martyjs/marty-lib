@@ -7,5 +7,3 @@ module.exports = function (marty) {
     return constants(obj);
   }
 };
-
-module.exports.constants = constants;

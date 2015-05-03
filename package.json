@@ -58,9 +58,6 @@
     "uglify-js": "^2.4.15",
     "shelljs": "^0.4.0"
   },
-  "peerDependencies": {
-    "react": "0.13.x"
-  },
   "author": "James Hollingworth",
   "licenses": [
     {

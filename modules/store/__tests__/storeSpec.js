@@ -15,6 +15,7 @@ describeStyles('Store', function (styles, currentStyle) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
 
     logger = stubbedLogger();
     dispatcher = {
@@ -160,6 +161,31 @@ describeStyles('Store', function (styles, currentStyle) {
       });
     });
   }
+
+  describe('when you pass in an application', function () {
+    var application;
+
+    beforeEach(function () {
+      Marty.isASingleton = false;
+
+      class App extends Marty.Application {
+        constructor() {
+          super();
+          this.register('store', class Store extends Marty.Store {});
+        }
+      }
+
+      application = new App();
+    });
+
+    afterEach(function () {
+      Marty.isASingleton = true;
+    });
+
+    it('should be accessible on the object', function () {
+      expect(application.store.app).to.equal(application);
+    });
+  });
 
   describe('when the store updates multiple times during a dispatch', function () {
     beforeEach(function () {

@@ -8,6 +8,7 @@ describe('StateSource', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
   });
 
   describeStyles('creating a state source', function (styles) {
@@ -75,6 +76,31 @@ describe('StateSource', function () {
           });
         }
       });
+    });
+  });
+
+  describe('when you pass in an application', function () {
+    var application;
+
+    beforeEach(function () {
+      Marty.isASingleton = false;
+
+      class App extends Marty.Application {
+        constructor() {
+          super();
+          this.register('ss', class SS extends Marty.StateSource {});
+        }
+      }
+
+      application = new App();
+    });
+
+    afterEach(function () {
+      Marty.isASingleton = true;
+    });
+
+    it('should be accessible on the object', function () {
+      expect(application.ss.app).to.equal(application);
     });
   });
 

@@ -15,6 +15,7 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     warnings.classDoesNotHaveAnId = false;
 
     localStorage.clear();

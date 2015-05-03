@@ -14,6 +14,9 @@ describe('Marty#rehydrate()', function () {
     ServerMarty = buildMarty();
     BrowserMarty = buildMarty();
 
+    ServerMarty.isASingleton = true;
+    BrowserMarty.isASingleton = true;
+
     serverStores = createStoresFor(ServerMarty);
     browserStores = createStoresFor(BrowserMarty);
 

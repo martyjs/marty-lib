@@ -7,6 +7,7 @@ describe('context', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
   });
 
   describe('#fetch(callback)', function () {

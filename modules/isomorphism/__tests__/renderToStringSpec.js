@@ -15,6 +15,7 @@ describeStyles('Marty#renderToString', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     expectedId = uuid.small();
     fixture = styles({
       classic: function () {

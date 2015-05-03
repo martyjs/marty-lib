@@ -7,6 +7,7 @@ describeStyles('LocationStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
+    Marty.isASingleton = true;
     source = styles({
       classic: function () {
         return Marty.createStateSource({

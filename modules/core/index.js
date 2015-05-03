@@ -22,14 +22,15 @@ module.exports = function (marty) {
       return !!this.__isASingleton;
     },
     set(value) {
-      if (this.warnings.martyIsASingleton) {
-        logger.warn(
-          'Warning: Marty will no longer be a singleton in future releases ' +
-          'http://martyjs.org/guides/marty-is-a-singelton.html'
-        ).
+      // if (warnings.appIsTheFuture) {
+      //   logger.warn(
+      //     'Warning: Marty will no longer be a singleton in future releases. ' +
+      //     'Please use applications instead. ' +
+      //     'http://martyjs.org/depreciated/singelton.html'
+      //   );
+      // }
 
-        this.__isASingleton = value;
-      }
+      this.__isASingleton = value;
     }
   });
 
@@ -56,6 +57,18 @@ module.exports = function (marty) {
   }
 
   function register(clazz, id) {
+    if (!this.isASingleton) {
+      return clazz;
+    }
+
+    // if (warnings.appIsTheFuture) {
+    //   logger.warn(
+    //     'Warning: Marty will no longer be a singleton in future releases. ' +
+    //     'Please use applications instead of registering in the global object. ' +
+    //     'http://martyjs.org/depreciated/singelton.html'
+    //   );
+    // }
+
     var className = getClassName(clazz);
 
     if (!clazz.id) {

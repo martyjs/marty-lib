@@ -16,7 +16,7 @@ class FetchDiagnostics {
     });
   }
 
-  fetchDone(storeId, fetchId, status, options) {
+  fetchFinished(storeId, fetchId, status, options) {
     var fetch  = _.find(this.fetches, {
       storeId: storeId,
       fetchId: fetchId
