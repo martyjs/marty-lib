@@ -1,4 +1,4 @@
-var _ = require('../mindash');
+var _ = require('../../mindash');
 
 function CompositeDisposable() {
   var disposables = _.toArray(arguments);

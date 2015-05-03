@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var log = require('./logger');
 var warnings = require('./warnings');
 var classId = require('./utils/classId');

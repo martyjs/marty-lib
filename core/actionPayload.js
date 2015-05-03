@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var uuid = require('./utils/uuid');
 
 function ActionPayload(options) {

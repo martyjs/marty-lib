@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var Registry = require('./registry');
 var MartyBuilder = require('./martyBuilder');
 var createDispatcher = require('./createDispatcher');

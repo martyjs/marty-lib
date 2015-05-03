@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var Diagnostics = require('./diagnostics');
 
 if (console) {

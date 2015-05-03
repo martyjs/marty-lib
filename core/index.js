@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var logger = require('./logger');
 var warnings = require('./warnings');
 var diagnostics = require('./diagnostics');

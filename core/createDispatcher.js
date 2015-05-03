@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 var uuid = require('./utils/uuid');
 var Dispatcher = require('flux').Dispatcher;
 var ActionPayload = require('./actionPayload');

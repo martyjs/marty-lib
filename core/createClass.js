@@ -1,4 +1,4 @@
-var _ = require('./mindash');
+var _ = require('../mindash');
 
 function createClass(properties, defaultOptions, BaseType) {
   function Class(options) {

@@ -1,4 +1,4 @@
-var _ = require('../mindash');
+var _ = require('../../mindash');
 var createClass = require('../createClass');
 
 function createStateSourceClass(properties, baseType) {

@@ -1,5 +1,5 @@
 var log = require('./logger');
-var _ = require('./mindash');
+var _ = require('../mindash');
 
 class StoreObserver {
   constructor(options) {
