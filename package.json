@@ -1,14 +1,10 @@
 {
-  "name": "marty",
-  "version": "0.9.11",
+  "name": "marty-lib",
+  "version": "0.10.0",
   "description": "A Javascript library for state management in React applications",
   "main": "dist/node/marty.js",
   "browser": "marty.js",
   "webpack": "dist/node/marty.js",
-  "directories": {
-    "doc": "./doc",
-    "lib": "./lib"
-  },
   "scripts": {
     "test": "make test"
   },
