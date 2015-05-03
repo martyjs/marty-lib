@@ -4,21 +4,8 @@ var yaml = require('js-yaml');
 var shell = require('shelljs');
 
 var SCRIPTS = [
-  './http-state-source/__tests__/lib/mockServer.js'
+  './modules/http-state-source/__tests__/lib/mockServer.js'
 ];
-
-var EXCLUDED_DIR = [
-  '.git',
-  'build',
-  'isomorphism',
-  'node_modules'
-];
-
-var MODULES = _.difference(
-  fs.readdirSync('./').filter(isDirectory),
-  EXCLUDED_DIR
-);
-
 
 module.exports = function (config) {
   process.env.NODE_ENV = 'test';
@@ -126,14 +113,6 @@ module.exports = function (config) {
   }
 
   function base() {
-    var moduleFiles = MODULES.map(function (module) {
-      return module + '/**/*.js'
-    });
-
-    var modulePreprocessors = _.object(moduleFiles.map(function (module) {
-      return [module, ['browserify']]
-    }));
-
     return {
       basePath: '',
       frameworks: ['mocha', 'browserify'],
@@ -142,16 +121,14 @@ module.exports = function (config) {
         debug: true
       },
       files: [
-        'test/setup.js'
-      ].concat(moduleFiles),
+        './modules/**/*.js'
+      ],
       exclude: [
-        './build',
-        './isomorphism',
-        './node_modules'
+        './modules/isomorphism/**/*.js'
       ].concat(SCRIPTS),
-      preprocessors: _.extend({
-        'test/setup.js': ['browserify']
-      }, modulePreprocessors),
+      preprocessors: {
+        'modules/**/*.js': ['browserify']
+      },
       port: 9876,
       proxies: {
         '/stub': 'http://localhost:8956/stub'
@@ -177,7 +154,3 @@ module.exports = function (config) {
     }
   }
 };
-
-function isDirectory(path) {
-  return fs.statSync(path).isDirectory();
-}
