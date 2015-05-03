@@ -5,8 +5,8 @@ var cheerio = require('cheerio');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
 var describeStyles = require('../../../test/lib/describeStyles');
-var es6MessagesFixtures = require('./fixtures/es6Messages');
-var classicMessagesFixtures = require('./fixtures/classicMessages');
+var es6MessagesFixtures = require('./fixtures/singleton/es6Messages');
+var classicMessagesFixtures = require('./fixtures/singleton/classicMessages');
 
 var MARTY_STATE_ID = '__marty-state';
 

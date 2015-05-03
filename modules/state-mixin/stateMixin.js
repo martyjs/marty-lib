@@ -21,6 +21,7 @@ function StateMixin(options) {
 
   let mixin = _.extend({
     contextTypes: {
+      app: React.PropTypes.object,
       marty: React.PropTypes.object
     },
     componentDidMount: function () {
@@ -32,6 +33,7 @@ function StateMixin(options) {
       this.__observer = new StoreObserver({
         component: component,
         stores: config.stores,
+        app: this.context.app,
         onStoreChanged: this.onStoreChanged
       });
     },
@@ -56,6 +58,14 @@ function StateMixin(options) {
       return config.getState(this);
     },
     getInitialState: function () {
+      Object.defineProperty(this, 'app', {
+        get: () => {
+          if (this.context) {
+            return this.context.app;
+          }
+        }
+      });
+
       let el = this._currentElement;
 
       if (!this.displayName && el && el.type) {
@@ -94,10 +104,6 @@ function StateMixin(options) {
       stores = [stores];
     }
 
-    if (!areStores(stores)) {
-      throw new Error('Can only listen to stores');
-    }
-
     stores = stores.concat(_.values(storesToGetStateFrom));
 
     return {
@@ -131,17 +137,8 @@ function StateMixin(options) {
     }
   }
 
-  function areStores(stores) {
-    for (let i = stores.length - 1; i >= 0; i--) {
-      if (!isStore(stores[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   function isStore(store) {
-    return store.getState && store.addChangeListener;
+    return store && store.__isStore;
   }
 }
 

@@ -586,6 +586,47 @@ describe('Container', () => {
     });
   });
 
+  describe('when I listen to the id of a store', () => {
+    var expectedResult;
+
+    beforeEach(() => {
+      Marty.isASingleton = false;
+
+      var app = new Marty.Application();
+
+      app.register('foo', Marty.createStore({
+        getInitialState() {
+          return {};
+        },
+        addFoo(foo) {
+          this.state[foo.id] = foo;
+          this.hasChanged();
+        },
+        getFoo(id) {
+          return this.state[id];
+        }
+      }));
+
+      element = render(app.bindTo(wrap(InnerComponent, {
+        listenTo: 'foo',
+        fetch: {
+          foo() {
+            return this.app.foo.getFoo(123);
+          }
+        }
+      })));
+
+      expectedResult = { id: 123 };
+      app.foo.addFoo(expectedResult);
+    });
+
+    it('should update the inner components props when the store changes', () => {
+      expect(updateProps).to.be.calledWith({
+        foo: expectedResult
+      });
+    });
+  });
+
   describe('when I listen to a store', () => {
     var expectedResult;
 

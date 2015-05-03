@@ -21,6 +21,7 @@ class Store {
     this.__type = 'Store';
     this.__id = uuid.type(this.__type);
     this.__state = {};
+    this.__isStore = true;
     this.__app = options.app;
     this.__isCoreType = true;
     this.__fetchHistory = {};

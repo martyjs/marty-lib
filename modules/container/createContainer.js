@@ -1,4 +1,3 @@
-let log = require('../core/logger');
 let _ = require('../mindash');
 let uuid = require('../core/utils/uuid');
 let StoreObserver = require('../core/storeObserver');
@@ -39,9 +38,10 @@ module.exports = function (React) {
         };
 
         this.observer = new StoreObserver({
+          app: this.app,
           component: component,
-          onStoreChanged: this.onStoreChanged,
-          stores: getStoresToListenTo(this.listenTo, component)
+          stores: this.listenTo,
+          onStoreChanged: this.onStoreChanged
         });
 
         if (_.isFunction(config.componentDidMount)) {
@@ -86,7 +86,9 @@ module.exports = function (React) {
       getInitialState() {
         Object.defineProperty(this, 'app', {
           get: () => {
-            return this.context.app;
+            if (this.context) {
+              return this.context.app;
+            }
           }
         });
 
@@ -137,28 +139,4 @@ module.exports = function (React) {
 
     return Container;
   };
-
-  function getStoresToListenTo(stores, component) {
-    if (!stores) {
-      return [];
-    }
-
-    if (!_.isArray(stores)) {
-      stores = [stores];
-    }
-
-    return _.filter(stores, function (store) {
-      let isStore = store.constructor.type === 'Store';
-
-      if (!isStore) {
-        log.warn(
-          'Warning: Trying to listen to something that isn\'t a store',
-          store,
-          component.displayName
-        );
-      }
-
-      return isStore;
-    });
-  }
 };

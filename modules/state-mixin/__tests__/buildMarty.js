@@ -6,6 +6,7 @@ module.exports = function () {
   marty.use(require('../index'));
   marty.use(require('../../core'));
   marty.use(require('../../store'));
+  marty.use(require('../../application'));
 
   return marty;
 };

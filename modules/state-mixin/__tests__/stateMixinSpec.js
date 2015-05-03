@@ -226,19 +226,40 @@ describe('StateMixin', function () {
         meh: 'bar'
       };
 
-      describe('when you listen to a non-store', function () {
-        var listenToObject;
+      describe('when listening to an Id', function () {
+        var app, state;
+
         beforeEach(function () {
-          listenToObject = function () {
-            return Marty.createStateMixin({
-              listenTo: [{}, createStore()]
-            });
-          };
+          Marty.isASingleton = false;
+
+          app = new Marty.Application();
+          app.register('foo', Marty.createStore());
+
+          mixin = Marty.createStateMixin({
+            listenTo: ['foo'],
+            getState: function () {
+              return this.app.foo.getState();
+            }
+          });
+
+          element = renderClassWithMixinAndApp(mixin, app);
         });
 
-        it('should throw an error', function () {
-          expect(listenToObject).to.throw(Error);
+        it('should called #getState() when the store has changed', function () {
+          app.foo.setState(newState);
+          expect(state).to.eql(newState);
         });
+
+        function renderClassWithMixinAndApp(mixin, app) {
+          return TestUtils.renderIntoDocument(React.createElement(app.bindTo(React.createClass({
+            mixins: [mixin],
+            displayName: mixin.displayName,
+            render() {
+              state = this.state;
+              return React.createElement('div', null, this.state.name);
+            }
+          }))));
+        }
       });
 
       describe('single store', function () {

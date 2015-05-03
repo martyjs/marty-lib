@@ -8,6 +8,7 @@ module.exports = function () {
   marty.use(require('../../store'));
   marty.use(require('../../container'));
   marty.use(require('../../state-mixin'));
+  marty.use(require('../../application'));
   marty.use(require('../../action-creators'));
 
   return marty;
