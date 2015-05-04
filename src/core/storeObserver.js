@@ -28,10 +28,6 @@ class StoreObserver {
       `The ${component.displayName} component  (${component.id}) is listening to the ${storeDisplayName} store`
     );
 
-    if (!this.app) {
-      store = store.for(component);
-    }
-
     return store.addChangeListener((state, store) => {
       let storeDisplayName = store.displayName || store.id;
 

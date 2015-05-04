@@ -1,7 +1,6 @@
 let log = require('./logger');
 let uuid = require('./utils/uuid');
 let warnings = require('./warnings');
-let resolve = require('./utils/resolve');
 let Environment = require('./environment');
 
 class DispatchCoordinator {

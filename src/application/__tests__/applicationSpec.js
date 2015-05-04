@@ -183,8 +183,6 @@ describe('Application', () => {
           baz: { }
         };
 
-        Marty.isASingleton = false;
-
         Store1 = Marty.createStore({
           id: 'Store1',
           foo: fetchFunc('foo'),

@@ -3,7 +3,6 @@ let fetch = require('./storeFetch');
 let _ = require('../mindash');
 let uuid= require('../core/utils/uuid');
 let warnings = require('../core/warnings');
-let resolve = require('../core/utils/resolve');
 let StoreEvents = require('./storeEvents');
 let Environment = require('../core/environment');
 let handleAction = require('./handleAction');

@@ -10,7 +10,6 @@ module.exports = function () {
   marty.use(require('../../src/container'));
   marty.use(require('../../src/cookie-state-source'));
   marty.use(require('../../src/http-state-source'));
-  marty.use(require('../../src/isomorphism'));
   marty.use(require('../../src/json-storage-state-source'));
   marty.use(require('../../src/local-storage-state-source'));
   marty.use(require('../../src/location-state-source'));

@@ -126,8 +126,7 @@ module.exports = function (config) {
         'src/**/*.js'
       ],
       exclude: [
-        'src/isomorphism/**/*.js',
-        'modules/**/*.js',
+        'src/application/__server-tests__/**/*.js'
       ].concat(SCRIPTS),
       preprocessors: {
         'test/browser/setup.js': ['browserify'],

@@ -1,11 +1,11 @@
 var React = require('react');
-var buildMarty = require('./buildMarty');
 var cheerio = require('cheerio');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
+var buildMarty = require('../../../test/lib/buildMarty');
+var es6MessagesFixtures = require('./fixtures/es6Messages');
 var describeStyles = require('../../../test/lib/describeStyles');
-var es6MessagesFixtures = require('./fixtures/app/es6Messages');
-var classicMessagesFixtures = require('./fixtures/app/classicMessages');
+var classicMessagesFixtures = require('./fixtures/classicMessages');
 
 var MARTY_STATE_ID = '__marty-state';
 
@@ -14,7 +14,6 @@ describeStyles.only('Marty#renderToString', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = false;
     expectedId = uuid.small();
     fixture = styles({
       classic: function () {

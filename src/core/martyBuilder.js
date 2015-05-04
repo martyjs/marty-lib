@@ -9,7 +9,6 @@ class MartyBuilder {
   }
   registerClass(id, clazz) {
     this._marty[id] = clazz;
-    this._marty.registry.addClass(id, clazz);
   }
   registerProperty(id, description) {
     Object.defineProperty(this._marty, id, description);

@@ -17,7 +17,6 @@ describeStyles('HttpStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = false;
     HttpStateSource = Marty.HttpStateSource;
 
     baseUrl = '/stub/';

@@ -1,5 +1,5 @@
 var React = require('react');
-var _ = require('../../../../mindash');
+var _ = require('../../../mindash');
 
 module.exports = function (Marty) {
   class MessageStore extends Marty.Store {

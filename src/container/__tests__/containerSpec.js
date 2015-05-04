@@ -544,8 +544,6 @@ describe('Container', () => {
     var expectedResult;
 
     beforeEach(() => {
-      Marty.isASingleton = false;
-
       var app = new Marty.Application();
 
       app.register('foo', Marty.createStore({

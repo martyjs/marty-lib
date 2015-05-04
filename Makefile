@@ -7,7 +7,7 @@ SRC = $(shell find ./src -type f -name '*.js')
 test: lint test-server test-browser
 
 test-server:
-	@$(BIN)/mocha -r test/server/setup -t 10000 src/isomorphism/__tests__
+	@$(BIN)/mocha -r test/server/setup -t 10000 src/application/__server-tests__
 
 build:
 	@rm -rf ./modules
