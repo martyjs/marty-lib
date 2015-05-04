@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var warnings = require('../../core/warnings');
 var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
@@ -16,7 +15,7 @@ describeStyles('LocalStorageStateSource', function (styles) {
         });
       },
       es6: function () {
-        return class LocalStorage extends Marty.LocalStorageStateSource { }
+        return class LocalStorage extends Marty.LocalStorageStateSource { };
       }
     });
 
@@ -64,7 +63,7 @@ describeStyles('LocalStorageStateSource', function (styles) {
             get namespace() {
               return 'baz';
             }
-          }
+          };
         }
       });
 

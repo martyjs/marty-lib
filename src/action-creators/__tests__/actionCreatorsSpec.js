@@ -1,4 +1,3 @@
-var sinon = require('sinon');
 var expect = require('chai').expect;
 var autoDispatch = require('../autoDispatch');
 var constants = require('../../constants/constants');

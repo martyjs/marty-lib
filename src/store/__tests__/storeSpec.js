@@ -185,8 +185,6 @@ describeStyles('Store', function (styles, currentStyle) {
 
   describe('when the store updates multiple times during a dispatch', function () {
     beforeEach(function () {
-      var dispatcher = Marty.dispatcher;
-
       app.register('multipleUpdatesStore', Marty.createStore({
         handlers: {
           foo: 'FOO'
@@ -762,7 +760,7 @@ describeStyles('Store', function (styles, currentStyle) {
               getInitialState() {
                 return initialState;
               }
-            }
+            };
           }
         }));
 
@@ -813,7 +811,7 @@ describeStyles('Store', function (styles, currentStyle) {
                 clear();
                 super.clear();
               }
-            }
+            };
           }
         }));
 

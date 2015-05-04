@@ -26,7 +26,7 @@ function getHandlerWithPredicates(constants, handler) {
 
   function toPredicate(constant) {
     return function (action) {
-      return action.type === constant
+      return action.type === constant;
     };
   }
 }

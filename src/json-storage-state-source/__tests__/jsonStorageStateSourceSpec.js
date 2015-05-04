@@ -26,7 +26,7 @@ describeStyles('JSONStorageStateSource', function (styles) {
       },
       es6: function () {
         return class StateSource extends Marty.JSONStorageStateSource {
-        }
+        };
       }
     });
 
@@ -92,7 +92,7 @@ describeStyles('JSONStorageStateSource', function (styles) {
               get storage() {
                 return sessionStorage;
               }
-            }
+            };
           }
         });
 

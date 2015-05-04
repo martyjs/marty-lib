@@ -25,10 +25,10 @@ describe('StateSource', () => {
       var StateSource = styles({
         classic: () => {
           return Marty.createStateSource({
-            foo(){
+            foo() {
               return this.bar();
             },
-            bar(){
+            bar() {
               return expectedResult;
             }
           });
@@ -42,7 +42,7 @@ describe('StateSource', () => {
             bar() {
               return expectedResult;
             }
-          }
+          };
         }
       });
 

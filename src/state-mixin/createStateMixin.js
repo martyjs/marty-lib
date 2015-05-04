@@ -77,5 +77,5 @@ module.exports = function (React) {
     }, instanceMethods);
 
     return mixin;
-  }
+  };
 };

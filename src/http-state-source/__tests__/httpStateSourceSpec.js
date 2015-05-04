@@ -2,7 +2,6 @@ var sinon = require('sinon');
 var _ = require('../../mindash');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
-var warnings = require('../../core/warnings');
 var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
@@ -486,7 +485,7 @@ describeStyles('HttpStateSource', function (styles) {
   });
 
   function httpStateSource(baseUrl) {
-     var StateSource = styles({
+    var StateSource = styles({
       classic: function () {
         return Marty.createStateSource({
           type: 'http',
@@ -499,11 +498,11 @@ describeStyles('HttpStateSource', function (styles) {
             super();
             this.baseUrl = baseUrl;
           }
-        }
+        };
       }
     });
 
-     return new StateSource();
+    return new StateSource();
   }
 
   function storeResponse(res) {

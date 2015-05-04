@@ -8,7 +8,7 @@ var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Container', () => {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updateProps, Store, handler, handlerContext, fetchContext, initialContext;
+  var initialProps, updateProps, handler, handlerContext, initialContext;
 
   beforeEach(() => {
     context = {

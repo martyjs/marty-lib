@@ -177,7 +177,7 @@ describe('Store#fetch()', function () {
     });
 
     describe('#dependsOn', function () {
-      var Store1, Store2, fooQueryResult, barQueryResult, store2ChangeListener;
+      var fooQueryResult, barQueryResult, store2ChangeListener;
 
       beforeEach(function () {
         store2ChangeListener = sinon.spy();

@@ -3,7 +3,6 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
 var Diagnostics = require('../../core/diagnostics');
-var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var buildMarty = require('../../../test/lib/buildMarty');
 var ActionPayload = require('../../core/actionPayload');
 var TestUtils = require('react/addons').addons.TestUtils;
@@ -37,7 +36,7 @@ describe('StateMixin', function () {
   });
 
   describe('when a store changes', function () {
-    var expectedState, expectedId, action, store, log;
+    var expectedState, expectedId, action, log;
 
     beforeEach(function () {
       expectedId = '123';
@@ -71,7 +70,7 @@ describe('StateMixin', function () {
   });
 
   describe('when the component unmounts', function () {
-    var disposable, store;
+    var disposable;
 
     beforeEach(function () {
       disposable = {
@@ -204,7 +203,6 @@ describe('StateMixin', function () {
       };
 
       describe('single store', function () {
-        var store;
         beforeEach(function () {
           app.register('store1', createStore());
           mixin = Marty.createStateMixin({
@@ -223,7 +221,6 @@ describe('StateMixin', function () {
       });
 
       describe('multiple stores', function () {
-        var store1, store2;
         var store1State = { woo: 'bar' };
         var newState = { foo: 'bar' };
 

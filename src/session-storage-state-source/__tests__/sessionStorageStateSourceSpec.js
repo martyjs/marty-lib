@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var warnings = require('../../core/warnings');
 var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
@@ -17,7 +16,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
       },
       es6: function () {
         return class SessionStorage extends Marty.SessionStorageStateSource {
-        }
+        };
       }
     });
 
@@ -65,7 +64,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
             get namespace() {
               return 'baz';
             }
-          }
+          };
         }
       });
 

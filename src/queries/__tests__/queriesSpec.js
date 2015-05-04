@@ -1,4 +1,3 @@
-var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
@@ -75,7 +74,7 @@ describe('Queries', function () {
             someQuery(arg) {
               this.dispatch(expectedQueryType, expectedOtherArg, arg);
             }
-          }
+          };
         }
       });
 
@@ -127,7 +126,7 @@ describe('Queries', function () {
         app: {
           dispatcher: dispatcher
         }
-      })
+      });
     });
 
     it('should allow you to mixin object literals', function () {

@@ -15,7 +15,7 @@ describeStyles('CookieStateSource', function (styles) {
         });
       },
       es6: function () {
-        return class Cookies extends Marty.CookieStateSource { }
+        return class Cookies extends Marty.CookieStateSource { };
       }
     });
 

@@ -1,6 +1,4 @@
 let _ = require('../mindash');
-let log = require('../core/logger');
-let warnings = require('../core/warnings');
 
 function constants(obj) {
   return toConstant(obj);

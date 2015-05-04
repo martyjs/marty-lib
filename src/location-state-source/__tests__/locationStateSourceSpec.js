@@ -14,8 +14,7 @@ describeStyles('LocationStateSource', function (styles) {
         });
       },
       es6: function () {
-        return class CurrentLocation extends Marty.LocationStateSource {
-        }
+        return class CurrentLocation extends Marty.LocationStateSource { };
       }
     });
 
