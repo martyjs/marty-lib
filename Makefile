@@ -4,7 +4,7 @@ BIN = ./node_modules/.bin
 
 SRC = $(shell find ./src -type f -name '*.js')
 
-test: lint test-server test-browser
+test: lint test-browser test-server
 
 test-server:
 	@$(BIN)/mocha -r test/server/setup -t 10000 src/application/__server-tests__

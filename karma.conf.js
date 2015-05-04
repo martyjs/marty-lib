@@ -116,6 +116,7 @@ module.exports = function (config) {
     return {
       basePath: '',
       frameworks: ['mocha', 'browserify'],
+      browserNoActivityTimeout: 100000,
       browserify: {
         transform: ['babelify'],
         bare: true,
