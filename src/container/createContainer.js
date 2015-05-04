@@ -26,7 +26,6 @@ module.exports = function (React) {
     let innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
     let contextTypes = _.extend({
       app: React.PropTypes.object,
-      marty: React.PropTypes.object
     }, config.contextTypes);
 
     let Container = React.createClass(_.extend({

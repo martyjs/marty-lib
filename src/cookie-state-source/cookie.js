@@ -5,7 +5,7 @@ class CookieStateSource extends StateSource {
   constructor(options) {
     super(options);
     this._isCookieStateSource = true;
-    this._cookies = cookieFactory(this.context);
+    this._cookies = cookieFactory(this.app);
   }
 
   get(key) {

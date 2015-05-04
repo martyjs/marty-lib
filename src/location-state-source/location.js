@@ -9,7 +9,7 @@ class LocationStateSource extends StateSource {
   }
 
   getLocation(location) {
-    return locationFactory(this.context, location);
+    return locationFactory(this.app, location);
   }
 
   static setLocationFactory(value) {
@@ -19,7 +19,7 @@ class LocationStateSource extends StateSource {
 
 module.exports = LocationStateSource;
 
-function defaultLocationFactory(context, location) {
+function defaultLocationFactory(app, location) {
   let l = location || window.location;
 
   return {
