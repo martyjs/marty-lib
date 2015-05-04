@@ -1,38 +1,40 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var TestSource = require('./fixtures/testSource');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
-describe('StateSource', function () {
+describe('StateSource', () => {
   var stateSource, Marty;
 
-  beforeEach(function () {
+  beforeEach(() => {
     Marty = buildMarty();
-    Marty.isASingleton = true;
+    Marty.use(function (marty) {
+      marty.registerStateSource('TestSource', 'testSource', TestSource);
+    });
   });
 
   describeStyles('creating a state source', function (styles) {
     var expectedResult, expectedType, expectedArg1, expectedArg2;
 
-    beforeEach(function () {
+    beforeEach(() => {
       expectedType = 'FOO';
       expectedResult = 'foo';
       expectedArg1 = 1;
       expectedArg2 = 'gib';
-      stateSource = styles({
-        classic: function () {
+
+      var StateSource = styles({
+        classic: () => {
           return Marty.createStateSource({
-            id: 'createStateSource',
-            foo: function () {
+            foo(){
               return this.bar();
             },
-            bar: function () {
+            bar(){
               return expectedResult;
             }
           });
         },
-        es6: function () {
-          class CreateStateSource extends Marty.StateSource {
+        es6: () => {
+          return class CreateStateSource extends Marty.StateSource {
             foo() {
               return this.bar();
             }
@@ -41,33 +43,34 @@ describe('StateSource', function () {
               return expectedResult;
             }
           }
-
-          return new CreateStateSource();
         }
       });
+
+      stateSource = new StateSource();
     });
 
-    it('should expose the function', function () {
+    it('should expose the function', () => {
       expect(stateSource.foo()).to.equal(expectedResult);
     });
   });
 
-  describe('#type', function () {
-    describe('when a known type', function () {
-      beforeEach(function () {
-        stateSource = Marty.createStateSource({
-          id: 'testSource',
+  describe('#type', () => {
+    describe('when a known type', () => {
+      beforeEach(() => {
+        var StateSource = Marty.createStateSource({
           type: 'testSource'
         });
+
+        stateSource = new StateSource();
       });
 
-      it('should subclass that source', function () {
+      it('should subclass that source', () => {
         expect(stateSource).to.be.instanceof(TestSource);
       });
     });
 
-    describe('when an unknown type', function () {
-      it('should throw an error', function () {
+    describe('when an unknown type', () => {
+      it('should throw an error', () => {
         expect(creatingAStateSourceWithAnUnknownError).to.throw(Error);
 
         function creatingAStateSourceWithAnUnknownError() {
@@ -79,12 +82,10 @@ describe('StateSource', function () {
     });
   });
 
-  describe('when you pass in an application', function () {
+  describe('when you pass in an application', () => {
     var application;
 
-    beforeEach(function () {
-      Marty.isASingleton = false;
-
+    beforeEach(() => {
       class App extends Marty.Application {
         constructor() {
           super();
@@ -95,29 +96,27 @@ describe('StateSource', function () {
       application = new App();
     });
 
-    afterEach(function () {
-      Marty.isASingleton = true;
-    });
-
-    it('should be accessible on the object', function () {
+    it('should be accessible on the object', () => {
       expect(application.ss.app).to.equal(application);
     });
   });
 
-  describe('#mixins', function () {
-    describe('when you have multiple mixins', function () {
-      beforeEach(function () {
-        stateSource = Marty.createStateSource({
+  describe('#mixins', () => {
+    describe('when you have multiple mixins', () => {
+      beforeEach(() => {
+        var StateSource = Marty.createStateSource({
           id: 'stateSourceWithMixins',
           mixins: [{
-            foo: function () { return 'foo'; }
+            foo: () => { return 'foo'; }
           }, {
-            bar: function () { return 'bar'; }
+            bar: () => { return 'bar'; }
           }]
         });
+
+        stateSource = new StateSource();
       });
 
-      it('should allow you to mixin object literals', function () {
+      it('should allow you to mixin object literals', () => {
         expect(stateSource.foo()).to.equal('foo');
         expect(stateSource.bar()).to.equal('bar');
       });

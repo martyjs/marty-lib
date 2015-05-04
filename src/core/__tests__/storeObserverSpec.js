@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var StoreObserver = require('../storeObserver');
+var buildMarty = require('../../../test/lib/buildMarty');
 
 describe('StoreObserver', () => {
   var Marty;

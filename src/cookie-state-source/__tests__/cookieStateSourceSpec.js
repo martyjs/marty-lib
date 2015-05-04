@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('CookieStateSource', function (styles) {
@@ -7,22 +7,19 @@ describeStyles('CookieStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     cookies = require('cookies-js');
-    source = styles({
+    var CookieSource = styles({
       classic: function () {
         return Marty.createStateSource({
-          id: 'Cookies',
           type: 'cookie'
         });
       },
       es6: function () {
-        class Cookies extends Marty.CookieStateSource {
-        }
-
-        return new Cookies();
+        return class Cookies extends Marty.CookieStateSource { }
       }
     });
+
+    source = new CookieSource();
   });
 
   describe('#set()', function () {

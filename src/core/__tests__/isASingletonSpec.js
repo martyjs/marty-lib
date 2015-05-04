@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var warnings = require('../warnings');
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 
 describe('Marty.isASingleton', () => {
   var Marty;
