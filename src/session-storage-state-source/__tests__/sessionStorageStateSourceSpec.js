@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('SessionStorageStateSource', function (styles) {
@@ -8,26 +8,20 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    warnings.classDoesNotHaveAnId = false;
     sessionStorage.clear();
-    source = styles({
+    var Source = styles({
       classic: function () {
         return Marty.createStateSource({
           type: 'sessionStorage'
         });
       },
       es6: function () {
-        class SessionStorage extends Marty.SessionStorageStateSource {
+        return class SessionStorage extends Marty.SessionStorageStateSource {
         }
-
-        return new SessionStorage();
       }
     });
-  });
 
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
+    source = new Source();
   });
 
   describe('#createRepository()', function () {
@@ -59,7 +53,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
   describe('#namespace', function () {
     beforeEach(function () {
-      source = styles({
+      var Source = styles({
         classic: function () {
           return Marty.createStateSource({
             namespace: 'baz',
@@ -67,15 +61,15 @@ describeStyles('SessionStorageStateSource', function (styles) {
           });
         },
         es6: function () {
-          class SessionStorage extends Marty.SessionStorageStateSource {
+          return class SessionStorage extends Marty.SessionStorageStateSource {
             get namespace() {
               return 'baz';
             }
           }
-
-          return new SessionStorage();
         }
       });
+
+      source = new Source();
     });
 
     describe('when you pass in a namespace', function () {
@@ -100,5 +94,4 @@ describeStyles('SessionStorageStateSource', function (styles) {
       });
     });
   });
-
 });

@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('LocalStorageStateSource', function (styles) {
@@ -8,27 +8,19 @@ describeStyles('LocalStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    warnings.classDoesNotHaveAnId = false;
-
     localStorage.clear();
-    source = styles({
+    var Source = styles({
       classic: function () {
         return Marty.createStateSource({
           type: 'localStorage'
         });
       },
       es6: function () {
-        class LocalStorage extends Marty.LocalStorageStateSource {
-        }
-
-        return new LocalStorage();
+        return class LocalStorage extends Marty.LocalStorageStateSource { }
       }
     });
-  });
 
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
+    source = new Source();
   });
 
   describe('#createRepository()', function () {
@@ -60,7 +52,7 @@ describeStyles('LocalStorageStateSource', function (styles) {
 
   describe('#namespace', function () {
     beforeEach(function () {
-      source = styles({
+      var Source = styles({
         classic: function () {
           return Marty.createStateSource({
             namespace: 'baz',
@@ -68,15 +60,15 @@ describeStyles('LocalStorageStateSource', function (styles) {
           });
         },
         es6: function () {
-          class LocalStorage extends Marty.LocalStorageStateSource {
+          return class LocalStorage extends Marty.LocalStorageStateSource {
             get namespace() {
               return 'baz';
             }
           }
-
-          return new LocalStorage();
         }
       });
+
+      source = new Source();
     });
 
     describe('when you pass in a namespace', function () {
@@ -101,5 +93,4 @@ describeStyles('LocalStorageStateSource', function (styles) {
       });
     });
   });
-
 });

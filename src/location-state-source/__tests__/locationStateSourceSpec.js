@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('LocationStateSource', function (styles) {
@@ -7,21 +7,19 @@ describeStyles('LocationStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    source = styles({
+    var Source = styles({
       classic: function () {
         return Marty.createStateSource({
-          id: 'Location',
           type: 'location'
         });
       },
       es6: function () {
-        class CurrentLocation extends Marty.LocationStateSource {
+        return class CurrentLocation extends Marty.LocationStateSource {
         }
-
-        return new CurrentLocation();
       }
     });
+
+    source = new Source();
   });
 
   describe('#getLocation()', function () {

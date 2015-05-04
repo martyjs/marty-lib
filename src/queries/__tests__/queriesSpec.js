@@ -1,7 +1,6 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
-var constants = require('../../constants');
+var buildMarty = require('../../../test/lib/buildMarty');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var describeStyles = require('../../../test/lib/describeStyles');
 var MockDispatcher = require('../../../test/lib/mockDispatcher');
@@ -13,7 +12,6 @@ describe('Queries', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     logger = stubbedLogger();
     dispatcher = new MockDispatcher();
   });
@@ -27,11 +25,14 @@ describe('Queries', function () {
       expect(createADispatchQueries).to.throw(Error);
 
       function createADispatchQueries() {
-        var TestConstants = constants(['DISPATCH']);
+        var Queries = Marty.createQueries({
+          dispatch: () => console.log('woop')
+        });
 
-        return Marty.createQueries({
-          dispatcher: dispatcher,
-          dispatch: TestConstants.DISPATCH()
+        return new Queries({
+          app: {
+            dispatcher: dispatcher
+          }
         });
       }
     });
@@ -41,8 +42,6 @@ describe('Queries', function () {
     var application;
 
     beforeEach(function () {
-      Marty.isASingleton = false;
-
       class App extends Marty.Application {
         constructor() {
           super();
@@ -51,10 +50,6 @@ describe('Queries', function () {
       }
 
       application = new App();
-    });
-
-    afterEach(function () {
-      Marty.isASingleton = true;
     });
 
     it('should be accessible on the object', function () {
@@ -67,25 +62,26 @@ describe('Queries', function () {
       expectedArg = { foo: 'bar' };
       expectedOtherArg = { baz: 'bim' };
       expectedQueryType = 'SOME_ACTION';
-      queries = styles({
+      var Queries = styles({
         classic: function () {
           return Marty.createQueries({
-            dispatcher: dispatcher,
             someQuery: function (arg) {
               this.dispatch(expectedQueryType, expectedOtherArg, arg);
             }
           });
         },
         es6: function () {
-          class TestQueries extends Marty.Queries {
+          return class TestQueries extends Marty.Queries {
             someQuery(arg) {
               this.dispatch(expectedQueryType, expectedOtherArg, arg);
             }
           }
+        }
+      });
 
-          return new TestQueries({
-            dispatcher: dispatcher
-          });
+      queries = new Queries({
+        app: {
+          dispatcher: dispatcher
         }
       });
 
@@ -123,10 +119,15 @@ describe('Queries', function () {
         bar: function () { return 'baz'; }
       };
 
-      queries = Marty.createQueries({
-        dispatcher: dispatcher,
+      var Queries = Marty.createQueries({
         mixins: [mixin1, mixin2]
       });
+
+      queries = new Queries({
+        app: {
+          dispatcher: dispatcher
+        }
+      })
     });
 
     it('should allow you to mixin object literals', function () {

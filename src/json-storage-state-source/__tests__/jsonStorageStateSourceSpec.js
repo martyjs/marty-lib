@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('JSONStorageStateSource', function (styles) {
@@ -15,25 +15,22 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    warnings.classDoesNotHaveAnId = false;
 
     localStorage.clear();
     sessionStorage.clear();
-    source = styles({
+    var Source = styles({
       classic: function () {
         return Marty.createStateSource({
-          id: 'jsonStorage',
           type: 'jsonStorage'
         });
       },
       es6: function () {
-        class StateSource extends Marty.JSONStorageStateSource {
+        return class StateSource extends Marty.JSONStorageStateSource {
         }
-
-        return new StateSource();
       }
     });
+
+    source = new Source();
   });
 
   afterEach(function () {
@@ -83,24 +80,23 @@ describeStyles('JSONStorageStateSource', function (styles) {
   describe('#storage', function () {
     describe('when you pass in a custom web storage object', function () {
       beforeEach(function () {
-        source = styles({
+        var Source = styles({
           classic: function () {
             return Marty.createStateSource({
               type: 'jsonStorage',
-              storage: sessionStorage,
-              id: 'jsonStorageWithSessionStorage'
+              storage: sessionStorage
             });
           },
           es6: function () {
-            class StateSource extends Marty.JSONStorageStateSource {
+            return class StateSource extends Marty.JSONStorageStateSource {
               get storage() {
                 return sessionStorage;
               }
             }
-
-            return new StateSource();
           }
         });
+
+        source = new Source();
 
         source.set('foo', payload.value);
       });
@@ -112,11 +108,12 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
   describe('#namespace', function () {
     beforeEach(function () {
-      source = Marty.createStateSource({
+      var Source = Marty.createStateSource({
         namespace: 'baz',
-        type: 'jsonStorage',
-        id: 'jsonStorageWithNamespace'
+        type: 'jsonStorage'
       });
+
+      source = new Source();
     });
 
     describe('when you pass in a namespace', function () {
@@ -141,5 +138,4 @@ describeStyles('JSONStorageStateSource', function (styles) {
       });
     });
   });
-
 });

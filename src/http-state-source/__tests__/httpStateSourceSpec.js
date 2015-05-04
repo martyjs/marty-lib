@@ -1,9 +1,9 @@
 var sinon = require('sinon');
-var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
+var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
 var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 require('es6-promise').polyfill();
@@ -17,17 +17,12 @@ describeStyles('HttpStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
+    Marty.isASingleton = false;
     HttpStateSource = Marty.HttpStateSource;
 
     baseUrl = '/stub/';
-    warnings.classDoesNotHaveAnId = false;
     xmlContentType = 'application/xml';
     jsonContentType = 'application/json';
-  });
-
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
   });
 
   describe('when you dont specify a baseUrl', function () {
@@ -492,7 +487,7 @@ describeStyles('HttpStateSource', function (styles) {
   });
 
   function httpStateSource(baseUrl) {
-    return styles({
+     var StateSource = styles({
       classic: function () {
         return Marty.createStateSource({
           type: 'http',
@@ -500,16 +495,16 @@ describeStyles('HttpStateSource', function (styles) {
         });
       },
       es6: function () {
-        class ExampleHttpStateSource extends HttpStateSource {
+        return class ExampleHttpStateSource extends HttpStateSource {
           constructor() {
             super();
             this.baseUrl = baseUrl;
           }
         }
-
-        return new ExampleHttpStateSource();
       }
     });
+
+     return new StateSource();
   }
 
   function storeResponse(res) {

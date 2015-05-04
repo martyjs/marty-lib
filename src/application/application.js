@@ -41,7 +41,7 @@ module.exports = function (React) {
           return { app: app };
         },
         render() {
-          return <InnerComponent {...this.props} />;
+          return <InnerComponent ref="subject" {...this.props} />;
         }
       });
     }
