@@ -9,7 +9,7 @@ var classicMessagesFixtures = require('./fixtures/classicMessages');
 
 var MARTY_STATE_ID = '__marty-state';
 
-describeStyles.only('Marty#renderToString', function (styles) {
+describeStyles('Application#renderToString', function (styles) {
   var $, app, Marty, fixture, expectedId;
 
   beforeEach(function () {

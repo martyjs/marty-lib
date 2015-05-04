@@ -10,38 +10,24 @@ function handleAction(action) {
     _.each(predicates, function (predicate) {
       if (predicate(action)) {
         store.action = action;
-        action.addStoreHandler(store, handlerName, predicate.toJSON());
+        action.addStoreHandler(store, handlerName);
         store[handlerName].apply(store, action.arguments);
       }
     });
   });
 }
 
-function getHandlerWithPredicates(actionPredicates, handler) {
-  _.isArray(actionPredicates) || (actionPredicates = [actionPredicates]);
+function getHandlerWithPredicates(constants, handler) {
+  _.isArray(constants) || (constants = [constants]);
 
-  let predicates = _.map(actionPredicates, toFunc);
+  let predicates = _.map(constants, toPredicate);
 
   return [handler, predicates];
 
-  function toFunc(actionPredicate) {
-    if (actionPredicate.isActionCreator) {
-      actionPredicate = {
-        type: actionPredicate.toString()
-      };
-    } else if (_.isString(actionPredicate)) {
-      actionPredicate = {
-        type: actionPredicate
-      };
-    }
-
-    let func = _.matches(actionPredicate);
-
-    func.toJSON = function () {
-      return actionPredicate;
+  function toPredicate(constant) {
+    return function (action) {
+      return action.type === constant
     };
-
-    return func;
   }
 }
 
