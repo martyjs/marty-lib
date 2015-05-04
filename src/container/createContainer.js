@@ -106,8 +106,9 @@ module.exports = function (React) {
       },
       render() {
         let container = this;
+        let result = this.state.result;
 
-        return this.state.result.when({
+        return result.when({
           done(results) {
             if (_.isFunction(container.done)) {
               return container.done(results);
@@ -117,7 +118,7 @@ module.exports = function (React) {
           },
           pending() {
             if (_.isFunction(container.pending)) {
-              return container.pending();
+              return container.pending(result.result);
             }
 
             return <div></div>;

@@ -469,6 +469,9 @@ describe('Container', () => {
           },
           bar() {
             return fetch.pending();
+          },
+          baz() {
+            return fetch.done('bam');
           }
         },
         pending: handler
@@ -477,6 +480,13 @@ describe('Container', () => {
 
     it('should call the handler with the fetches and component', () => {
       expect(handler).to.be.calledOnce;
+    });
+
+    it('should pass in all the fetch results that have finished', function () {
+      expect(handler).to.be.calledWith({
+        foo: 'bar',
+        baz: 'bam'
+      });
     });
   });
 
