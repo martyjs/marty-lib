@@ -2,7 +2,7 @@ var _ = require('lodash');
 var sinon = require('sinon');
 var React = require('react');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Application', () => {

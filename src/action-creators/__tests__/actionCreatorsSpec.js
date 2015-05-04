@@ -1,8 +1,8 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var autoDispatch = require('../autoDispatch');
 var constants = require('../../constants/constants');
+var buildMarty = require('../../../test/lib/buildMarty');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var MockDispatcher = require('../../../test/lib/mockDispatcher');
 var describeStyles = require('../../../test/lib/describeStyles');
@@ -14,7 +14,6 @@ describe('ActionCreators', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     logger = stubbedLogger();
     dispatcher = new MockDispatcher();
   });
@@ -27,8 +26,6 @@ describe('ActionCreators', function () {
     var application;
 
     beforeEach(function () {
-      Marty.isASingleton = false;
-
       class App extends Marty.Application {
         constructor() {
           super();
@@ -37,10 +34,6 @@ describe('ActionCreators', function () {
       }
 
       application = new App();
-    });
-
-    afterEach(function () {
-      Marty.isASingleton = true;
     });
 
     it('should be accessible on the object', function () {
@@ -53,8 +46,7 @@ describe('ActionCreators', function () {
     beforeEach(function () {
       TestConstants = constants(['TEST_CONSTANT']);
 
-      actionCreators = Marty.createActionCreators({
-        dispatcher: dispatcher,
+      actionCreators = createActionCreators({
         testConstant: autoDispatch(TestConstants.TEST_CONSTANT)
       });
     });
@@ -85,106 +77,11 @@ describe('ActionCreators', function () {
       function createADispatchActionCreator() {
         var TestConstants = constants(['DISPATCH']);
 
-        return Marty.createActionCreators({
+        return createActionCreators({
           dispatcher: dispatcher,
           dispatch: TestConstants.DISPATCH()
         });
       }
-    });
-  });
-
-  describe('resolve', function () {
-    var context, creators, actualInstance, expectedInstance, action;
-
-    beforeEach(function () {
-      action = sinon.spy();
-      creators = Marty.createActionCreators({
-        id: 'foo',
-        displayName: 'Bar',
-        someAction: action
-      });
-
-      context = Marty.createContext();
-      actualInstance = creators.for(context);
-      expectedInstance = context.instances.ActionCreators.foo;
-    });
-
-    it('should resolve to the actual instance', function () {
-      expect(actualInstance).to.equal(expectedInstance);
-    });
-
-    it('should still expose all actions', function () {
-      creators.someAction(1);
-      expect(action).to.be.calledWith(1);
-    });
-  });
-
-  describe('when the action creator is created from a constant', function () {
-    describe('when you pass in a function', function () {
-      var TestConstants;
-      beforeEach(function () {
-        TestConstants = constants(['TEST_CONSTANT']);
-
-        actionCreators = Marty.createActionCreators({
-          dispatcher: dispatcher,
-          testConstant: TestConstants.TEST_CONSTANT(function (a, b, c) {
-            this.dispatch(a, b, c);
-          })
-        });
-      });
-
-      describe('when I create an action', function () {
-        var expectedArguments;
-
-        beforeEach(function () {
-          expectedArguments = [1, 2, 3];
-          actionCreators.testConstant.apply(actionCreators, expectedArguments);
-          actualAction = dispatcher.getActionWithType('TEST_CONSTANT');
-        });
-
-        it('should dispatch an action with the constant name', function () {
-          expect(actualAction).to.exist;
-        });
-
-        it('should pass through all the arguments', function () {
-          expect(actualAction.arguments).to.eql(expectedArguments);
-        });
-      });
-    });
-
-    describe('when you dont pass in a function', function () {
-      var TestConstants, expectedProperties;
-      beforeEach(function () {
-        expectedProperties = {
-          foo: 'bar',
-          baz: 'bam'
-        };
-
-        TestConstants = constants(['TEST_CONSTANT']);
-
-        actionCreators = Marty.createActionCreators({
-          dispatcher: dispatcher,
-          testConstant: TestConstants.TEST_CONSTANT()
-        });
-      });
-
-      describe('when I create an action', function () {
-        var expectedArguments;
-
-        beforeEach(function () {
-          expectedArguments = [1, 2, 3];
-          actionCreators.testConstant.apply(actionCreators, expectedArguments);
-          actualAction = dispatcher.getActionWithType('TEST_CONSTANT');
-        });
-
-        it('should dispatch an action with the constant name', function () {
-          expect(actualAction).to.exist;
-        });
-
-        it('should pass through all the arguments', function () {
-          expect(actualAction.arguments).to.eql(expectedArguments);
-        });
-      });
     });
   });
 
@@ -195,8 +92,7 @@ describe('ActionCreators', function () {
       expectedActionType = 'SOME_ACTION';
       actionCreators = styles({
         classic: function () {
-          return Marty.createActionCreators({
-            dispatcher: dispatcher,
+          return createActionCreators({
             someAction: function (arg) {
               this.dispatch(expectedActionType, expectedOtherArg, arg);
             }
@@ -210,7 +106,9 @@ describe('ActionCreators', function () {
           }
 
           return new TestActionCreators({
-            dispatcher: dispatcher
+            app: {
+              dispatcher: dispatcher
+            }
           });
         }
       });
@@ -249,8 +147,7 @@ describe('ActionCreators', function () {
         bar: function () { return 'baz'; }
       };
 
-      actionCreators = Marty.createActionCreators({
-        dispatcher: dispatcher,
+      actionCreators = createActionCreators({
         mixins: [mixin1, mixin2]
       });
     });
@@ -260,4 +157,14 @@ describe('ActionCreators', function () {
       expect(actionCreators.bar()).to.equal('baz');
     });
   });
+
+  function createActionCreators(options) {
+    var ActionCreators = Marty.createActionCreators(options);
+
+    return new ActionCreators({
+      app: {
+        dispatcher: dispatcher
+      }
+    });
+  }
 });

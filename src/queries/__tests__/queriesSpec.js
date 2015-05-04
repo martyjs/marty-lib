@@ -62,32 +62,6 @@ describe('Queries', function () {
     });
   });
 
-  describe('resolve', function () {
-    var context, queries, actualInstance, expectedInstance, query;
-
-    beforeEach(function () {
-      query = sinon.spy();
-      queries = Marty.createQueries({
-        id: 'foo',
-        displayName: 'Bar',
-        someQuery: query
-      });
-
-      context = Marty.createContext();
-      actualInstance = queries.for(context);
-      expectedInstance = context.instances.Queries.foo;
-    });
-
-    it('should resolve to the actual instance', function () {
-      expect(actualInstance).to.equal(expectedInstance);
-    });
-
-    it('should still expose all querys', function () {
-      queries.someQuery(1);
-      expect(query).to.be.calledWith(1);
-    });
-  });
-
   describeStyles('when you create a query', function (styles) {
     beforeEach(function () {
       expectedArg = { foo: 'bar' };

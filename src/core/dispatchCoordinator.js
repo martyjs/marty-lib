@@ -15,28 +15,18 @@ class DispatchCoordinator {
     this.__type = type;
     this.__isCoreType = true;
     this.__app = options.app;
-    this.__context = options.context;
     this.__id = uuid.type(this.__type);
-    this.__dispatcher = options.dispatcher;
   }
 
   dispatch(type, ...args) {
-    return this.__dispatcher.dispatchAction({
+    return this.app.dispatcher.dispatchAction({
       type: type,
       arguments: args
     });
   }
 
-  for (obj) {
-    return resolve(this, obj);
-  }
-
   get app() {
     return this.__app;
-  }
-
-  get context() {
-    return this.__context;
   }
 }
 

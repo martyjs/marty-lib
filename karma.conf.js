@@ -4,7 +4,7 @@ var yaml = require('js-yaml');
 var shell = require('shelljs');
 
 var SCRIPTS = [
-  './modules/http-state-source/__tests__/lib/mockServer.js'
+  './src/http-state-source/__tests__/lib/mockServer.js'
 ];
 
 module.exports = function (config) {
@@ -108,8 +108,6 @@ module.exports = function (config) {
       browsers: ['Chrome'],
       autoWatch: true,
       singleRun: false,
-      browserDisconnectTolerance : 2,
-      captureTimeout : 4 * 60 * 1000,
       colors: true
     });
   }
@@ -120,24 +118,26 @@ module.exports = function (config) {
       frameworks: ['mocha', 'browserify'],
       browserify: {
         transform: ['babelify'],
+        bare: true,
         debug: true
       },
       files: [
         'test/browser/setup.js',
-        'modules/**/*.js'
+        'src/**/*.js'
       ],
       exclude: [
-        'modules/isomorphism/**/*.js'
+        'src/isomorphism/**/*.js',
+        'modules/**/*.js',
       ].concat(SCRIPTS),
       preprocessors: {
         'test/browser/setup.js': ['browserify'],
-        'modules/**/*.js': ['browserify']
+        'src/**/*.js': ['browserify']
       },
       port: 9876,
       proxies: {
         '/stub': 'http://localhost:8956/stub'
       },
-      logLevel: config.LOG_INFO,
+      logLevel: config.LOG_INFO
     };
   }
 

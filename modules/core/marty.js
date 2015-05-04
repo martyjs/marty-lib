@@ -23,7 +23,7 @@ var Marty = function Marty(version, react) {
         this.logger.warn('Warning: The global registry is being depreciated. ' + 'Please move to using application\'s instead. ' + 'http://martyjs.org/depreciated/singelton.html');
       }
 
-      return dispatcher;
+      return registry;
     }
   });
 

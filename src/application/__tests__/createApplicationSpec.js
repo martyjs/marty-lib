@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 
 describe('Marty#createApplication()', () => {
   var Marty, application;

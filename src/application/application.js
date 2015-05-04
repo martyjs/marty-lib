@@ -2,9 +2,9 @@ let _ = require('../mindash');
 let log = require('../core/logger');
 let timeout = require('../core/utils/timeout');
 let deferred = require('../core/utils/deferred');
+let FetchDiagnostics = require('./fetchDiagnostics');
 let createDispatcher = require('../core/createDispatcher');
 let UnknownStoreError = require('../errors/unknownStoreError');
-let FetchDiagnostics = require('../isomorphism/fetchDiagnostics');
 
 let DEFAULT_TIMEOUT = 1000;
 let SERIALIZED_WINDOW_OBJECT = '__marty';

@@ -2,7 +2,7 @@ BIN = ./node_modules/.bin
 
 .PHONY: bootstrap test test-server test-browser;
 
-SRC = $(shell find ./modules -type f -name '*.js')
+SRC = $(shell find ./src -type f -name '*.js')
 
 test: lint test-server test-browser
 
