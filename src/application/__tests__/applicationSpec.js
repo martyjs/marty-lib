@@ -12,6 +12,18 @@ describe('Application', () => {
     Marty = buildMarty();
   });
 
+  describe('when you pass options into the application', () => {
+    beforeEach(() => {
+      application = new Marty.Application({
+        foo: 'bar'
+      });
+    });
+
+    it('should add those options to the application', () => {
+      expect(application.foo).to.equal('bar');
+    });
+  });
+
   describe('#dispatcher', () => {
     var dispatchHandler, payload;
 

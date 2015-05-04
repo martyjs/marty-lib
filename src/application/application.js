@@ -11,7 +11,9 @@ let SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = function (React) {
   class Application {
-    constructor() {
+    constructor(options) {
+      options = options || {};
+
       let dispatcher = createDispatcher();
 
       // Needed because we don't have access to actual Application type
@@ -19,8 +21,10 @@ module.exports = function (React) {
       this.__isCoreType = true;
       this.__types = {};
 
+      _.extend(this, options);
+
       Object.defineProperty(this, 'dispatcher', {
-        get: function () {
+        get() {
           return dispatcher;
         }
       });
