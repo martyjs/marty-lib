@@ -39,57 +39,11 @@ function constants(obj) {
       ];
 
       _.each(types, function (type) {
-        constants[type] = createActionCreator(type);
+        constants[type] = type;
       });
     });
 
     return constants;
-  }
-
-  function createActionCreator(actionType) {
-    let constantActionCreator = function (actionCreator) {
-      if (warnings.invokeConstant) {
-        log.warn(
-          'Warning: Invoking constants has been depreciated. ' +
-          'Please migrate to new style of creating action creators ' +
-          'http://martyjs.org/guides/action-creators/migrating-from-v8.html'
-        );
-      }
-
-      if (!_.isFunction(actionCreator)) {
-        actionCreator = autoDispatch;
-      }
-
-      return function () {
-        let context = actionContext(this);
-
-        actionCreator.apply(context, arguments);
-
-        function actionContext(creators) {
-          return _.extend({}, creators, {
-            dispatch: function () {
-              let args = _.toArray(arguments);
-
-              args.unshift(actionType);
-
-              creators.dispatch.apply(creators, args);
-            }
-          });
-        }
-      };
-
-      function autoDispatch() {
-        this.dispatch.apply(this, arguments);
-      }
-    };
-
-    constantActionCreator.type = actionType;
-    constantActionCreator.isActionCreator = true;
-    constantActionCreator.toString = function () {
-      return actionType;
-    };
-
-    return constantActionCreator;
   }
 }
 
