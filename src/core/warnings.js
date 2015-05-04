@@ -3,7 +3,6 @@ let _ = require('../mindash');
 let warnings = {
   without: without,
   invokeConstant: true,
-  appIsTheFuture: true,
   reservedFunction: true,
   cannotFindContext: true,
   classDoesNotHaveAnId: true,

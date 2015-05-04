@@ -18,7 +18,5 @@ module.exports = function () {
   marty.use(require('../../src/state-mixin'));
   marty.use(require('../../src/store'));
 
-  marty.warnings.appIsTheFuture = false;
-
   return marty;
 };
