@@ -5,12 +5,39 @@ let createDispatcher = require('./createDispatcher');
 
 class Marty {
   constructor(version, react) {
+    let dispatcher = createDispatcher();
     let builder = new MartyBuilder(this);
+    let registry = new Registry({
+      defaultDispatcher: dispatcher
+    });
 
     this.version = version;
-    this.dispatcher = createDispatcher();
-    this.registry = new Registry({
-      defaultDispatcher: this.dispatcher
+    Object.defineProperty(this, 'registry', {
+      get() {
+        if (this.warnings && this.warnings.appIsTheFuture) {
+          this.logger.warn(
+            'Warning: The global registry is being depreciated. ' +
+            'Please move to using application\'s instead. ' +
+            'http://martyjs.org/depreciated/singelton.html'
+          );
+        }
+
+        return dispatcher;
+      }
+    });
+
+    Object.defineProperty(this, 'dispatcher', {
+      get() {
+        if (this.warnings && this.warnings.appIsTheFuture) {
+          this.logger.warn(
+            'Warning: The global dispatcher is being depreciated. ' +
+            'Please move to using application\'s instead. ' +
+            'http://martyjs.org/depreciated/singelton.html'
+          );
+        }
+
+        return dispatcher;
+      }
     });
 
     this.use = function use(cb) {
