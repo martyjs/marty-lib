@@ -8,9 +8,7 @@ describe('StateSource', () => {
 
   beforeEach(() => {
     Marty = buildMarty();
-    Marty.use(function (marty) {
-      marty.registerStateSource('TestSource', 'testSource', TestSource);
-    });
+    Marty.stateSources['testSource'] = TestSource;
   });
 
   describeStyles('creating a state source', function (styles) {

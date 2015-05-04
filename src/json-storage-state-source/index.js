@@ -1,7 +1,9 @@
 let JSONStorageStateSource = require('./jsonStorage');
+let registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource(
+  registerStateSource(
+    marty,
     'JSONStorageStateSource',
     'jsonStorage',
     JSONStorageStateSource

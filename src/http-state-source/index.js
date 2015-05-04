@@ -1,7 +1,9 @@
 let HttpStateSource = require('./http');
+let registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource(
+  registerStateSource(
+    marty,
     'HttpStateSource',
     'http',
     HttpStateSource

@@ -1,3 +1,3 @@
 module.exports = function (marty, React) {
-  marty.register('createStateMixin', require('./createStateMixin')(React));
+  marty.createStateMixin = require('./createStateMixin')(React);
 };

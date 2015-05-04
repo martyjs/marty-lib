@@ -1,7 +1,9 @@
 let LocationStateSource = require('./location');
+let registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource(
+  registerStateSource(
+    marty,
     'LocationStateSource',
     'location',
     LocationStateSource

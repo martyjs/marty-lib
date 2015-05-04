@@ -1,3 +1,3 @@
 module.exports = function (marty, React) {
-  marty.register('createContainer', require('./createContainer')(React));
+  marty.createContainer = require('./createContainer')(React);
 };

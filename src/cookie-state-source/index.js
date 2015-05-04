@@ -1,7 +1,9 @@
 let CookieStateSource = require('./cookie');
+let registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource(
+  registerStateSource(
+    marty,
     'CookieStateSource',
     'cookie',
     CookieStateSource

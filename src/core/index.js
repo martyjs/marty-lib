@@ -7,16 +7,13 @@ let StateSource = require('./stateSource');
 let createStateSourceClass = require('./stateSource/createStateSourceClass');
 
 module.exports = function (marty) {
-  marty.registerClass('StateSource', StateSource);
+  marty.logger = logger;
+  marty.warnings = warnings;
+  marty.diagnostics = diagnostics;
+  marty.StateSource = StateSource;
+  marty.createStateSource = createStateSource;
 
-  marty.register('logger', logger);
-  marty.register('warnings', warnings);
-  marty.register('diagnostics', diagnostics);
-  marty.register('createStateSource', createStateSource);
-
-  _.each(environment, function (value, key) {
-    marty.register(key, value);
-  });
+  _.extend(marty, environment);
 
   function createStateSource(properties) {
     properties = properties || {};
