@@ -27,10 +27,8 @@ class Store {
     this.__fetchHistory = {};
     this.__failedFetches = {};
     this.__fetchInProgress = {};
-    this.__context = options.context;
     this.__emitter = new EventEmitter();
     this.__validateHandlers = _.once(() => validateHandlers(this));
-    this.__dispatcher = this.__app ? this.__app.dispatcher : options.dispatcher;
 
     let initialState = this.getInitialState();
 
@@ -40,28 +38,13 @@ class Store {
 
     this.replaceState(initialState);
 
-    this.dispatchToken = this.__dispatcher.register(
+    this.dispatchToken = this.app.dispatcher.register(
       _.bind(this.handleAction, this)
     );
   }
 
-  for (obj) {
-    if (warnings.appIsTheFuture) {
-      log.warn(
-        'Warning: Contexts are depreciated. ' +
-        'Use application\'s instead http://martyjs.org/depreciated/contexts.html'
-      );
-    }
-
-    return resolve(this, obj);
-  }
-
   get app() {
     return this.__app;
-  }
-
-  get context() {
-    return this.__context;
   }
 
   get state() {
@@ -126,7 +109,7 @@ class Store {
     this.clear();
 
     if (dispatchToken) {
-      this.__dispatcher.unregister(dispatchToken);
+      this.app.dispatcher.unregister(dispatchToken);
       this.dispatchToken = undefined;
     }
   }
@@ -193,7 +176,7 @@ class Store {
   }
 
   waitFor(stores) {
-    let dispatcher = this.__dispatcher;
+    let dispatcher = this.app.dispatcher;
 
     if (!_.isArray(stores)) {
       stores = _.toArray(arguments);

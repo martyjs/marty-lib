@@ -3,7 +3,7 @@ let ActionHandlerNotFoundError = require('../errors/actionHandlerNotFoundError')
 let ActionPredicateUndefinedError = require('../errors/actionPredicateUndefinedError');
 
 function validateHandlers(store) {
-  _.each(store.handlers, function (actionPredicate, handlerName) {
+  _.each(store.handlers, (actionPredicate, handlerName) => {
     let actionHandler = store[handlerName];
 
     if (_.isUndefined(actionHandler) || _.isNull(actionHandler)) {

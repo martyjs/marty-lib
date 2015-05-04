@@ -1,36 +1,39 @@
 var _ = require('lodash');
 var sinon = require('sinon');
 var fetch = require('../fetch');
-var buildMarty = require('./buildMarty');
 var expect = require('chai').expect;
-var warnings = require('../../core/warnings');
 var Promise = require('es6-promise').Promise;
+var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var MockDispatcher = require('../../../test/lib/mockDispatcher');
 
 describe('Store#fetch()', function () {
-  var listener, store, changeListener, endFetch, remoteFetch, fetchId, dispatcher;
-  var expectedResult, actualResult, actualContext, expectedError, actualError, Marty;
+  var listener, store, changeListener, endFetch, remoteFetch, fetchId, dispatcher, app;
+  var expectedResult, actualResult, actualContext, expectedError, actualError, Marty, Store;
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
+    app = new Marty.Application();
     warnings.stateIsNullOrUndefined = false;
     warnings.promiseNotReturnedFromRemotely = false;
 
     fetchId = 'foo';
     listener = sinon.spy();
     dispatcher = new MockDispatcher();
-    store = Marty.createStore({
+
+    Store = Marty.createStore({
       id: 'storeFetch',
       displayName: 'Test',
-      getInitialState: _.noop,
-      dispatcher: dispatcher
+      getInitialState: _.noop
     });
+
+    app.register('storeFetch', Store);
+
+    store = app.storeFetch;
     changeListener = store.addChangeListener(listener);
   });
 
   afterEach(function () {
-    store.dispose();
     endFetch && endFetch();
     changeListener.dispose();
     warnings.stateIsNullOrUndefined = true;
@@ -39,8 +42,7 @@ describe('Store#fetch()', function () {
 
   describe('#hasAlreadyFetched()', function () {
     beforeEach(function () {
-      store = Marty.createStore({
-        id: 'hasAlreadyFetched',
+      app.register('fetchedStore', Marty.createStore({
         displayName: 'Test',
         getInitialState: _.noop,
         fetchFoo: function () {
@@ -48,22 +50,22 @@ describe('Store#fetch()', function () {
             return 'foo';
           });
         }
-      });
+      }));
     });
 
     describe('when you have never fetched that key before', function () {
       it('should return false', function () {
-        expect(store.hasAlreadyFetched(fetchId)).to.be.false;
+        expect(app.fetchedStore.hasAlreadyFetched(fetchId)).to.be.false;
       });
     });
 
     describe('when a fetch has previously completed', function () {
       beforeEach(function () {
-        store.fetchFoo();
+        app.fetchedStore.fetchFoo();
       });
 
       it('should return true', function () {
-        expect(store.hasAlreadyFetched(fetchId)).to.be.true;
+        expect(app.fetchedStore.hasAlreadyFetched(fetchId)).to.be.true;
       });
     });
   });
@@ -180,8 +182,7 @@ describe('Store#fetch()', function () {
       beforeEach(function () {
         store2ChangeListener = sinon.spy();
 
-        Store1 = Marty.createStore({
-          id: 'Store1',
+        app.register('store1', Marty.createStore({
           foo: function () {
             return this.fetch({
               id: 'foo',
@@ -217,14 +218,13 @@ describe('Store#fetch()', function () {
               }
             });
           },
-        });
+        }));
 
-        Store2 = Marty.createStore({
-          id: 'Store2',
+        app.register('store2', Marty.createStore({
           singleDependency: function () {
             return this.fetch({
               id: 'singleDependency',
-              dependsOn: Store1.foo(),
+              dependsOn: this.app.store1.foo(),
               locally: function () {
                 return { bar: 'baz' };
               }
@@ -233,20 +233,23 @@ describe('Store#fetch()', function () {
           multipleDependencies: function () {
             return this.fetch({
               id: 'multipleDependencies',
-              dependsOn: [Store1.foo(), Store1.bar()],
+              dependsOn: [
+                this.app.store1.foo(),
+                this.app.store1.bar()
+              ],
               locally: function () {
                 return { bar: 'baz' };
               }
             });
           }
-        });
+        }));
 
-        Store2.addChangeListener(store2ChangeListener);
+        app.store2.addChangeListener(store2ChangeListener);
       });
 
       describe('when there is one pending dependency', function () {
         beforeEach(function () {
-          return Store2.singleDependency().toPromise();
+          return app.store2.singleDependency().toPromise();
         });
 
         it('should trigger the store to update', function () {
@@ -256,7 +259,7 @@ describe('Store#fetch()', function () {
 
       describe('when there are two pending dependency', function () {
         beforeEach(function () {
-          return Store2.multipleDependencies().toPromise();
+          return app.store2.multipleDependencies().toPromise();
         });
 
         it('should trigger the store to update', function () {
@@ -563,6 +566,12 @@ describe('Store#fetch()', function () {
 
         beforeEach(function (done) {
           expectedError = new Error();
+
+          store = new Store({
+            app: {
+              dispatcher: dispatcher
+            }
+          });
 
           store.fetch('foo', noop, function () {
             return new Promise(function (resolve, reject) {

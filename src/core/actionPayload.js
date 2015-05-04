@@ -6,7 +6,6 @@ function ActionPayload(options) {
 
   let stores = [];
   let components = [];
-  let rollbackHandlers = [];
   let actionHandledCallbacks = {};
 
   _.extend(this, options);
@@ -18,10 +17,8 @@ function ActionPayload(options) {
   this.toJSON = toJSON;
   this.handled = handled;
   this.toString = toString;
-  this.rollback = rollback;
   this.addStoreHandler = addStoreHandler;
   this.onActionHandled = onActionHandled;
-  this.addRollbackHandler = addRollbackHandler;
   this.addComponentHandler = addComponentHandler;
   this.timestamp = options.timestamp || new Date();
 
@@ -62,10 +59,6 @@ function ActionPayload(options) {
     return json;
   }
 
-  function rollback() {
-    _.each(rollbackHandlers, rollback => rollback(this.error));
-  }
-
   function handled() {
     _.each(actionHandledCallbacks, callback => callback());
   }
@@ -87,16 +80,6 @@ function ActionPayload(options) {
       handler: handlerName,
       store: store.id || store.displayName
     });
-  }
-
-  function addRollbackHandler(rollbackHandler, context) {
-    if (_.isFunction(rollbackHandler)) {
-      if (context) {
-        rollbackHandler = _.bind(rollbackHandler, context);
-      }
-
-      rollbackHandlers.push(rollbackHandler);
-    }
   }
 }
 
