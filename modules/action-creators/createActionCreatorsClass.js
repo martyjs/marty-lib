@@ -5,7 +5,7 @@ let RESERVED_KEYWORDS = ['dispatch'];
 
 function createActionCreatorsClass(properties) {
   _.extend.apply(_, [properties].concat(properties.mixins));
-  _.each(RESERVED_KEYWORDS, function (keyword) {
+  _.each(RESERVED_KEYWORDS, (keyword) => {
     if (properties[keyword]) {
       throw new Error(`${keyword} is a reserved keyword`);
     }
