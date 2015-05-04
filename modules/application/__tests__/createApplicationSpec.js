@@ -1,7 +1,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 
 describe('Marty#createApplication()', function () {
   var Marty, application;

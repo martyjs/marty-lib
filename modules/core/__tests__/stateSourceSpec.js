@@ -11,8 +11,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var TestSource = require('./fixtures/testSource');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describe('StateSource', function () {
@@ -20,7 +20,9 @@ describe('StateSource', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
+    Marty.use(function (marty) {
+      marty.registerStateSource('TestSource', 'testSource', TestSource);
+    });
   });
 
   describeStyles('creating a state source', function (styles) {
@@ -31,10 +33,10 @@ describe('StateSource', function () {
       expectedResult = 'foo';
       expectedArg1 = 1;
       expectedArg2 = 'gib';
-      stateSource = styles({
+
+      var StateSource = styles({
         classic: function classic() {
           return Marty.createStateSource({
-            id: 'createStateSource',
             foo: function foo() {
               return this.bar();
             },
@@ -44,7 +46,7 @@ describe('StateSource', function () {
           });
         },
         es6: function es6() {
-          var CreateStateSource = (function (_Marty$StateSource) {
+          return (function (_Marty$StateSource) {
             function CreateStateSource() {
               _classCallCheck(this, CreateStateSource);
 
@@ -69,10 +71,10 @@ describe('StateSource', function () {
 
             return CreateStateSource;
           })(Marty.StateSource);
-
-          return new CreateStateSource();
         }
       });
+
+      stateSource = new StateSource();
     });
 
     it('should expose the function', function () {
@@ -83,10 +85,11 @@ describe('StateSource', function () {
   describe('#type', function () {
     describe('when a known type', function () {
       beforeEach(function () {
-        stateSource = Marty.createStateSource({
-          id: 'testSource',
+        var StateSource = Marty.createStateSource({
           type: 'testSource'
         });
+
+        stateSource = new StateSource();
       });
 
       it('should subclass that source', function () {
@@ -111,8 +114,6 @@ describe('StateSource', function () {
     var application;
 
     beforeEach(function () {
-      Marty.isASingleton = false;
-
       var App = (function (_Marty$Application) {
         function App() {
           _classCallCheck(this, App);
@@ -141,10 +142,6 @@ describe('StateSource', function () {
       application = new App();
     });
 
-    afterEach(function () {
-      Marty.isASingleton = true;
-    });
-
     it('should be accessible on the object', function () {
       expect(application.ss.app).to.equal(application);
     });
@@ -153,7 +150,7 @@ describe('StateSource', function () {
   describe('#mixins', function () {
     describe('when you have multiple mixins', function () {
       beforeEach(function () {
-        stateSource = Marty.createStateSource({
+        var StateSource = Marty.createStateSource({
           id: 'stateSourceWithMixins',
           mixins: [{
             foo: function foo() {
@@ -165,6 +162,8 @@ describe('StateSource', function () {
             }
           }]
         });
+
+        stateSource = new StateSource();
       });
 
       it('should allow you to mixin object literals', function () {

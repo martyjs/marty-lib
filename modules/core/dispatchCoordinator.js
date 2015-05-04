@@ -7,7 +7,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var log = require('./logger');
 var uuid = require('./utils/uuid');
 var warnings = require('./warnings');
-var resolve = require('./utils/resolve');
 var Environment = require('./environment');
 
 var DispatchCoordinator = (function () {
@@ -23,9 +22,7 @@ var DispatchCoordinator = (function () {
     this.__type = type;
     this.__isCoreType = true;
     this.__app = options.app;
-    this.__context = options.context;
     this.__id = uuid.type(this.__type);
-    this.__dispatcher = options.dispatcher;
   }
 
   _createClass(DispatchCoordinator, [{
@@ -35,25 +32,15 @@ var DispatchCoordinator = (function () {
         args[_key - 1] = arguments[_key];
       }
 
-      return this.__dispatcher.dispatchAction({
+      return this.app.dispatcher.dispatchAction({
         type: type,
         arguments: args
       });
     }
   }, {
-    key: 'for',
-    value: function _for(obj) {
-      return resolve(this, obj);
-    }
-  }, {
     key: 'app',
     get: function () {
       return this.__app;
-    }
-  }, {
-    key: 'context',
-    get: function () {
-      return this.__context;
     }
   }]);
 

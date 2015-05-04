@@ -2,6 +2,8 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _ = require('../mindash');
@@ -17,8 +19,10 @@ var SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = function (React) {
   var Application = (function () {
-    function Application() {
+    function Application(options) {
       _classCallCheck(this, Application);
+
+      options = options || {};
 
       var dispatcher = createDispatcher();
 
@@ -26,6 +30,8 @@ module.exports = function (React) {
       this.__isApplication = true;
       this.__isCoreType = true;
       this.__types = {};
+
+      _.extend(this, options);
 
       Object.defineProperty(this, 'dispatcher', {
         get: function get() {
@@ -51,7 +57,7 @@ module.exports = function (React) {
             return { app: app };
           },
           render: function render() {
-            return React.createElement(InnerComponent, this.props);
+            return React.createElement(InnerComponent, _extends({ ref: 'subject' }, this.props));
           }
         });
       }

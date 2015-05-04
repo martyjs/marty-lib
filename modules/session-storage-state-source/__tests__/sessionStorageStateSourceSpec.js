@@ -7,8 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
-var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('SessionStorageStateSource', function (styles) {
@@ -16,17 +15,15 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    warnings.classDoesNotHaveAnId = false;
     sessionStorage.clear();
-    source = styles({
+    var Source = styles({
       classic: function classic() {
         return Marty.createStateSource({
           type: 'sessionStorage'
         });
       },
       es6: function es6() {
-        var SessionStorage = (function (_Marty$SessionStorageStateSource) {
+        return (function (_Marty$SessionStorageStateSource) {
           function SessionStorage() {
             _classCallCheck(this, SessionStorage);
 
@@ -39,14 +36,10 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
           return SessionStorage;
         })(Marty.SessionStorageStateSource);
-
-        return new SessionStorage();
       }
     });
-  });
 
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
+    source = new Source();
   });
 
   describe('#createRepository()', function () {
@@ -78,7 +71,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
   describe('#namespace', function () {
     beforeEach(function () {
-      source = styles({
+      var Source = styles({
         classic: function classic() {
           return Marty.createStateSource({
             namespace: 'baz',
@@ -86,7 +79,7 @@ describeStyles('SessionStorageStateSource', function (styles) {
           });
         },
         es6: function es6() {
-          var SessionStorage = (function (_Marty$SessionStorageStateSource2) {
+          return (function (_Marty$SessionStorageStateSource2) {
             function SessionStorage() {
               _classCallCheck(this, SessionStorage);
 
@@ -106,10 +99,10 @@ describeStyles('SessionStorageStateSource', function (styles) {
 
             return SessionStorage;
           })(Marty.SessionStorageStateSource);
-
-          return new SessionStorage();
         }
       });
+
+      source = new Source();
     });
 
     describe('when you pass in a namespace', function () {

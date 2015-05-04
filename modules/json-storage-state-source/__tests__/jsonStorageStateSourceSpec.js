@@ -7,8 +7,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('JSONStorageStateSource', function (styles) {
@@ -23,20 +23,17 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    warnings.classDoesNotHaveAnId = false;
 
     localStorage.clear();
     sessionStorage.clear();
-    source = styles({
+    var Source = styles({
       classic: function classic() {
         return Marty.createStateSource({
-          id: 'jsonStorage',
           type: 'jsonStorage'
         });
       },
       es6: function es6() {
-        var StateSource = (function (_Marty$JSONStorageStateSource) {
+        return (function (_Marty$JSONStorageStateSource) {
           function StateSource() {
             _classCallCheck(this, StateSource);
 
@@ -49,10 +46,10 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
           return StateSource;
         })(Marty.JSONStorageStateSource);
-
-        return new StateSource();
       }
     });
+
+    source = new Source();
   });
 
   afterEach(function () {
@@ -102,16 +99,15 @@ describeStyles('JSONStorageStateSource', function (styles) {
   describe('#storage', function () {
     describe('when you pass in a custom web storage object', function () {
       beforeEach(function () {
-        source = styles({
+        var Source = styles({
           classic: function classic() {
             return Marty.createStateSource({
               type: 'jsonStorage',
-              storage: sessionStorage,
-              id: 'jsonStorageWithSessionStorage'
+              storage: sessionStorage
             });
           },
           es6: function es6() {
-            var StateSource = (function (_Marty$JSONStorageStateSource2) {
+            return (function (_Marty$JSONStorageStateSource2) {
               function StateSource() {
                 _classCallCheck(this, StateSource);
 
@@ -131,10 +127,10 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
               return StateSource;
             })(Marty.JSONStorageStateSource);
-
-            return new StateSource();
           }
         });
+
+        source = new Source();
 
         source.set('foo', payload.value);
       });
@@ -146,11 +142,12 @@ describeStyles('JSONStorageStateSource', function (styles) {
 
   describe('#namespace', function () {
     beforeEach(function () {
-      source = Marty.createStateSource({
+      var Source = Marty.createStateSource({
         namespace: 'baz',
-        type: 'jsonStorage',
-        id: 'jsonStorageWithNamespace'
+        type: 'jsonStorage'
       });
+
+      source = new Source();
     });
 
     describe('when you pass in a namespace', function () {

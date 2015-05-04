@@ -5,7 +5,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('CookieStateSource', function (styles) {
@@ -13,17 +13,15 @@ describeStyles('CookieStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     cookies = require('cookies-js');
-    source = styles({
+    var CookieSource = styles({
       classic: function classic() {
         return Marty.createStateSource({
-          id: 'Cookies',
           type: 'cookie'
         });
       },
       es6: function es6() {
-        var Cookies = (function (_Marty$CookieStateSource) {
+        return (function (_Marty$CookieStateSource) {
           function Cookies() {
             _classCallCheck(this, Cookies);
 
@@ -36,10 +34,10 @@ describeStyles('CookieStateSource', function (styles) {
 
           return Cookies;
         })(Marty.CookieStateSource);
-
-        return new Cookies();
       }
     });
+
+    source = new CookieSource();
   });
 
   describe('#set()', function () {

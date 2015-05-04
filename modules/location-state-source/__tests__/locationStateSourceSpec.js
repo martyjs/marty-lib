@@ -5,7 +5,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 describeStyles('LocationStateSource', function (styles) {
@@ -13,16 +13,14 @@ describeStyles('LocationStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
-    source = styles({
+    var Source = styles({
       classic: function classic() {
         return Marty.createStateSource({
-          id: 'Location',
           type: 'location'
         });
       },
       es6: function es6() {
-        var CurrentLocation = (function (_Marty$LocationStateSource) {
+        return (function (_Marty$LocationStateSource) {
           function CurrentLocation() {
             _classCallCheck(this, CurrentLocation);
 
@@ -35,10 +33,10 @@ describeStyles('LocationStateSource', function (styles) {
 
           return CurrentLocation;
         })(Marty.LocationStateSource);
-
-        return new CurrentLocation();
       }
     });
+
+    source = new Source();
   });
 
   describe('#getLocation()', function () {

@@ -10,10 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
-var constants = require('../../constants');
+var buildMarty = require('../../../test/lib/buildMarty');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var describeStyles = require('../../../test/lib/describeStyles');
 var MockDispatcher = require('../../../test/lib/mockDispatcher');
@@ -25,7 +23,6 @@ describe('Queries', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     logger = stubbedLogger();
     dispatcher = new MockDispatcher();
   });
@@ -39,11 +36,16 @@ describe('Queries', function () {
       expect(createADispatchQueries).to['throw'](Error);
 
       function createADispatchQueries() {
-        var TestConstants = constants(['DISPATCH']);
+        var Queries = Marty.createQueries({
+          dispatch: function dispatch() {
+            return console.log('woop');
+          }
+        });
 
-        return Marty.createQueries({
-          dispatcher: dispatcher,
-          dispatch: TestConstants.DISPATCH()
+        return new Queries({
+          app: {
+            dispatcher: dispatcher
+          }
         });
       }
     });
@@ -53,8 +55,6 @@ describe('Queries', function () {
     var application;
 
     beforeEach(function () {
-      Marty.isASingleton = false;
-
       var App = (function (_Marty$Application) {
         function App() {
           _classCallCheck(this, App);
@@ -83,38 +83,8 @@ describe('Queries', function () {
       application = new App();
     });
 
-    afterEach(function () {
-      Marty.isASingleton = true;
-    });
-
     it('should be accessible on the object', function () {
       expect(application.query.app).to.equal(application);
-    });
-  });
-
-  describe('resolve', function () {
-    var context, queries, actualInstance, expectedInstance, query;
-
-    beforeEach(function () {
-      query = sinon.spy();
-      queries = Marty.createQueries({
-        id: 'foo',
-        displayName: 'Bar',
-        someQuery: query
-      });
-
-      context = Marty.createContext();
-      actualInstance = queries['for'](context);
-      expectedInstance = context.instances.Queries.foo;
-    });
-
-    it('should resolve to the actual instance', function () {
-      expect(actualInstance).to.equal(expectedInstance);
-    });
-
-    it('should still expose all querys', function () {
-      queries.someQuery(1);
-      expect(query).to.be.calledWith(1);
     });
   });
 
@@ -123,17 +93,16 @@ describe('Queries', function () {
       expectedArg = { foo: 'bar' };
       expectedOtherArg = { baz: 'bim' };
       expectedQueryType = 'SOME_ACTION';
-      queries = styles({
+      var Queries = styles({
         classic: function classic() {
           return Marty.createQueries({
-            dispatcher: dispatcher,
             someQuery: function someQuery(arg) {
               this.dispatch(expectedQueryType, expectedOtherArg, arg);
             }
           });
         },
         es6: function es6() {
-          var TestQueries = (function (_Marty$Queries2) {
+          return (function (_Marty$Queries2) {
             function TestQueries() {
               _classCallCheck(this, TestQueries);
 
@@ -153,10 +122,12 @@ describe('Queries', function () {
 
             return TestQueries;
           })(Marty.Queries);
+        }
+      });
 
-          return new TestQueries({
-            dispatcher: dispatcher
-          });
+      queries = new Queries({
+        app: {
+          dispatcher: dispatcher
         }
       });
 
@@ -198,9 +169,14 @@ describe('Queries', function () {
         }
       };
 
-      queries = Marty.createQueries({
-        dispatcher: dispatcher,
+      var Queries = Marty.createQueries({
         mixins: [mixin1, mixin2]
+      });
+
+      queries = new Queries({
+        app: {
+          dispatcher: dispatcher
+        }
       });
     });
 

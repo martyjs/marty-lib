@@ -19,7 +19,7 @@ var CookieStateSource = (function (_StateSource) {
 
     _get(Object.getPrototypeOf(CookieStateSource.prototype), 'constructor', this).call(this, options);
     this._isCookieStateSource = true;
-    this._cookies = cookieFactory(this.context);
+    this._cookies = cookieFactory(this.app);
   }
 
   _inherits(CookieStateSource, _StateSource);

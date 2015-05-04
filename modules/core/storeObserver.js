@@ -41,10 +41,6 @@ var StoreObserver = (function () {
 
       log.trace('The ' + component.displayName + ' component  (' + component.id + ') is listening to the ' + storeDisplayName + ' store');
 
-      if (!this.app) {
-        store = store['for'](component);
-      }
-
       return store.addChangeListener(function (state, store) {
         var storeDisplayName = store.displayName || store.id;
 

@@ -12,7 +12,7 @@ var _ = require('lodash');
 var sinon = require('sinon');
 var React = require('react');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Application', function () {
@@ -20,6 +20,18 @@ describe('Application', function () {
 
   beforeEach(function () {
     Marty = buildMarty();
+  });
+
+  describe('when you pass options into the application', function () {
+    beforeEach(function () {
+      application = new Marty.Application({
+        foo: 'bar'
+      });
+    });
+
+    it('should add those options to the application', function () {
+      expect(application.foo).to.equal('bar');
+    });
   });
 
   describe('#dispatcher', function () {
@@ -207,8 +219,6 @@ describe('Application', function () {
           },
           baz: {}
         };
-
-        Marty.isASingleton = false;
 
         Store1 = Marty.createStore({
           id: 'Store1',

@@ -9,7 +9,6 @@ var fetch = require('./storeFetch');
 var _ = require('../mindash');
 var uuid = require('../core/utils/uuid');
 var warnings = require('../core/warnings');
-var resolve = require('../core/utils/resolve');
 var StoreEvents = require('./storeEvents');
 var Environment = require('../core/environment');
 var handleAction = require('./handleAction');
@@ -37,12 +36,10 @@ var Store = (function () {
     this.__fetchHistory = {};
     this.__failedFetches = {};
     this.__fetchInProgress = {};
-    this.__context = options.context;
     this.__emitter = new EventEmitter();
     this.__validateHandlers = _.once(function () {
       return validateHandlers(_this);
     });
-    this.__dispatcher = this.__app ? this.__app.dispatcher : options.dispatcher;
 
     var initialState = this.getInitialState();
 
@@ -52,27 +49,13 @@ var Store = (function () {
 
     this.replaceState(initialState);
 
-    this.dispatchToken = this.__dispatcher.register(_.bind(this.handleAction, this));
+    this.dispatchToken = this.app.dispatcher.register(_.bind(this.handleAction, this));
   }
 
   _createClass(Store, [{
-    key: 'for',
-    value: function _for(obj) {
-      if (warnings.appIsTheFuture) {
-        log.warn('Warning: Contexts are depreciated. ' + 'Use application\'s instead http://martyjs.org/depreciated/contexts.html');
-      }
-
-      return resolve(this, obj);
-    }
-  }, {
     key: 'app',
     get: function () {
       return this.__app;
-    }
-  }, {
-    key: 'context',
-    get: function () {
-      return this.__context;
     }
   }, {
     key: 'state',
@@ -141,7 +124,7 @@ var Store = (function () {
       this.clear();
 
       if (dispatchToken) {
-        this.__dispatcher.unregister(dispatchToken);
+        this.app.dispatcher.unregister(dispatchToken);
         this.dispatchToken = undefined;
       }
     }
@@ -213,7 +196,7 @@ var Store = (function () {
   }, {
     key: 'waitFor',
     value: function waitFor(stores) {
-      var dispatcher = this.__dispatcher;
+      var dispatcher = this.app.dispatcher;
 
       if (!_.isArray(stores)) {
         stores = _.toArray(arguments);

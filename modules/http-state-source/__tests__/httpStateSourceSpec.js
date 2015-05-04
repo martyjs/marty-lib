@@ -9,11 +9,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var sinon = require('sinon');
-var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var _ = require('../../mindash');
+var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
-var warnings = require('../../core/warnings');
+var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
 require('es6-promise').polyfill();
@@ -27,17 +26,11 @@ describeStyles('HttpStateSource', function (styles) {
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
     HttpStateSource = Marty.HttpStateSource;
 
     baseUrl = '/stub/';
-    warnings.classDoesNotHaveAnId = false;
     xmlContentType = 'application/xml';
     jsonContentType = 'application/json';
-  });
-
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
   });
 
   describe('when you dont specify a baseUrl', function () {
@@ -500,7 +493,7 @@ describeStyles('HttpStateSource', function (styles) {
   });
 
   function httpStateSource(baseUrl) {
-    return styles({
+    var StateSource = styles({
       classic: function classic() {
         return Marty.createStateSource({
           type: 'http',
@@ -508,7 +501,7 @@ describeStyles('HttpStateSource', function (styles) {
         });
       },
       es6: function es6() {
-        var ExampleHttpStateSource = (function (_HttpStateSource) {
+        return (function (_HttpStateSource) {
           function ExampleHttpStateSource() {
             _classCallCheck(this, ExampleHttpStateSource);
 
@@ -520,10 +513,10 @@ describeStyles('HttpStateSource', function (styles) {
 
           return ExampleHttpStateSource;
         })(HttpStateSource);
-
-        return new ExampleHttpStateSource();
       }
     });
+
+    return new StateSource();
   }
 
   function storeResponse(res) {

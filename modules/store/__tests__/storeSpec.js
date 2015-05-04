@@ -13,8 +13,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 var _ = require('lodash');
 var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
 var ActionPayload = require('../../core/actionPayload');
+var buildMarty = require('../../../test/lib/buildMarty');
 var stubbedLogger = require('../../../test/lib/stubbedLogger');
 var describeStyles = require('../../../test/lib/describeStyles');
 var ActionHandlerNotFoundError = require('../../errors/actionHandlerNotFoundError');
@@ -28,12 +28,12 @@ describeStyles('Store', function (styles, currentStyle) {
       dispatchToken = 'foo',
       initialState = {};
   var actualAction, actualChangeListenerFunctionContext, expectedChangeListenerFunctionContext;
-  var expectedError, logger, Marty;
+  var expectedError, logger, Marty, app;
 
   beforeEach(function () {
     Marty = buildMarty();
-    Marty.isASingleton = true;
 
+    app = new Marty.Application();
     logger = stubbedLogger();
     dispatcher = {
       register: sinon.stub().returns(dispatchToken),
@@ -45,9 +45,7 @@ describeStyles('Store', function (styles, currentStyle) {
     var handlers = {
       error: 'ERROR',
       one: 'one-action',
-      multiple: ['multi-1-action', 'multi-2-action'],
-      where: { source: 'VIEW' },
-      whereAndAction: [{ source: 'VIEW' }, 'where-and-action']
+      multiple: ['multi-1-action', 'multi-2-action']
     };
 
     var proto = {
@@ -62,7 +60,7 @@ describeStyles('Store', function (styles, currentStyle) {
       })
     };
 
-    store = styles({
+    var Store = styles({
       classic: function classic() {
         return Marty.createStore(_.extend({
           id: 'test',
@@ -89,9 +87,13 @@ describeStyles('Store', function (styles, currentStyle) {
 
         _.extend(TestStore.prototype, _.omit(proto, 'getInitialState'));
 
-        return new TestStore({
-          dispatcher: dispatcher
-        });
+        return TestStore;
+      }
+    });
+
+    store = new Store({
+      app: {
+        dispatcher: dispatcher
       }
     });
 
@@ -133,17 +135,17 @@ describeStyles('Store', function (styles, currentStyle) {
             }
           };
 
-          store = Marty.createStore({
+          app.register('multipleMixins', Marty.createStore({
             id: 'multiple-mixins',
             dispatcher: dispatcher,
             getInitialState: _.noop,
             mixins: [mixin1, mixin2]
-          });
+          }));
         });
 
         it('should allow you to mixin object literals', function () {
-          expect(store.foo()).to.equal('bar');
-          expect(store.bar()).to.equal('baz');
+          expect(app.multipleMixins.foo()).to.equal('bar');
+          expect(app.multipleMixins.bar()).to.equal('baz');
         });
       });
 
@@ -158,7 +160,7 @@ describeStyles('Store', function (styles, currentStyle) {
             baz: _.noop
           };
 
-          store = Marty.createStore({
+          app.register('mixinHandlers', Marty.createStore({
             id: 'mixin-with-handlers',
             dispatcher: dispatcher,
             handlers: {
@@ -169,11 +171,11 @@ describeStyles('Store', function (styles, currentStyle) {
             mixins: [handlerMixin],
             foo: _.noop,
             bar: _.noop
-          });
+          }));
         });
 
         it('should do a deep merge', function () {
-          expect(store.handlers).to.include.keys('foo', 'bar', 'baz');
+          expect(app.mixinHandlers.handlers).to.include.keys('foo', 'bar', 'baz');
         });
       });
     });
@@ -193,8 +195,6 @@ describeStyles('Store', function (styles, currentStyle) {
     var application;
 
     beforeEach(function () {
-      Marty.isASingleton = false;
-
       var App = (function (_Marty$Application) {
         function App() {
           _classCallCheck(this, App);
@@ -223,10 +223,6 @@ describeStyles('Store', function (styles, currentStyle) {
       application = new App();
     });
 
-    afterEach(function () {
-      Marty.isASingleton = true;
-    });
-
     it('should be accessible on the object', function () {
       expect(application.store.app).to.equal(application);
     });
@@ -234,9 +230,7 @@ describeStyles('Store', function (styles, currentStyle) {
 
   describe('when the store updates multiple times during a dispatch', function () {
     beforeEach(function () {
-      var dispatcher = Marty.dispatcher;
-
-      var FooStore = Marty.createStore({
+      app.register('multipleUpdatesStore', Marty.createStore({
         handlers: {
           foo: 'FOO'
         },
@@ -245,11 +239,13 @@ describeStyles('Store', function (styles, currentStyle) {
           this.hasChanged();
           this.hasChanged();
         }
-      });
+      }));
 
       changeListener = sinon.spy();
-      FooStore.addChangeListener(changeListener);
-      dispatcher.dispatchAction({
+
+      app.multipleUpdatesStore.addChangeListener(changeListener);
+
+      app.dispatcher.dispatchAction({
         type: 'FOO',
         arguments: []
       });
@@ -365,12 +361,12 @@ describeStyles('Store', function (styles, currentStyle) {
     });
 
     describe('when you dont pass in a dispose function', function () {
+      var disposeStore;
+
       beforeEach(function () {
-        store = styles({
+        var Store = styles({
           classic: function classic() {
             return Marty.createStore({
-              id: 'no dispose',
-              dispatcher: dispatcher,
               clear: _clear,
               getInitialState: function getInitialState() {
                 return {};
@@ -394,16 +390,20 @@ describeStyles('Store', function (styles, currentStyle) {
 
             TestStore.prototype.clear = _clear;
 
-            return new TestStore({
-              dispatcher: dispatcher
-            });
+            return TestStore;
           }
         });
 
-        store.addChangeListener(listener);
-        store.hasChanged();
-        store.dispose();
-        store.hasChanged();
+        disposeStore = new Store({
+          app: {
+            dispatcher: dispatcher
+          }
+        });
+
+        disposeStore.addChangeListener(listener);
+        disposeStore.hasChanged();
+        disposeStore.dispose();
+        disposeStore.hasChanged();
       });
 
       it('should call clear', function () {
@@ -419,7 +419,7 @@ describeStyles('Store', function (styles, currentStyle) {
       });
 
       it('should make store.dispatchToken undefined', function () {
-        expect(store.dispatchToken).to.be.undefined;
+        expect(disposeStore.dispatchToken).to.be.undefined;
       });
     });
 
@@ -428,11 +428,10 @@ describeStyles('Store', function (styles, currentStyle) {
 
       beforeEach(function () {
         _dispose = sinon.spy();
-        store = styles({
+        var Store = styles({
           classic: function classic() {
             return Marty.createStore({
               id: 'dispose',
-              dispatcher: dispatcher,
               clear: _clear,
               dispose: _dispose,
               getInitialState: function getInitialState() {
@@ -468,9 +467,13 @@ describeStyles('Store', function (styles, currentStyle) {
               return TestStore;
             })(Marty.Store);
 
-            return new TestStore({
-              dispatcher: dispatcher
-            });
+            return TestStore;
+          }
+        });
+
+        var store = new Store({
+          app: {
+            dispatcher: dispatcher
           }
         });
 
@@ -495,65 +498,6 @@ describeStyles('Store', function (styles, currentStyle) {
       it('should call unregister with dispatchToken', function () {
         expect(dispatcher.unregister).to.have.been.calledWith(dispatchToken);
       });
-
-      it('should make store.dispatchToken undefined', function () {
-        expect(store.dispatchToken).to.be.undefined;
-      });
-    });
-  });
-
-  describe('#createStore()', function () {
-    var data = {},
-        one;
-    var actionType = 'foo';
-
-    beforeEach(function () {
-      one = sinon.spy();
-      store = styles({
-        classic: function classic() {
-          return Marty.createStore({
-            id: 'createStore',
-            handlers: {
-              one: actionType },
-            one: one,
-            getInitialState: function getInitialState() {
-              return {};
-            }
-          });
-        },
-        es6: function es6() {
-          var TestStore = (function (_Marty$Store5) {
-            function TestStore(options) {
-              _classCallCheck(this, TestStore);
-
-              _get(Object.getPrototypeOf(TestStore.prototype), 'constructor', this).call(this, options);
-              this.state = {};
-              this.handlers = {
-                one: actionType
-              };
-            }
-
-            _inherits(TestStore, _Marty$Store5);
-
-            return TestStore;
-          })(Marty.Store);
-
-          TestStore.prototype.one = one;
-
-          return new TestStore({
-            dispatcher: Marty.dispatcher
-          });
-        }
-      });
-
-      Marty.dispatcher.dispatchAction({
-        type: actionType,
-        arguments: [data]
-      });
-    });
-
-    it('calls the handlers', function () {
-      expect(one).to.have.been.calledWith(data);
     });
   });
 
@@ -574,7 +518,7 @@ describeStyles('Store', function (styles, currentStyle) {
               });
             },
             es6: function es6() {
-              var TestStore = (function (_Marty$Store6) {
+              var TestStore = (function (_Marty$Store5) {
                 function TestStore(options) {
                   _classCallCheck(this, TestStore);
 
@@ -585,18 +529,22 @@ describeStyles('Store', function (styles, currentStyle) {
                   };
                 }
 
-                _inherits(TestStore, _Marty$Store6);
+                _inherits(TestStore, _Marty$Store5);
 
                 return TestStore;
               })(Marty.Store);
 
-              return new TestStore({
-                options: dispatcher
-              });
+              return TestStore;
             }
           });
 
-          Store.handleAction();
+          store = new Store({
+            app: {
+              dispatcher: dispatcher
+            }
+          });
+
+          store.handleAction();
         }
       });
     });
@@ -610,7 +558,6 @@ describeStyles('Store', function (styles, currentStyle) {
             classic: function classic() {
               return Marty.createStore({
                 id: 'createStoreWithANullActionPredicate',
-                dispatcher: dispatcher,
                 handlers: {
                   foo: null
                 },
@@ -618,7 +565,7 @@ describeStyles('Store', function (styles, currentStyle) {
               });
             },
             es6: function es6() {
-              var TestStore = (function (_Marty$Store7) {
+              var TestStore = (function (_Marty$Store6) {
                 function TestStore(options) {
                   _classCallCheck(this, TestStore);
 
@@ -629,25 +576,29 @@ describeStyles('Store', function (styles, currentStyle) {
                   };
                 }
 
-                _inherits(TestStore, _Marty$Store7);
+                _inherits(TestStore, _Marty$Store6);
 
                 return TestStore;
               })(Marty.Store);
 
-              return new TestStore({
-                options: dispatcher
-              });
+              return TestStore;
             }
           });
 
-          Store.handleAction();
+          store = new Store({
+            app: {
+              dispatcher: dispatcher
+            }
+          });
+
+          store.handleAction();
         }
       });
     });
   });
 
   describe('#waitFor()', function () {
-    var store1, store2, store3, testActionCreators, actualResult, expectedResult, executionOrder;
+    var actualResult, expectedResult, executionOrder;
 
     beforeEach(function () {
       executionOrder = [];
@@ -657,7 +608,7 @@ describeStyles('Store', function (styles, currentStyle) {
     describe('when I pass in an array of stores', function () {
       beforeEach(function () {
         executionOrder = waitFor(function (store) {
-          store.waitFor([store3, store2]);
+          store.waitFor([app.store3, app.store2]);
         });
       });
 
@@ -673,7 +624,7 @@ describeStyles('Store', function (styles, currentStyle) {
     describe('when I pass in stores as arguments', function () {
       beforeEach(function () {
         executionOrder = waitFor(function (store) {
-          store.waitFor(store3, store2);
+          store.waitFor(app.store3, app.store2);
         });
       });
 
@@ -689,7 +640,7 @@ describeStyles('Store', function (styles, currentStyle) {
     describe('when I pass in dispatch tokens', function () {
       beforeEach(function () {
         executionOrder = waitFor(function (store) {
-          store.waitFor(store3.dispatchToken, store2.dispatchToken);
+          store.waitFor(app.store3.dispatchToken, app.store2.dispatchToken);
         });
       });
 
@@ -707,41 +658,37 @@ describeStyles('Store', function (styles, currentStyle) {
 
       styles({
         classic: function classic() {
-          testActionCreators = Marty.createActionCreators({
-            id: 'test',
+          app.register('testActionCreators', Marty.createActionCreators({
             sum: function sum() {
               this.dispatch('SUM', 2);
             }
-          });
+          }));
 
-          store2 = Marty.createStore({
-            id: 'store2',
+          app.register('store2', Marty.createStore({
             handlers: { sum: 'SUM' },
             getInitialState: function getInitialState() {
               return 0;
             },
             sum: function sum(value) {
-              this.waitFor(store3);
-              this.state += store3.getState() + value;
+              this.waitFor(this.app.store3);
+              this.state += this.app.store3.getState() + value;
               order.push('store2');
             }
-          });
+          }));
 
-          store1 = Marty.createStore({
-            id: 'store1',
+          app.register('store1', Marty.createStore({
             handlers: { sum: 'SUM' },
             getInitialState: function getInitialState() {
               return 0;
             },
             sum: function sum(value) {
               waitForCb(this);
-              this.state = store2.getState() + value;
+              this.state = this.app.store2.getState() + value;
               order.push('store1');
             }
-          });
+          }));
 
-          store3 = Marty.createStore({
-            id: 'store3',
+          app.register('store3', Marty.createStore({
             handlers: { sum: 'SUM' },
             getInitialState: function getInitialState() {
               return 0;
@@ -750,7 +697,7 @@ describeStyles('Store', function (styles, currentStyle) {
               this.state += value;
               order.push('store3');
             }
-          });
+          }));
         },
         es6: function es6() {
           var TestActionCreators = (function (_Marty$ActionCreators) {
@@ -774,7 +721,7 @@ describeStyles('Store', function (styles, currentStyle) {
             return TestActionCreators;
           })(Marty.ActionCreators);
 
-          var Store1 = (function (_Marty$Store8) {
+          var Store1 = (function (_Marty$Store7) {
             function Store1(options) {
               _classCallCheck(this, Store1);
 
@@ -783,13 +730,13 @@ describeStyles('Store', function (styles, currentStyle) {
               this.handlers = { sum: 'SUM' };
             }
 
-            _inherits(Store1, _Marty$Store8);
+            _inherits(Store1, _Marty$Store7);
 
             _createClass(Store1, [{
               key: 'sum',
               value: function sum(value) {
                 waitForCb(this);
-                this.state = store2.getState() + value;
+                this.state = this.app.store2.getState() + value;
                 order.push('store1');
               }
             }]);
@@ -797,7 +744,7 @@ describeStyles('Store', function (styles, currentStyle) {
             return Store1;
           })(Marty.Store);
 
-          var Store2 = (function (_Marty$Store9) {
+          var Store2 = (function (_Marty$Store8) {
             function Store2(options) {
               _classCallCheck(this, Store2);
 
@@ -806,13 +753,13 @@ describeStyles('Store', function (styles, currentStyle) {
               this.handlers = { sum: 'SUM' };
             }
 
-            _inherits(Store2, _Marty$Store9);
+            _inherits(Store2, _Marty$Store8);
 
             _createClass(Store2, [{
               key: 'sum',
               value: function sum(value) {
-                this.waitFor(store3);
-                this.state += store3.getState() + value;
+                this.waitFor(this.app.store3);
+                this.state += this.app.store3.getState() + value;
                 order.push('store2');
               }
             }]);
@@ -820,7 +767,7 @@ describeStyles('Store', function (styles, currentStyle) {
             return Store2;
           })(Marty.Store);
 
-          var Store3 = (function (_Marty$Store10) {
+          var Store3 = (function (_Marty$Store9) {
             function Store3(options) {
               _classCallCheck(this, Store3);
 
@@ -829,7 +776,7 @@ describeStyles('Store', function (styles, currentStyle) {
               this.handlers = { sum: 'SUM' };
             }
 
-            _inherits(Store3, _Marty$Store10);
+            _inherits(Store3, _Marty$Store9);
 
             _createClass(Store3, [{
               key: 'sum',
@@ -842,32 +789,15 @@ describeStyles('Store', function (styles, currentStyle) {
             return Store3;
           })(Marty.Store);
 
-          Store1.id = 'store1';
-          Store2.id = 'store2';
-          Store3.id = 'store3';
-
-          store2 = new Store2({
-            dispatcher: Marty.dispatcher
-          });
-
-          console.log('Dispatcher', Marty.dispatcher);
-
-          store1 = new Store1({
-            dispatcher: Marty.dispatcher
-          });
-
-          store3 = new Store3({
-            dispatcher: Marty.dispatcher
-          });
-
-          testActionCreators = new TestActionCreators({
-            dispatcher: Marty.dispatcher
-          });
+          app.register('store2', Store2);
+          app.register('store1', Store1);
+          app.register('store3', Store3);
+          app.register('testActionCreators', TestActionCreators);
         }
       });
 
-      testActionCreators.sum();
-      actualResult = store1.getState();
+      app.testActionCreators.sum();
+      actualResult = app.store1.getState();
 
       return order;
     }
@@ -921,156 +851,8 @@ describeStyles('Store', function (styles, currentStyle) {
       });
     });
 
-    describe('when the store has a where clause for a handler', function () {
-      beforeEach(function () {
-        handleActionFrom('foo', 'VIEW');
-      });
-
-      it('should call the action handler', function () {
-        expect(store.where).to.have.been.called;
-      });
-    });
-
-    describe('when the store has a where clause and an action type for a handler', function () {
-      beforeEach(function () {
-        handleActionFrom('foo', 'VIEW');
-        handleAction('where-and-action');
-      });
-
-      it('should call the action handler for either', function () {
-        expect(store.whereAndAction).to.have.been.calledTwice;
-      });
-    });
-
-    describe('rollbacks', function () {
-      var Store, ActionCreators, interimState;
-
-      beforeEach(function () {
-        Store = styles({
-          classic: function classic() {
-            ActionCreators = Marty.createActionCreators({
-              id: 'rollbacks',
-              add: function add(user) {
-                var action = this.dispatch('ADD', user);
-
-                interimState = _.clone(Store.getState());
-
-                action.rollback();
-              }
-            });
-
-            return Marty.createStore({
-              id: 'store',
-              handlers: {
-                add: 'ADD'
-              },
-              getInitialState: function getInitialState() {
-                return [];
-              },
-              add: function add(user) {
-                this.state.push(user);
-
-                return function rollback() {
-                  this.state.splice(this.state.indexOf(user), 1);
-                };
-              }
-            });
-          },
-          es6: function es6() {
-            var TestActionCreators = (function (_Marty$ActionCreators2) {
-              function TestActionCreators() {
-                _classCallCheck(this, TestActionCreators);
-
-                if (_Marty$ActionCreators2 != null) {
-                  _Marty$ActionCreators2.apply(this, arguments);
-                }
-              }
-
-              _inherits(TestActionCreators, _Marty$ActionCreators2);
-
-              _createClass(TestActionCreators, [{
-                key: 'add',
-                value: function add(user) {
-                  var action = this.dispatch('ADD', user);
-
-                  interimState = _.clone(Store.getState());
-
-                  action.rollback();
-                }
-              }]);
-
-              return TestActionCreators;
-            })(Marty.ActionCreators);
-
-            ActionCreators = new TestActionCreators({
-              dispatcher: Marty.dispatcher
-            });
-
-            var TestStore = (function (_Marty$Store11) {
-              function TestStore(options) {
-                _classCallCheck(this, TestStore);
-
-                _get(Object.getPrototypeOf(TestStore.prototype), 'constructor', this).call(this, options);
-                this.state = [];
-                this.handlers = {
-                  add: 'ADD'
-                };
-              }
-
-              _inherits(TestStore, _Marty$Store11);
-
-              _createClass(TestStore, [{
-                key: 'add',
-                value: function add(user) {
-                  this.state.push(user);
-
-                  return function rollback() {
-                    this.state.splice(this.state.indexOf(user), 1);
-                  };
-                }
-              }]);
-
-              return TestStore;
-            })(Marty.Store);
-
-            return new TestStore({
-              dispatcher: Marty.dispatcher
-            });
-          }
-        });
-      });
-
-      describe('when you create an action and then rollback', function () {
-        var user = { name: 'foo' };
-
-        beforeEach(function () {
-          ActionCreators.add(user);
-        });
-
-        it('should call the action handler', function () {
-          expect(interimState).to.eql([user]);
-        });
-
-        it('should call the action handlers rollback functions', function () {
-          expect(Store.getState()).to.eql([]);
-        });
-      });
-    });
-
     function handleAction(actionType) {
       var action = new ActionPayload({
-        type: actionType,
-        arguments: [data]
-      });
-
-      store.handleAction(action);
-
-      return action;
-    }
-
-    function handleActionFrom(actionType, source) {
-      var action = new ActionPayload({
-        source: source,
         type: actionType,
         arguments: [data]
       });
@@ -1090,26 +872,25 @@ describeStyles('Store', function (styles, currentStyle) {
           foo: 'foo'
         };
 
-        store = styles({
+        app.register('clearStore', styles({
           classic: function classic() {
             return Marty.createStore({
-              id: 'clear',
               getInitialState: function getInitialState() {
                 return initialState;
               }
             });
           },
           es6: function es6() {
-            var ClearStore = (function (_Marty$Store12) {
+            return (function (_Marty$Store10) {
               function ClearStore() {
                 _classCallCheck(this, ClearStore);
 
-                if (_Marty$Store12 != null) {
-                  _Marty$Store12.apply(this, arguments);
+                if (_Marty$Store10 != null) {
+                  _Marty$Store10.apply(this, arguments);
                 }
               }
 
-              _inherits(ClearStore, _Marty$Store12);
+              _inherits(ClearStore, _Marty$Store10);
 
               _createClass(ClearStore, [{
                 key: 'getInitialState',
@@ -1120,35 +901,31 @@ describeStyles('Store', function (styles, currentStyle) {
 
               return ClearStore;
             })(Marty.Store);
-
-            return new ClearStore({
-              dispatcher: Marty.dispatcher
-            });
           }
-        });
+        }));
 
-        store.setState({
+        app.clearStore.setState({
           foo: 'bar'
         });
 
-        store.clear();
+        app.clearStore.clear();
       });
 
       it('should replace the state with the original state', function () {
-        expect(store.state).to.eql(initialState);
+        expect(app.clearStore.state).to.eql(initialState);
       });
 
       it('should clear the fetchHistory', function () {
         var fetchId = 'foo';
-        store.fetch(fetchId, function () {
+        app.clearStore.fetch(fetchId, function () {
           return {};
         });
 
-        expect(store.hasAlreadyFetched(fetchId)).to.be['true'];
+        expect(app.clearStore.hasAlreadyFetched(fetchId)).to.be['true'];
 
-        store.clear();
+        app.clearStore.clear();
 
-        expect(store.hasAlreadyFetched(fetchId)).to.be['false'];
+        expect(app.clearStore.hasAlreadyFetched(fetchId)).to.be['false'];
       });
     });
 
@@ -1157,10 +934,9 @@ describeStyles('Store', function (styles, currentStyle) {
 
       beforeEach(function () {
         _clear2 = sinon.spy();
-        store = styles({
+        app.register('clearStore', styles({
           classic: function classic() {
             return Marty.createStore({
-              id: 'clear',
               clear: _clear2,
               getInitialState: function getInitialState() {
                 return {};
@@ -1168,7 +944,7 @@ describeStyles('Store', function (styles, currentStyle) {
             });
           },
           es6: function es6() {
-            var ClearStore = (function (_Marty$Store13) {
+            return (function (_Marty$Store11) {
               function ClearStore(options) {
                 _classCallCheck(this, ClearStore);
 
@@ -1176,7 +952,7 @@ describeStyles('Store', function (styles, currentStyle) {
                 this.state = {};
               }
 
-              _inherits(ClearStore, _Marty$Store13);
+              _inherits(ClearStore, _Marty$Store11);
 
               _createClass(ClearStore, [{
                 key: 'clear',
@@ -1188,15 +964,11 @@ describeStyles('Store', function (styles, currentStyle) {
 
               return ClearStore;
             })(Marty.Store);
-
-            return new ClearStore({
-              dispatcher: Marty.dispatcher
-            });
           }
-        });
+        }));
 
-        store.setState({ foo: 'bar' });
-        store.clear();
+        app.clearStore.setState({ foo: 'bar' });
+        app.clearStore.clear();
       });
 
       it('should call the clear function', function () {
@@ -1204,7 +976,7 @@ describeStyles('Store', function (styles, currentStyle) {
       });
 
       it('should replace the state with the original state', function () {
-        expect(store.state).to.eql({});
+        expect(app.clearStore.state).to.eql({});
       });
     });
   });

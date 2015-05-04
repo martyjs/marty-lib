@@ -11,13 +11,11 @@ var FetchConstants = require('./fetchConstants');
 
 function fetch(id, local, remote) {
   var store = this;
+  var app = this.app;
   var options = undefined,
       result = undefined,
       error = undefined,
       cacheError = undefined;
-
-  // Context has the same fetch API as Application
-  var app = this.app || this.context;
 
   if (_.isObject(id)) {
     options = id;
@@ -58,7 +56,7 @@ function fetch(id, local, remote) {
     return fetchResult.pending(options.id, store);
   }
 
-  if (app) {
+  if (app && app.fetchStarted) {
     app.fetchStarted(store.id, options.id);
   }
 
@@ -104,7 +102,7 @@ function fetch(id, local, remote) {
           fetchFailed(error);
           store.hasChanged();
 
-          store.__dispatcher.dispatchAction({
+          store.app.dispatcher.dispatchAction({
             type: FetchConstants.FETCH_FAILED,
             arguments: [error, options.id, store]
           });
@@ -150,7 +148,7 @@ function fetch(id, local, remote) {
   function fetchFinished(result) {
     finished();
 
-    if (app && result) {
+    if (app && app.fetchFinished && result) {
       app.fetchFinished(store.id, options.id, 'DONE', {
         result: result
       });
@@ -166,7 +164,7 @@ function fetch(id, local, remote) {
 
     finished();
 
-    if (app) {
+    if (app && app.fetchFinished) {
       app.fetchFinished(store.id, options.id, 'FAILED', {
         error: error
       });

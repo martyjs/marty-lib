@@ -7,7 +7,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var log = require('../logger');
 var uuid = require('../utils/uuid');
 var warnings = require('../warnings');
-var resolve = require('../utils/resolve');
 var Environment = require('../environment');
 
 var StateSource = (function () {
@@ -23,24 +22,13 @@ var StateSource = (function () {
     this.__isCoreType = true;
     this.__type = 'StateSource';
     this.__app = options.app;
-    this.__context = options.context;
     this.__id = uuid.type(this.__type);
   }
 
   _createClass(StateSource, [{
-    key: 'context',
-    get: function () {
-      return this.__context;
-    }
-  }, {
     key: 'app',
     get: function () {
       return this.__app;
-    }
-  }, {
-    key: 'for',
-    value: function _for(obj) {
-      return resolve(this, obj);
     }
   }, {
     key: 'dispose',

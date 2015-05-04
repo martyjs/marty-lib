@@ -11,11 +11,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 module.exports = function (MartyApplication) {
   return function createApplication(ctor) {
     var Application = (function (_MartyApplication) {
-      function Application() {
+      function Application(options) {
         _classCallCheck(this, Application);
 
-        _get(Object.getPrototypeOf(Application.prototype), "constructor", this).call(this);
-        ctor.call(this);
+        _get(Object.getPrototypeOf(Application.prototype), "constructor", this).call(this, options);
+        ctor.call(this, options);
       }
 
       _inherits(Application, _MartyApplication);

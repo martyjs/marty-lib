@@ -22,11 +22,11 @@ function when(handlers, parentContext) {
 
   try {
     switch (this.status) {
-      case StatusConstants.PENDING.toString():
+      case StatusConstants.PENDING:
         return handler.call(new WhenContext());
-      case StatusConstants.FAILED.toString():
+      case StatusConstants.FAILED:
         return handler.call(new WhenContext(), this.error);
-      case StatusConstants.DONE.toString():
+      case StatusConstants.DONE:
         return handler.call(new WhenContext(), this.result);
       default:
         throw new Error('Unknown fetch result status');
@@ -97,7 +97,7 @@ function results(fetchResults) {
 
 function firstError(fetchResults) {
   var failedResult = _.find(fetchResults, {
-    status: StatusConstants.FAILED.toString()
+    status: StatusConstants.FAILED
   });
 
   if (failedResult) {
@@ -113,12 +113,12 @@ function aggregateStatus(fetchResults) {
   for (var i = fetchResults.length - 1; i >= 0; i--) {
     var _status = fetchResults[i].status;
 
-    if (_status === StatusConstants.FAILED.toString() || _status === StatusConstants.PENDING.toString()) {
+    if (_status === StatusConstants.FAILED || _status === StatusConstants.PENDING) {
       return _status;
     }
   }
 
-  return StatusConstants.DONE.toString();
+  return StatusConstants.DONE;
 }
 
 module.exports = when;

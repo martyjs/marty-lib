@@ -22,7 +22,6 @@ var MartyBuilder = (function () {
     key: "registerClass",
     value: function registerClass(id, clazz) {
       this._marty[id] = clazz;
-      this._marty.registry.addClass(id, clazz);
     }
   }, {
     key: "registerProperty",

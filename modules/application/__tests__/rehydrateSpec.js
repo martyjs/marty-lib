@@ -12,7 +12,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var sinon = require('sinon');
 var expect = require('chai').expect;
-var buildMarty = require('./buildMarty');
+var buildMarty = require('../../../test/lib/buildMarty');
 var UnknownStoreError = require('../../errors/unknownStoreError');
 
 describe('Application#rehydrate()', function () {

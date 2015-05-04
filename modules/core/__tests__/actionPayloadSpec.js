@@ -56,28 +56,6 @@ describe('ActionPayload', function () {
     });
   });
 
-  describe('#rollback()', function () {
-    var handlers;
-
-    beforeEach(function () {
-      handlers = [sinon.spy(), null, sinon.spy()];
-
-      handlers.forEach(function (handler) {
-        action.addRollbackHandler(handler);
-      });
-    });
-
-    it('should invoke any rollback handlers', function () {
-      action.rollback();
-
-      handlers.forEach(function (handler) {
-        if (handler) {
-          expect(handler).to.have.been.called;
-        }
-      });
-    });
-  });
-
   describe('#addComponentHandler()', function () {
     var expectedStoreId;
     beforeEach(function () {
