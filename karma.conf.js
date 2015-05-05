@@ -118,7 +118,6 @@ module.exports = function (config) {
       frameworks: ['mocha', 'browserify'],
       browserNoActivityTimeout: 100000,
       browserify: {
-        transform: ['babelify'],
         bare: true,
         debug: true
       },
