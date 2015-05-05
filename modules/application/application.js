@@ -10,10 +10,10 @@ var _ = require('../mindash');
 var log = require('../core/logger');
 var timeout = require('../core/utils/timeout');
 var deferred = require('../core/utils/deferred');
+var _renderToString = require('./renderToString');
 var FetchDiagnostics = require('./fetchDiagnostics');
 var createDispatcher = require('../core/createDispatcher');
 var UnknownStoreError = require('../errors/unknownStoreError');
-
 var DEFAULT_TIMEOUT = 1000;
 var SERIALIZED_WINDOW_OBJECT = '__marty';
 
@@ -272,43 +272,12 @@ module.exports = function (React) {
     }, {
       key: 'renderToString',
       value: function renderToString(element, options) {
-        options = options || {};
-
-        var app = this;
-        var fetchOptions = { timeout: options.timeout };
-
-        return new Promise(function (resolve, reject) {
-          startFetches().then(dehydrateAndRenderHtml);
-
-          function dehydrateAndRenderHtml(diagnostics) {
-            app.fetch(function () {
-              try {
-                var html = React.renderToString(element);
-                html += dehydratedState();
-                resolve({
-                  html: html,
-                  diagnostics: diagnostics
-                });
-              } catch (e) {
-                reject(e);
-              }
-            }, fetchOptions);
-          }
-
-          function startFetches() {
-            return app.fetch(function () {
-              try {
-                React.renderToString(element);
-              } catch (e) {
-                reject(e);
-              }
-            }, fetchOptions);
-          }
-
-          function dehydratedState() {
-            return '<script id="__marty-state">' + app.dehydrate() + '</script>';
-          }
-        });
+        return _renderToString(this, React.renderToString, element, options);
+      }
+    }, {
+      key: 'renderToStaticMarkup',
+      value: function renderToStaticMarkup(element, options) {
+        return _renderToString(this, React.renderToStaticMarkup, element, options);
       }
     }]);
 

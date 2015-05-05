@@ -5,7 +5,6 @@ var _ = require('../mindash');
 var warnings = {
   without: without,
   invokeConstant: true,
-  appIsTheFuture: true,
   reservedFunction: true,
   cannotFindContext: true,
   classDoesNotHaveAnId: true,

@@ -1,7 +1,8 @@
 'use strict';
 
 var JSONStorageStateSource = require('./jsonStorage');
+var registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource('JSONStorageStateSource', 'jsonStorage', JSONStorageStateSource);
+  registerStateSource(marty, 'JSONStorageStateSource', 'jsonStorage', JSONStorageStateSource);
 };

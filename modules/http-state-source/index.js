@@ -1,7 +1,8 @@
 'use strict';
 
 var HttpStateSource = require('./http');
+var registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource('HttpStateSource', 'http', HttpStateSource);
+  registerStateSource(marty, 'HttpStateSource', 'http', HttpStateSource);
 };

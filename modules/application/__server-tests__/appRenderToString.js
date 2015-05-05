@@ -74,6 +74,24 @@ describeStyles('Application#renderToString', function (styles) {
     });
   });
 
+  describe('#renderToStaticMarkup()', function () {
+    beforeEach(function () {
+      return renderToStaticMarkup();
+    });
+
+    it('should get the state', function () {
+      expect($('.text').text()).to.equal('remote');
+    });
+
+    it('should come from the correct context', function () {
+      expect($('.context').text()).to.equal('local-context');
+    });
+
+    it('should include the serialized state', function () {
+      expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+    });
+  });
+
   describe('timeout', function () {
     beforeEach(function () {
       app.messageAPI.delay = 1500;
@@ -90,6 +108,10 @@ describeStyles('Application#renderToString', function (styles) {
 
   function renderToString(options) {
     return app.renderToString(React.createElement(fixture.Message, { id: expectedId }), options).then(loadDOM);
+  }
+
+  function renderToStaticMarkup(options) {
+    return app.renderToStaticMarkup(React.createElement(fixture.Message, { id: expectedId }), options).then(loadDOM);
   }
 
   function loadDOM(result) {

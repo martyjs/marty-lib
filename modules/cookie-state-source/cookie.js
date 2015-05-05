@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
+var _ = require('../mindash');
+var invariant = require('invariant');
 var cookieFactory = defaultCookieFactory;
 var StateSource = require('../core/stateSource');
 
@@ -27,16 +29,22 @@ var CookieStateSource = (function (_StateSource) {
   _createClass(CookieStateSource, [{
     key: 'get',
     value: function get(key) {
+      invariant(_.isString(key), 'key must be a string');
+
       return this._cookies.get(key);
     }
   }, {
     key: 'set',
     value: function set(key, value, options) {
+      invariant(_.isString(key), 'key must be a string');
+
       return this._cookies.set(key, value, options);
     }
   }, {
     key: 'expire',
     value: function expire(key) {
+      invariant(_.isString(key), 'key must be a string');
+
       return this._cookies.expire(key);
     }
   }], [{

@@ -1,7 +1,8 @@
 'use strict';
 
 var LocationStateSource = require('./location');
+var registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource('LocationStateSource', 'location', LocationStateSource);
+  registerStateSource(marty, 'LocationStateSource', 'location', LocationStateSource);
 };

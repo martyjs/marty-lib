@@ -5,6 +5,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var log = require('./logger');
+var _ = require('../mindash');
 var uuid = require('./utils/uuid');
 var warnings = require('./warnings');
 var Environment = require('./environment');
@@ -30,6 +31,10 @@ var DispatchCoordinator = (function () {
     value: function dispatch(type) {
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
+      }
+
+      if (_.isUndefined(type) || _.isNull(type)) {
+        throw new Error('Must specify the action type');
       }
 
       return this.app.dispatcher.dispatchAction({

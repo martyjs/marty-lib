@@ -50,6 +50,16 @@ describeStyles('CookieStateSource', function (styles) {
     });
   });
 
+  describe('when you pass in a non string', function () {
+    it('should throw an error', function () {
+      expect(settingNonString).to['throw'](Error);
+
+      function settingNonString() {
+        source.set(123, 'bar');
+      }
+    });
+  });
+
   describe('#get()', function () {
     beforeEach(function () {
       cookies.set('foo', 'bar');

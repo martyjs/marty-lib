@@ -1,7 +1,8 @@
 'use strict';
 
 var SessionStorageStateSource = require('./sessionStorage');
+var registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource('SessionStorageStateSource', 'sessionStorage', SessionStorageStateSource);
+  registerStateSource(marty, 'SessionStorageStateSource', 'sessionStorage', SessionStorageStateSource);
 };

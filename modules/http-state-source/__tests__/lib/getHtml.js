@@ -3,7 +3,6 @@
 var _$ = require('jquery');
 var MOCK_SERVER_PORT = 8956;
 var format = require('util').format;
-var Promise = require('es6-promise').Promise;
 
 function getHtml(url) {
   return new Promise(function (resolve, reject) {

@@ -3,9 +3,9 @@
 module.exports = function (marty, React) {
   var Application = require('./application')(React);
 
-  marty.register('createApplication', require('./createApplication')(Application));
-  marty.register('Application', Application);
-  marty.register('contextTypes', {
+  marty.createApplication = require('./createApplication')(Application);
+  marty.Application = Application;
+  marty.contextTypes = {
     app: React.PropTypes.instanceOf(Application)
-  });
+  };
 };

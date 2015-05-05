@@ -1,7 +1,8 @@
 'use strict';
 
 var LocalStorageStateSource = require('./localStorage');
+var registerStateSource = require('../core/registerStateSource');
 
 module.exports = function (marty) {
-  marty.registerStateSource('LocalStorageStateSource', 'localStorage', LocalStorageStateSource);
+  registerStateSource(marty, 'LocalStorageStateSource', 'localStorage', LocalStorageStateSource);
 };
