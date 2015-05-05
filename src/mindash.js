@@ -18,7 +18,6 @@ module.exports = {
   isUndefined: require('lodash/lang/isUndefined'),
   last: require('lodash/array/last'),
   map: require('lodash/collection/map'),
-  matches: require('lodash/utility/matches'),
   noop: require('lodash/utility/noop'),
   object: require('lodash/array/zipObject'),
   omit: require('lodash/object/omit'),

@@ -1,4 +1,3 @@
-var sinon = require('sinon');
 var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
 var DispatchCoordinator = require('../dispatchCoordinator');
