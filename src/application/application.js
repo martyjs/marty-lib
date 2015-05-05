@@ -2,10 +2,10 @@ let _ = require('../mindash');
 let log = require('../core/logger');
 let timeout = require('../core/utils/timeout');
 let deferred = require('../core/utils/deferred');
+let renderToString = require('./renderToString');
 let FetchDiagnostics = require('./fetchDiagnostics');
 let createDispatcher = require('../core/createDispatcher');
 let UnknownStoreError = require('../errors/unknownStoreError');
-
 let DEFAULT_TIMEOUT = 1000;
 let SERIALIZED_WINDOW_OBJECT = '__marty';
 
@@ -246,43 +246,21 @@ module.exports = function (React) {
     }
 
     renderToString(element, options) {
-      options = options || {};
+      return renderToString(
+        this,
+        React.renderToString,
+        element,
+        options
+      );
+    }
 
-      let app = this;
-      let fetchOptions = { timeout: options.timeout };
-
-      return new Promise(function (resolve, reject) {
-        startFetches().then(dehydrateAndRenderHtml);
-
-        function dehydrateAndRenderHtml(diagnostics) {
-          app.fetch(function () {
-            try {
-              let html = React.renderToString(element);
-              html += dehydratedState();
-              resolve({
-                html: html,
-                diagnostics: diagnostics
-              });
-            } catch (e) {
-              reject(e);
-            }
-          }, fetchOptions);
-        }
-
-        function startFetches() {
-          return app.fetch(function () {
-            try {
-              React.renderToString(element);
-            } catch (e) {
-              reject(e);
-            }
-          }, fetchOptions);
-        }
-
-        function dehydratedState() {
-          return `<script id="__marty-state">${app.dehydrate()}</script>`;
-        }
-      });
+    renderToStaticMarkup(element, options) {
+      return renderToString(
+        this,
+        React.renderToStaticMarkup,
+        element,
+        options
+      );
     }
   }
 

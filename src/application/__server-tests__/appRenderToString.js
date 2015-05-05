@@ -12,14 +12,14 @@ var MARTY_STATE_ID = '__marty-state';
 describeStyles('Application#renderToString', function (styles) {
   var $, app, Marty, fixture, expectedId;
 
-  beforeEach(function () {
+  beforeEach(() => {
     Marty = buildMarty();
     expectedId = uuid.small();
     fixture = styles({
-      classic: function () {
+      classic() {
         return classicMessagesFixtures(Marty);
       },
-      es6: function () {
+      es6() {
         return es6MessagesFixtures(Marty);
       }
     });
@@ -29,51 +29,69 @@ describeStyles('Application#renderToString', function (styles) {
     app.messageStore.setContextName('local-context');
   });
 
-  describe('when you dont pass in a component type', function () {
-    it('should reject', function () {
+  describe('when you dont pass in a component type', () => {
+    it('should reject', () => {
       return expect(app.renderToString({ })).to.be.rejected;
     });
   });
 
-  describe('when all the state is present locally', function () {
-    beforeEach(function () {
+  describe('when all the state is present locally', () => {
+    beforeEach(() => {
       app.messageStore.addMessage(expectedId, { text: 'local' });
       return renderToString();
     });
 
-    it('should get the state', function () {
+    it('should get the state', () => {
       expect($('.text').text()).to.equal('local');
     });
 
-    it('should come from the correct context', function () {
+    it('should come from the correct context', () => {
       expect($('.context').text()).to.equal('local-context');
     });
 
-    it('should include the serialized state', function () {
+    it('should include the serialized state', () => {
       expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
     });
   });
 
-  describe('when it needs to wait for state to come from a remote source', function () {
-    beforeEach(function () {
+  describe('when it needs to wait for state to come from a remote source', () => {
+    beforeEach(() => {
       return renderToString();
     });
 
-    it('should get the state', function () {
+    it('should get the state', () => {
       expect($('.text').text()).to.equal('remote');
     });
 
-    it('should come from the correct context', function () {
+    it('should come from the correct context', () => {
       expect($('.context').text()).to.equal('local-context');
     });
 
-    it('should include the serialized state', function () {
+    it('should include the serialized state', () => {
       expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
     });
   });
 
-  describe('timeout', function () {
-    beforeEach(function () {
+  describe('#renderToStaticMarkup()', () => {
+    beforeEach(() => {
+      return renderToStaticMarkup();
+    });
+
+    it('should get the state', () => {
+      expect($('.text').text()).to.equal('remote');
+    });
+
+    it('should come from the correct context', () => {
+      expect($('.context').text()).to.equal('local-context');
+    });
+
+    it('should include the serialized state', () => {
+      expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+    });
+  });
+
+  describe('timeout', () => {
+    beforeEach(() => {
       app.messageAPI.delay = 1500;
 
       return renderToString({
@@ -81,7 +99,7 @@ describeStyles('Application#renderToString', function (styles) {
       });
     });
 
-    it('should render after the timeout regardless of whether fetches are complete', function () {
+    it('should render after the timeout regardless of whether fetches are complete', () => {
       expect($('.text').text()).to.equal('pending');
     });
   });
@@ -89,6 +107,12 @@ describeStyles('Application#renderToString', function (styles) {
   function renderToString(options) {
     return app
       .renderToString(<fixture.Message id={expectedId} />, options)
+      .then(loadDOM);
+  }
+
+  function renderToStaticMarkup(options) {
+    return app
+      .renderToStaticMarkup(<fixture.Message id={expectedId} />, options)
       .then(loadDOM);
   }
 
