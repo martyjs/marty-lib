@@ -53,7 +53,9 @@
     "shelljs": "^0.4.0",
     "sinon": "^1.10.3",
     "sinon-chai": "^2.5.0",
-    "uglify-js": "^2.4.15"
+    "uglify-js": "^2.4.15",
+    "es6-promise": "^2.0.0",
+    "isomorphic-fetch": "1.6.0"
   },
   "author": "James Hollingworth",
   "licenses": [

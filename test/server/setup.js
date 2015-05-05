@@ -1,4 +1,6 @@
 require('babel').register();
+require('isomorphic-fetch');
+require('es6-promise').polyfill();
 
 process.env['NODE_ENV'] = 'test';
 
