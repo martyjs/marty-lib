@@ -1,4 +1,5 @@
 let log = require('./logger');
+let _ = require('../mindash');
 let uuid = require('./utils/uuid');
 let warnings = require('./warnings');
 let Environment = require('./environment');
@@ -18,6 +19,10 @@ class DispatchCoordinator {
   }
 
   dispatch(type, ...args) {
+    if (_.isUndefined(type) || _.isNull(type)) {
+      throw new Error('Must specify the action type');
+    }
+
     return this.app.dispatcher.dispatchAction({
       type: type,
       arguments: args
