@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var sinon = require('sinon');
-var logger = require('../../lib/logger');
+var logger = require('../../modules/core/logger');
 
 function stubbedLogger() {
   var sandbox = sinon.sandbox.create();

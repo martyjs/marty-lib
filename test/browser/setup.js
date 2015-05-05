@@ -1,3 +1,6 @@
+require('isomorphic-fetch');
+require('es6-promise').polyfill();
+
 process.env['NODE_ENV'] = 'test';
 
 var chai = require('chai');
@@ -6,7 +9,3 @@ var chaiAsPromised = require('chai-as-promised');
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
-
-afterEach(function () {
-  require('../../marty').dispose();
-});

@@ -1,6 +1,8 @@
-process.env['NODE_ENV'] = 'test';
+require('babel').register();
+require('isomorphic-fetch');
+require('es6-promise').polyfill();
 
-require('babel/register');
+process.env['NODE_ENV'] = 'test';
 
 var chai = require('chai');
 var sinonChai = require('sinon-chai');

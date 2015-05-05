@@ -1,6 +1,11 @@
 var fs = require('fs');
 var _ = require('lodash');
 var yaml = require('js-yaml');
+var shell = require('shelljs');
+
+var SCRIPTS = [
+  './src/http-state-source/__tests__/lib/mockServer.js'
+];
 
 module.exports = function (config) {
   process.env.NODE_ENV = 'test';
@@ -28,6 +33,20 @@ module.exports = function (config) {
     default:
       config.set(local());
       break;
+  }
+
+  runScripts(SCRIPTS);
+
+  function runScripts(scripts) {
+    var children = [];
+
+    process.on('exit', function () {
+      _.invoke(children, 'kill');
+    });
+
+    _.each(scripts, function (script) {
+      children.push(shell.exec('node ' + script, { async:true }));
+    });
   }
 
   function saucelabs() {
@@ -97,28 +116,27 @@ module.exports = function (config) {
     return {
       basePath: '',
       frameworks: ['mocha', 'browserify'],
+      browserNoActivityTimeout: 100000,
       browserify: {
-        transform: ['babelify'],
+        bare: true,
         debug: true
       },
       files: [
-        'marty.js',
-        'lib/*.js',
-        'test/browser/**/*.js'
+        'test/browser/setup.js',
+        'src/**/*.js'
       ],
       exclude: [
-        'test/browser/lib/mockServer.js'
-      ],
+        'src/application/__server-tests__/**/*.js'
+      ].concat(SCRIPTS),
       preprocessors: {
-        'lib/*': ['browserify'],
-        'marty.js': ['browserify'],
-        'test/browser/**/*.js': ['browserify']
+        'test/browser/setup.js': ['browserify'],
+        'src/**/*.js': ['browserify']
       },
       port: 9876,
       proxies: {
         '/stub': 'http://localhost:8956/stub'
       },
-      logLevel: config.LOG_INFO,
+      logLevel: config.LOG_INFO
     };
   }
 
