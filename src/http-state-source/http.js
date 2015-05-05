@@ -47,13 +47,19 @@ class HttpStateSource extends StateSource {
   }
 
   static addHook(hook) {
-    if (hook) {
-      if (_.isUndefined(hook.priority)) {
-        hook.priority = Object.keys(hooks).length;
-      }
-
-      hooks[hook.id] = hook;
+    if (!hook) {
+      throw new Error('Must specify a hook');
     }
+
+    if (_.isUndefined(hook.id)) {
+      throw new Error('Hook must have an id');
+    }
+
+    if (_.isUndefined(hook.priority)) {
+      hook.priority = Object.keys(hooks).length;
+    }
+
+    hooks[hook.id] = hook;
   }
 
   static removeHook(hook) {

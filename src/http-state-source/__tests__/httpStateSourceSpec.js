@@ -53,7 +53,19 @@ describeStyles('HttpStateSource', function (styles) {
       server.restore();
     });
 
-    describe('use', function () {
+    describe('addHook', function () {
+      describe('when I add a hook with no Id', function () {
+        it('should throw an error', function () {
+          expect(creatingAHookWithNoId).to.throw(Error);
+
+          function creatingAHookWithNoId() {
+            HttpStateSource.addHook({
+              foo: 'bar'
+            });
+          }
+        });
+      });
+
       describe('before', function () {
         beforeEach(function () {
           executionOrder = [];
