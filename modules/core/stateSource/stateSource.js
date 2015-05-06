@@ -19,9 +19,10 @@ var StateSource = (function () {
 
     options = options || {};
 
+    this.id = options.id;
+    this.__app = options.app;
     this.__isCoreType = true;
     this.__type = 'StateSource';
-    this.__app = options.app;
     this.__id = uuid.type(this.__type);
   }
 

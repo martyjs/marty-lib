@@ -28,6 +28,12 @@ module.exports = function (React) {
           return dispatcher;
         }
       });
+
+      currentApplicationIs(this);
+    }
+
+    static __getCurrentApplication(cb) {
+      return getCurrentApplication(cb);
     }
 
     bindTo(InnerComponent) {
@@ -58,23 +64,26 @@ module.exports = function (React) {
       return this.getAll('Store');
     }
 
-    register(key, ctor) {
+    register(id, ctor) {
       if (!this.dispatcher) {
         throw new Error('`super()` must be called before you can register anything');
       }
 
-      if (!key) {
-        throw new Error('Must specify a key or an object');
+      if (!id) {
+        throw new Error('Must specify a id or an object');
       }
 
-      if (_.isString(key)) {
+      if (_.isString(id)) {
         if (!_.isFunction(ctor)) {
           throw new Error('Must pass in a instantiable object');
         }
 
         let obj = new ctor({
-          app: this
+          app: this,
+          id: id
         });
+
+        obj.id = id;
 
         let type = obj.__type;
 
@@ -83,14 +92,14 @@ module.exports = function (React) {
             this.__types[type] = {};
           }
 
-          this.__types[type][key] = obj;
+          this.__types[type][id] = obj;
         }
 
-        if (key.indexOf('.') === -1) {
-          this[key] = obj;
+        if (id.indexOf('.') === -1) {
+          this[id] = obj;
         } else {
           var container = this;
-          var parts = key.split('.');
+          var parts = id.split('.');
 
           _.each(_.initial(parts), (part) => {
             if (_.isUndefined(container[part])) {
@@ -104,22 +113,22 @@ module.exports = function (React) {
         }
       }
 
-      if (_.isObject(key)) {
+      if (_.isObject(id)) {
         let registerObject = (obj, prefix) => {
-          _.each(obj, (ctor, key) => {
+          _.each(obj, (ctor, id) => {
             if (prefix) {
-              key = `${prefix}.${key}`;
+              id = `${prefix}.${id}`;
             }
 
             if (_.isFunction(ctor)) {
-              this.register(key, ctor);
+              this.register(id, ctor);
             } else {
-              registerObject(ctor, key);
+              registerObject(ctor, id);
             }
           });
         };
 
-        registerObject(key);
+        registerObject(id);
       }
     }
 
@@ -261,6 +270,24 @@ module.exports = function (React) {
         element,
         options
       );
+    }
+  }
+
+  // Internal API used by DevTools to access the current application
+  let currentApplication;
+  let currentApplicationRequests = [];
+
+  function currentApplicationIs(app) {
+    currentApplication = app;
+    _.each(currentApplicationRequests, cb => cb(app));
+    currentApplicationRequests = [];
+  }
+
+  function getCurrentApplication(cb) {
+    if (currentApplication) {
+      cb(currentApplication);
+    } else {
+      currentApplicationRequests.push(cb);
     }
   }
 

@@ -13,6 +13,7 @@ class DispatchCoordinator {
     options = options || {};
 
     this.__type = type;
+    this.id = options.id;
     this.__isCoreType = true;
     this.__app = options.app;
     this.__id = uuid.type(this.__type);

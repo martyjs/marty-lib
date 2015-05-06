@@ -38,6 +38,8 @@ module.exports = function (React) {
           return dispatcher;
         }
       });
+
+      currentApplicationIs(this);
     }
 
     _createClass(Application, [{
@@ -73,25 +75,28 @@ module.exports = function (React) {
       }
     }, {
       key: 'register',
-      value: function register(key, ctor) {
+      value: function register(id, ctor) {
         var _this = this;
 
         if (!this.dispatcher) {
           throw new Error('`super()` must be called before you can register anything');
         }
 
-        if (!key) {
-          throw new Error('Must specify a key or an object');
+        if (!id) {
+          throw new Error('Must specify a id or an object');
         }
 
-        if (_.isString(key)) {
+        if (_.isString(id)) {
           if (!_.isFunction(ctor)) {
             throw new Error('Must pass in a instantiable object');
           }
 
           var obj = new ctor({
-            app: this
+            app: this,
+            id: id
           });
+
+          obj.id = id;
 
           var type = obj.__type;
 
@@ -100,14 +105,14 @@ module.exports = function (React) {
               this.__types[type] = {};
             }
 
-            this.__types[type][key] = obj;
+            this.__types[type][id] = obj;
           }
 
-          if (key.indexOf('.') === -1) {
-            this[key] = obj;
+          if (id.indexOf('.') === -1) {
+            this[id] = obj;
           } else {
             var container = this;
-            var parts = key.split('.');
+            var parts = id.split('.');
 
             _.each(_.initial(parts), function (part) {
               if (_.isUndefined(container[part])) {
@@ -121,23 +126,23 @@ module.exports = function (React) {
           }
         }
 
-        if (_.isObject(key)) {
+        if (_.isObject(id)) {
           (function () {
             var registerObject = function registerObject(obj, prefix) {
-              _.each(obj, function (ctor, key) {
+              _.each(obj, function (ctor, id) {
                 if (prefix) {
-                  key = '' + prefix + '.' + key;
+                  id = '' + prefix + '.' + id;
                 }
 
                 if (_.isFunction(ctor)) {
-                  _this.register(key, ctor);
+                  _this.register(id, ctor);
                 } else {
-                  registerObject(ctor, key);
+                  registerObject(ctor, id);
                 }
               });
             };
 
-            registerObject(key);
+            registerObject(id);
           })();
         }
       }
@@ -279,10 +284,35 @@ module.exports = function (React) {
       value: function renderToStaticMarkup(element, options) {
         return _renderToString(this, React.renderToStaticMarkup, element, options);
       }
+    }], [{
+      key: '__getCurrentApplication',
+      value: function __getCurrentApplication(cb) {
+        return getCurrentApplication(cb);
+      }
     }]);
 
     return Application;
   })();
+
+  // Internal API used by DevTools to access the current application
+  var currentApplication = undefined;
+  var currentApplicationRequests = [];
+
+  function currentApplicationIs(app) {
+    currentApplication = app;
+    _.each(currentApplicationRequests, function (cb) {
+      return cb(app);
+    });
+    currentApplicationRequests = [];
+  }
+
+  function getCurrentApplication(cb) {
+    if (currentApplication) {
+      cb(currentApplication);
+    } else {
+      currentApplicationRequests.push(cb);
+    }
+  }
 
   return Application;
 };

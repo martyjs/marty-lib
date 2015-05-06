@@ -17,15 +17,16 @@ class Store {
 
     options = options || {};
 
-    this.__type = 'Store';
-    this.__id = uuid.type(this.__type);
     this.__state = {};
+    this.id = options.id;
+    this.__type = 'Store';
     this.__isStore = true;
     this.__app = options.app;
     this.__isCoreType = true;
     this.__fetchHistory = {};
     this.__failedFetches = {};
     this.__fetchInProgress = {};
+    this.__id = uuid.type(this.__type);
     this.__emitter = new EventEmitter();
     this.__validateHandlers = _.once(() => validateHandlers(this));
 
