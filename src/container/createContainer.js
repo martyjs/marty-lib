@@ -121,7 +121,7 @@ module.exports = function (React) {
               return container.pending(result.result);
             }
 
-            return <div></div>;
+            return false;
           },
           failed(error) {
             if (_.isFunction(container.failed)) {

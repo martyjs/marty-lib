@@ -118,7 +118,7 @@ module.exports = function (React) {
               return container.pending(result.result);
             }
 
-            return React.createElement('div', null);
+            return false;
           },
           failed: function failed(error) {
             if (_.isFunction(container.failed)) {
