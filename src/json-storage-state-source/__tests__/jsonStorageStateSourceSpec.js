@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var warnings = require('../../core/warnings');
 var buildMarty = require('../../../test/lib/buildMarty');
 var describeStyles = require('../../../test/lib/describeStyles');
 
@@ -31,10 +30,6 @@ describeStyles('JSONStorageStateSource', function (styles) {
     });
 
     source = new Source();
-  });
-
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
   });
 
   describe('#createRepository()', function () {

@@ -2,17 +2,11 @@ let _ = require('../mindash');
 
 let warnings = {
   without: without,
-  invokeConstant: true,
   reservedFunction: true,
-  cannotFindContext: true,
-  classDoesNotHaveAnId: true,
   stateIsNullOrUndefined: true,
-  callingResolverOnServer: true,
-  stateSourceAlreadyExists: true,
   superNotCalledWithOptions: true,
   fetchDoneRenamedFetchFailed: true,
-  promiseNotReturnedFromRemotely: true,
-  contextNotPassedInToConstructor: true,
+  promiseNotReturnedFromRemotely: true
 };
 
 module.exports = warnings;

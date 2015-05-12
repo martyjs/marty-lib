@@ -1,24 +1,8 @@
-[Marty](http://martyjs.org) is a Javascript library for state management in React applications. It is an implementation of the [Flux architecture](http://facebook.github.io/flux/docs/overview.html).
+marty-lib is the internal library used by all distributions of [Marty](http://martyjs.org).
 
 [![Join the chat at https://gitter.im/martyjs/marty](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/martyjs/marty?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/martyjs/marty.svg?branch=master)](https://travis-ci.org/martyjs/marty)
-
-## Quick start
-
-```
-make build        # rebuild source
-make test         # lint & run tests
-make docs         # show documentation on http://localhost:4000
-```
-
-## Releasing
-
-```
-make release           # inc's patch, builds, creates tag, pushes to github and then publishes to npm
-make release inc={inc} # specify what to version part to increment (major, premajor, minor, preminor, patch, prepatch, prerelease)
-make release-docs      # builds documentation and copies into ../marty-gh-pages
-```
+[![Build Status](https://travis-ci.org/martyjs/marty.svg?branch=master)](https://travis-ci.org/martyjs/marty-lib)
 
 ## Git Commit Messages
 
@@ -44,14 +28,10 @@ make release-docs      # builds documentation and copies into ../marty-gh-pages
 
 (From [atom](https://atom.io/docs/latest/contributing#git-commit-messages))
 
-##Browser Support
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/jhollingworth.svg)](https://saucelabs.com/u/jhollingworth)
-
 ## Maintainers
 
 * [James Hollingworth](http://github.com/jhollingworth)
 
 ## License
 
-* [MIT](https://raw.github.com/martyjs/marty/master/LICENSE)
+* [MIT](https://raw.github.com/martyjs/marty-lib/master/LICENSE)

@@ -52,10 +52,6 @@ describeStyles('JSONStorageStateSource', function (styles) {
     source = new Source();
   });
 
-  afterEach(function () {
-    warnings.classDoesNotHaveAnId = true;
-  });
-
   describe('#createRepository()', function () {
     it('should expose get and set methods', function () {
       expect(source).to.have.property('get');
