@@ -1,11 +1,21 @@
+let _ = require('../../mindash');
+let log = require('../../core/logger');
+let warnings = require('../../core/warnings');
+
 let CONTENT_TYPE = 'Content-Type';
 let JSON_CONTENT_TYPE = 'application/json';
-let _ = require('../../mindash');
 
 module.exports = {
   id: 'parseJSON',
   after: function (res) {
     if (isJson(res)) {
+      if (warnings.parseJSONDeprecated) {
+        log.warn(
+          'Warning: The parseJSON HTTP hook is being deprecated ' +
+          'http://martyjs.org/guides/upgrading/09_10.html#parseJSON'
+        );
+      }
+
       return res.json().then(function (body) {
         res.body = body;
 

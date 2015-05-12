@@ -6,6 +6,7 @@ var warnings = {
   without: without,
   invokeConstant: true,
   reservedFunction: true,
+  parseJSONDeprecated: true,
   stateIsNullOrUndefined: true,
   superNotCalledWithOptions: true,
   fetchDoneRenamedFetchFailed: true,

@@ -8,4 +8,6 @@ module.exports = function (marty) {
     'http',
     HttpStateSource
   );
+
+  marty.hooks = require('./hooks');
 };
