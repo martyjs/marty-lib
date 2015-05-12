@@ -235,17 +235,17 @@ describe('Application', () => {
 
         expect(diagnosticsWithoutTime).to.eql([{
           fetchId: 'foo',
-          storeId: 'Store1',
+          storeId: 'store1',
           status: 'DONE',
           result: fetches.foo.expectedState
         }, {
           fetchId: 'bar',
-          storeId: 'Store1',
+          storeId: 'store1',
           status: 'FAILED',
           error: fetches.bar.expectedError
         }, {
           fetchId: 'baz',
-          storeId: 'Store2',
+          storeId: 'store2',
           status: 'PENDING'
         }]);
       });
