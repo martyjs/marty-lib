@@ -12,15 +12,41 @@ describe('Application', () => {
     Marty = buildMarty();
   });
 
-  describe('when you pass options into the application', () => {
+  describe('when you pass in a req/res into the application', () => {
     beforeEach(() => {
       application = new Marty.Application({
-        foo: 'bar'
+        req: 'foo',
+        res: 'bar'
       });
     });
 
     it('should add those options to the application', () => {
-      expect(application.foo).to.equal('bar');
+      expect(application.req).to.equal('foo');
+      expect(application.res).to.equal('bar');
+    });
+  });
+
+  describe('when you pass in some `register` options', () => {
+    var register, registrations;
+
+    beforeEach(() => {
+      register = sinon.spy(Marty.Application.prototype, 'register');
+
+      registrations = {
+        userStore: Marty.Store
+      };
+
+      application = new Marty.Application({
+        register: registrations
+      });
+    });
+
+    afterEach(() => {
+      register.restore();
+    });
+
+    it('should automatically pass it to the #register()', () => {
+      expect(register).to.be.calledWith(registrations);
     });
   });
 

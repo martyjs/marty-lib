@@ -21,13 +21,18 @@ module.exports = function (React) {
       this.__isCoreType = true;
       this.__types = {};
 
-      _.extend(this, options);
-
       Object.defineProperty(this, 'dispatcher', {
         get() {
           return dispatcher;
         }
       });
+
+      this.req = options.req;
+      this.res = options.res;
+
+      if (options.register) {
+        this.register(options.register);
+      }
 
       this.__registerStatic(this.constructor);
 
