@@ -8,14 +8,13 @@ var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Container', () => {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updateProps, handler, handlerContext, initialContext;
+  var initialProps, updatedProps, handler, handlerContext, initialContext;
 
   beforeEach(() => {
     context = {
       foo: 'bar'
     };
 
-    updateProps = sinon.spy();
     handler = sinon.spy(function () {
       handlerContext = this;
       return <div></div>;
@@ -44,11 +43,13 @@ describe('Container', () => {
         return React.createElement('div');
       },
       getInitialState() {
-        initialProps = this.props;
         initialContext = this.context;
+        initialProps = withoutApp(this.props);
         return {};
       },
-      componentWillReceiveProps: updateProps,
+      componentWillReceiveProps: function (props) {
+        updatedProps = withoutApp(props);
+      },
       foo() {
         return { bar: 'baz' };
       }
@@ -133,6 +134,35 @@ describe('Container', () => {
 
     it('should call componentWillMount if passed in', () => {
       expect(componentWillMount).to.be.calledOnce;
+    });
+  });
+
+  describe('when the component is bound to an application', () => {
+    let actualApplication;
+    let exectedApplication;
+
+    beforeEach(() => {
+      exectedApplication = new Marty.Application();
+
+      class TestComponent extends React.Component {
+        constructor(props) {
+          super(props);
+          actualApplication = props.app;
+        }
+        render() {
+          return false;
+        }
+      }
+
+      var WrappedComponent = exectedApplication.bindTo(
+        Marty.createContainer(TestComponent)
+      );
+
+      TestUtils.renderIntoDocument(<WrappedComponent />);
+    });
+
+    it('should pass the app down through the props', () => {
+      expect(actualApplication).to.equal(exectedApplication);
     });
   });
 
@@ -280,7 +310,7 @@ describe('Container', () => {
     });
 
     it('should update the inner components props', () => {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: 'baz',
         bar: 'bam'
       });
@@ -583,7 +613,7 @@ describe('Container', () => {
     });
 
     it('should update the inner components props when the store changes', () => {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: expectedResult
       });
     });
@@ -607,7 +637,7 @@ describe('Container', () => {
     });
 
     it('should update the inner components props when the store changes', () => {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: expectedResult
       });
     });
@@ -640,6 +670,10 @@ describe('Container', () => {
       expect(failed).to.be.calledWith(expectedResult);
     });
   });
+
+  function withoutApp(props) {
+    return _.omit(props, 'app');
+  }
 
   function wrap(InnerComponent, containerOptions) {
     return Marty.createContainer(InnerComponent, containerOptions);

@@ -99,7 +99,7 @@ module.exports = function (React) {
         };
       },
       done(results) {
-        return <InnerComponent ref="innerComponent" {...this.props} {...results} />;
+        return <InnerComponent ref="innerComponent" {...this.props} {...results} app={this.app} />;
       },
       getInnerComponent() {
         return this.refs.innerComponent;
