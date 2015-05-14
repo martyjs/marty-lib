@@ -1,15 +1,31 @@
 'use strict';
 
+var _ = require('../../mindash');
+var log = require('../../core/logger');
+var warnings = require('../../core/warnings');
+
 var CONTENT_TYPE = 'Content-Type';
 var JSON_CONTENT_TYPE = 'application/json';
-var _ = require('../../mindash');
 
 module.exports = {
   id: 'parseJSON',
   after: function after(res) {
     if (isJson(res)) {
+      if (warnings.parseJSONDeprecated) {
+        log.warn('Warning: The parseJSON HTTP hook is being deprecated ' + 'http://martyjs.org/guides/upgrading/09_10.html#parseJSON');
+      }
+
       return res.json().then(function (body) {
-        res.body = body;
+        try {
+          res.body = body;
+        } catch (e) {
+          if (e instanceof TypeError) {
+            // Workaround for Chrome 43+ where Response.body is not settable.
+            Object.defineProperty(res, 'body', { value: body });
+          } else {
+            throw e;
+          }
+        }
 
         return res;
       });

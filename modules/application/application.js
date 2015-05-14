@@ -1,8 +1,8 @@
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -31,18 +31,39 @@ module.exports = function (React) {
       this.__isCoreType = true;
       this.__types = {};
 
-      _.extend(this, options);
-
       Object.defineProperty(this, 'dispatcher', {
         get: function get() {
           return dispatcher;
         }
       });
 
+      this.req = options.req;
+      this.res = options.res;
+
+      if (options.register) {
+        this.register(options.register);
+      }
+
+      this.__registerStatic(this.constructor);
+
       currentApplicationIs(this);
     }
 
     _createClass(Application, [{
+      key: '__registerStatic',
+      value: function __registerStatic(constructor) {
+        var _this = this;
+
+        var superConstructor = constructor.__proto__;
+        if (_.isFunction(superConstructor.__getRegistrations)) {
+          this.__registerStatic(superConstructor);
+        }
+
+        constructor.__getRegistrations().forEach(function (registration) {
+          return _this.register(registration[0], registration[1]);
+        });
+      }
+    }, {
       key: 'bindTo',
       value: function bindTo(InnerComponent) {
         var app = this;
@@ -76,7 +97,7 @@ module.exports = function (React) {
     }, {
       key: 'register',
       value: function register(id, ctor) {
-        var _this = this;
+        var _this2 = this;
 
         if (!this.dispatcher) {
           throw new Error('`super()` must be called before you can register anything');
@@ -135,7 +156,7 @@ module.exports = function (React) {
                 }
 
                 if (_.isFunction(ctor)) {
-                  _this.register(id, ctor);
+                  _this2.register(id, ctor);
                 } else {
                   registerObject(ctor, id);
                 }
@@ -149,7 +170,7 @@ module.exports = function (React) {
     }, {
       key: 'fetch',
       value: function fetch(cb, options) {
-        var _this2 = this;
+        var _this3 = this;
 
         var fetchFinished = undefined;
 
@@ -174,7 +195,7 @@ module.exports = function (React) {
         }
 
         return Promise.race([fetchFinished, timeout(options.timeout)]).then(function () {
-          return _this2.__diagnostics.toJSON();
+          return _this3.__diagnostics.toJSON();
         });
       }
     }, {
@@ -288,6 +309,20 @@ module.exports = function (React) {
       key: '__getCurrentApplication',
       value: function __getCurrentApplication(cb) {
         return getCurrentApplication(cb);
+      }
+    }, {
+      key: 'register',
+      value: function register(id, ctor) {
+        this.__getRegistrations().push([id, ctor]);
+      }
+    }, {
+      key: '__getRegistrations',
+      value: function __getRegistrations() {
+        if (!this.hasOwnProperty('__registrations')) {
+          this.__registrations = [];
+        }
+
+        return this.__registrations;
       }
     }]);
 

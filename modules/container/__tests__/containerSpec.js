@@ -2,6 +2,8 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
@@ -16,14 +18,13 @@ var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Container', function () {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updateProps, handler, handlerContext, initialContext;
+  var initialProps, updatedProps, handler, handlerContext, initialContext;
 
   beforeEach(function () {
     context = {
       foo: 'bar'
     };
 
-    updateProps = sinon.spy();
     handler = sinon.spy(function () {
       handlerContext = this;
       return React.createElement('div', null);
@@ -54,11 +55,13 @@ describe('Container', function () {
         return React.createElement('div');
       },
       getInitialState: function getInitialState() {
-        initialProps = this.props;
         initialContext = this.context;
+        initialProps = withoutApp(this.props);
         return {};
       },
-      componentWillReceiveProps: updateProps,
+      componentWillReceiveProps: function componentWillReceiveProps(props) {
+        updatedProps = withoutApp(props);
+      },
       foo: function foo() {
         return { bar: 'baz' };
       }
@@ -152,6 +155,43 @@ describe('Container', function () {
     });
   });
 
+  describe('when the component is bound to an application', function () {
+    var actualApplication = undefined;
+    var exectedApplication = undefined;
+
+    beforeEach(function () {
+      exectedApplication = new Marty.Application();
+
+      var TestComponent = (function (_React$Component) {
+        function TestComponent(props) {
+          _classCallCheck(this, TestComponent);
+
+          _get(Object.getPrototypeOf(TestComponent.prototype), 'constructor', this).call(this, props);
+          actualApplication = props.app;
+        }
+
+        _inherits(TestComponent, _React$Component);
+
+        _createClass(TestComponent, [{
+          key: 'render',
+          value: function render() {
+            return false;
+          }
+        }]);
+
+        return TestComponent;
+      })(React.Component);
+
+      var WrappedComponent = exectedApplication.bindTo(Marty.createContainer(TestComponent));
+
+      TestUtils.renderIntoDocument(React.createElement(WrappedComponent, null));
+    });
+
+    it('should pass the app down through the props', function () {
+      expect(actualApplication).to.equal(exectedApplication);
+    });
+  });
+
   describe('when I pass in a simple component', function () {
     beforeEach(function () {
       ContainerComponent = Marty.createContainer(InnerComponent);
@@ -170,16 +210,16 @@ describe('Container', function () {
     });
 
     it('should set the display name on ES6 React components', function () {
-      var ES6InnerComponent = (function (_React$Component) {
+      var ES6InnerComponent = (function (_React$Component2) {
         function ES6InnerComponent() {
           _classCallCheck(this, ES6InnerComponent);
 
-          if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
+          if (_React$Component2 != null) {
+            _React$Component2.apply(this, arguments);
           }
         }
 
-        _inherits(ES6InnerComponent, _React$Component);
+        _inherits(ES6InnerComponent, _React$Component2);
 
         _createClass(ES6InnerComponent, [{
           key: 'render',
@@ -317,7 +357,7 @@ describe('Container', function () {
     });
 
     it('should update the inner components props', function () {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: 'baz',
         bar: 'bam'
       });
@@ -620,7 +660,7 @@ describe('Container', function () {
     });
 
     it('should update the inner components props when the store changes', function () {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: expectedResult
       });
     });
@@ -644,7 +684,7 @@ describe('Container', function () {
     });
 
     it('should update the inner components props when the store changes', function () {
-      expect(updateProps).to.be.calledWith({
+      expect(updatedProps).to.eql({
         foo: expectedResult
       });
     });
@@ -677,6 +717,10 @@ describe('Container', function () {
       expect(_failed).to.be.calledWith(expectedResult);
     });
   });
+
+  function withoutApp(props) {
+    return _.omit(props, 'app');
+  }
 
   function wrap(InnerComponent, containerOptions) {
     return Marty.createContainer(InnerComponent, containerOptions);

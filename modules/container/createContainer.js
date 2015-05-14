@@ -96,7 +96,7 @@ module.exports = function (React) {
         };
       },
       done: function done(results) {
-        return React.createElement(InnerComponent, _extends({ ref: 'innerComponent' }, this.props, results));
+        return React.createElement(InnerComponent, _extends({ ref: 'innerComponent' }, this.props, results, { app: this.app }));
       },
       getInnerComponent: function getInnerComponent() {
         return this.refs.innerComponent;
