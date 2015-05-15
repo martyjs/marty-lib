@@ -48,31 +48,30 @@ class StoreObserver {
 }
 
 function resolveStores(options) {
+  var app = options.app;
   var stores = options.stores;
-  var appStores = options.app ? options.app.getAllStores() : {};
 
   if (stores && !_.isArray(stores)) {
     stores = [stores];
   }
 
-  return _.map(stores, (store) => {
-    if (_.isString(store)) {
-      if (!options.app) {
-        throw new Error('You can only reference stores by string if you are using an application.');
-      }
-
-      if (!appStores[store]) {
-        throw new Error(`Could not find the store ${store}`);
-      }
-
-      return appStores[store];
+  return _.map(stores, storeId => {
+    if (!_.isString(storeId)) {
+      throw new Error(
+        'Store Id\'s must be strings. If you\'re migrating to v0.10 ' +
+        'you have probably forgotten to update listenTo'
+      );
     }
 
-    if (!_.isFunction(store.addChangeListener)) {
-      throw new Error('Cannot listen to things that are not a store');
+    if (!app) {
+      throw new Error('Component not bound to an application');
     }
 
-    return store;
+    if (!app[storeId]) {
+      throw new Error(`Could not find the store ${storeId}`);
+    }
+
+    return app[storeId];
   });
 }
 
