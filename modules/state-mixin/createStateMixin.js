@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('../mindash');
+var inject = require('../core/inject');
 var uuid = require('../core/utils/uuid');
 var StoreObserver = require('../core/storeObserver');
 var reservedKeys = ['listenTo', 'getState', 'getInitialState'];
@@ -60,6 +61,8 @@ module.exports = function (React) {
           }
         });
 
+        inject(this, options);
+
         var el = this._currentElement;
 
         if (!this.displayName && el && el.type) {
@@ -70,7 +73,7 @@ module.exports = function (React) {
         this.__id = uuid.type('Component');
 
         if (options.getInitialState) {
-          this.state = options.getInitialState();
+          this.state = options.getInitialState.call(this);
         }
 
         this.state = _.extend(this.state, this.getState());

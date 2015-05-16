@@ -1,8 +1,10 @@
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
+    property = _x2,
+    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -14,11 +16,12 @@ var _ = require('../../mindash');
 var expect = require('chai').expect;
 var _fetch = require('../../store/fetch');
 var buildMarty = require('../../../test/lib/buildMarty');
-var TestUtils = require('react/addons').addons.TestUtils;
+
+var renderIntoDocument = require('react/addons').addons.TestUtils.renderIntoDocument;
 
 describe('Container', function () {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updatedProps, handler, handlerContext, initialContext;
+  var initialProps, updatedProps, handler, handlerContext, initialContext, innerFunctionContext;
 
   beforeEach(function () {
     context = {
@@ -55,6 +58,7 @@ describe('Container', function () {
         return React.createElement('div');
       },
       getInitialState: function getInitialState() {
+        innerFunctionContext = this;
         initialContext = this.context;
         initialProps = withoutApp(this.props);
         return {};
@@ -75,6 +79,85 @@ describe('Container', function () {
       function createContainerWithNoInnerComponent() {
         Marty.createContainer();
       }
+    });
+  });
+
+  describe('#inject', function () {
+    var containerFunctionContext;
+
+    beforeEach(function () {
+      app.register('dep1', Marty.Store);
+      app.register('dep2', Marty.Store);
+    });
+
+    describe('when I inject in a dependency', function () {
+      beforeEach(function () {
+        var Component = app.bindTo(Marty.createContainer(InnerComponent, {
+          inject: ['dep1', 'dep2'],
+          fetch: {
+            foo: function foo() {
+              containerFunctionContext = this;
+              return {};
+            }
+          }
+        }));
+
+        renderIntoDocument(React.createElement(Component, null));
+      });
+
+      it('should make it available in the container component', function () {
+        expect(deps(containerFunctionContext)).to.eql(deps(app));
+      });
+
+      it('should make it available in the inner component', function () {
+        expect(deps(innerFunctionContext)).to.eql(deps(app));
+      });
+    });
+
+    describe('when I inject a dependency to a component that have contextTypes', function () {
+      beforeEach(function () {
+        var _Component = (function (_React$Component) {
+          function _Component() {
+            _classCallCheck(this, _Component);
+
+            if (_React$Component != null) {
+              _React$Component.apply(this, arguments);
+            }
+          }
+
+          _inherits(_Component, _React$Component);
+
+          _createClass(_Component, [{
+            key: 'render',
+            value: function render() {
+              innerFunctionContext = this;
+              return false;
+            }
+          }]);
+
+          return _Component;
+        })(React.Component);
+
+        var Component = app.bindTo(Marty.createContainer(_Component, {
+          inject: ['dep1', 'dep2'],
+          fetch: {
+            foo: function foo() {
+              containerFunctionContext = this;
+              return {};
+            }
+          }
+        }));
+
+        renderIntoDocument(React.createElement(Component, null));
+      });
+
+      it('should make it available in the container component', function () {
+        expect(deps(containerFunctionContext)).to.eql(deps(app));
+      });
+
+      it('should make it available in the inner component', function () {
+        expect(deps(innerFunctionContext)).to.eql(deps(app));
+      });
     });
   });
 
@@ -121,7 +204,7 @@ describe('Container', function () {
         }
       });
 
-      element = TestUtils.renderIntoDocument(React.createElement(ParentComponent, null));
+      element = renderIntoDocument(React.createElement(ParentComponent, null));
 
       element.setState({
         foo: 'baz'
@@ -162,7 +245,7 @@ describe('Container', function () {
     beforeEach(function () {
       exectedApplication = new Marty.Application();
 
-      var TestComponent = (function (_React$Component) {
+      var TestComponent = (function (_React$Component2) {
         function TestComponent(props) {
           _classCallCheck(this, TestComponent);
 
@@ -170,7 +253,7 @@ describe('Container', function () {
           actualApplication = props.app;
         }
 
-        _inherits(TestComponent, _React$Component);
+        _inherits(TestComponent, _React$Component2);
 
         _createClass(TestComponent, [{
           key: 'render',
@@ -184,7 +267,7 @@ describe('Container', function () {
 
       var WrappedComponent = exectedApplication.bindTo(Marty.createContainer(TestComponent));
 
-      TestUtils.renderIntoDocument(React.createElement(WrappedComponent, null));
+      renderIntoDocument(React.createElement(WrappedComponent, null));
     });
 
     it('should pass the app down through the props', function () {
@@ -210,16 +293,16 @@ describe('Container', function () {
     });
 
     it('should set the display name on ES6 React components', function () {
-      var ES6InnerComponent = (function (_React$Component2) {
+      var ES6InnerComponent = (function (_React$Component3) {
         function ES6InnerComponent() {
           _classCallCheck(this, ES6InnerComponent);
 
-          if (_React$Component2 != null) {
-            _React$Component2.apply(this, arguments);
+          if (_React$Component3 != null) {
+            _React$Component3.apply(this, arguments);
           }
         }
 
-        _inherits(ES6InnerComponent, _React$Component2);
+        _inherits(ES6InnerComponent, _React$Component3);
 
         _createClass(ES6InnerComponent, [{
           key: 'render',
@@ -265,7 +348,7 @@ describe('Container', function () {
           return this.getInnerComponent();
         }
       });
-      element = TestUtils.renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null));
     });
 
     it('should return the inner component', function () {
@@ -349,7 +432,7 @@ describe('Container', function () {
         }
       });
 
-      var element = TestUtils.renderIntoDocument(React.createElement(ParentComponent, null));
+      var element = renderIntoDocument(React.createElement(ParentComponent, null));
 
       element.replaceState({
         foo: 'baz'
@@ -452,12 +535,12 @@ describe('Container', function () {
         listenTo: 'barStore',
         fetch: {
           bar: function bar() {
-            return this.app.barStore.getBar(expectedId);
+            return this.barStore.getBar(expectedId);
           }
         }
       }));
 
-      element = TestUtils.renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null));
 
       finishQuery();
 
@@ -479,7 +562,7 @@ describe('Container', function () {
         }
       });
 
-      element = TestUtils.renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null));
     });
 
     it('should expose the function with the element as the context', function () {
@@ -502,7 +585,7 @@ describe('Container', function () {
         }
       }));
 
-      element = TestUtils.renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null));
     });
 
     it('should make the application accessible on `this.app`', function () {
@@ -633,7 +716,7 @@ describe('Container', function () {
     beforeEach(function () {
       var app = new Marty.Application();
 
-      app.register('foo', Marty.createStore({
+      app.register('fooStore', Marty.createStore({
         getInitialState: function getInitialState() {
           return {};
         },
@@ -647,16 +730,16 @@ describe('Container', function () {
       }));
 
       element = render(app.bindTo(wrap(InnerComponent, {
-        listenTo: 'foo',
+        listenTo: 'fooStore',
         fetch: {
           foo: function foo() {
-            return this.app.foo.getFoo(123);
+            return this.fooStore.getFoo(123);
           }
         }
       })));
 
       expectedResult = { id: 123 };
-      app.foo.addFoo(expectedResult);
+      app.fooStore.addFoo(expectedResult);
     });
 
     it('should update the inner components props when the store changes', function () {
@@ -674,7 +757,7 @@ describe('Container', function () {
         listenTo: 'store',
         fetch: {
           foo: function foo() {
-            return this.app.store.getFoo(123);
+            return this.store.getFoo(123);
           }
         }
       })));
@@ -718,6 +801,10 @@ describe('Container', function () {
     });
   });
 
+  function deps(obj) {
+    return _.pick(obj, 'dep1', 'dep2');
+  }
+
   function withoutApp(props) {
     return _.omit(props, 'app');
   }
@@ -737,6 +824,6 @@ describe('Container', function () {
       }
     });
 
-    return TestUtils.renderIntoDocument(React.createElement(ContextContainer, null));
+    return renderIntoDocument(React.createElement(ContextContainer, null));
   }
 });

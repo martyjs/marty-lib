@@ -3,6 +3,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _ = require('../mindash');
+var inject = require('../core/inject');
 var uuid = require('../core/utils/uuid');
 var StoreObserver = require('../core/storeObserver');
 var getFetchResult = require('./getFetchResult');
@@ -11,6 +12,9 @@ var getClassName = require('../core/utils/getClassName');
 var RESERVED_FUNCTIONS = ['contextTypes', 'componentDidMount', 'onStoreChanged', 'componentWillUnmount', 'getInitialState', 'getState', 'render'];
 
 module.exports = function (React) {
+  var DEFAULT_CONTEXT_TYPES = {
+    app: React.PropTypes.object };
+
   return function createContainer(InnerComponent, config) {
     config = config || {};
 
@@ -20,8 +24,11 @@ module.exports = function (React) {
 
     var id = uuid.type('Component');
     var innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
-    var contextTypes = _.extend({
-      app: React.PropTypes.object }, config.contextTypes);
+    var contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, config.contextTypes);
+
+    InnerComponent.contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, InnerComponent.contextTypes);
+
+    inject(InnerComponent.prototype, config);
 
     var Container = React.createClass(_.extend({
       contextTypes: contextTypes,
@@ -79,6 +86,8 @@ module.exports = function (React) {
       },
       getInitialState: function getInitialState() {
         var _this = this;
+
+        inject(this, config);
 
         Object.defineProperty(this, 'app', {
           get: function get() {
