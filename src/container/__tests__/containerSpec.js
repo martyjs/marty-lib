@@ -4,11 +4,11 @@ var _ = require('../../mindash');
 var expect = require('chai').expect;
 var fetch = require('../../store/fetch');
 var buildMarty = require('../../../test/lib/buildMarty');
-var TestUtils = require('react/addons').addons.TestUtils;
+var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('Container', () => {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updatedProps, handler, handlerContext, initialContext;
+  var initialProps, updatedProps, handler, handlerContext, initialContext, innerFunctionContext;
 
   beforeEach(() => {
     context = {
@@ -43,6 +43,7 @@ describe('Container', () => {
         return React.createElement('div');
       },
       getInitialState() {
+        innerFunctionContext = this;
         initialContext = this.context;
         initialProps = withoutApp(this.props);
         return {};
@@ -62,6 +63,41 @@ describe('Container', () => {
 
       function createContainerWithNoInnerComponent() {
         Marty.createContainer();
+      }
+    });
+  });
+
+  describe('#inject', () => {
+    describe('when I inject in a dependency', () => {
+      var containerFunctionContext;
+
+      beforeEach(function () {
+        app.register('dep1', Marty.Store);
+        app.register('dep2', Marty.Store);
+
+        var Component = app.bindTo(Marty.createContainer(InnerComponent, {
+          inject: ['dep1', 'dep2'],
+          fetch: {
+            foo() {
+              containerFunctionContext = this;
+              return {};
+            }
+          }
+        }));
+
+        renderIntoDocument(<Component />);
+      });
+
+      it('should make it available in the container component', () => {
+        expect(deps(containerFunctionContext)).to.eql(deps(app));
+      });
+
+      it('should make it available in the inner component', () => {
+        expect(deps(innerFunctionContext)).to.eql(deps(app));
+      });
+
+      function deps(obj) {
+        return _.pick(obj, 'dep1', 'dep2');
       }
     });
   });
@@ -103,7 +139,7 @@ describe('Container', () => {
         }
       });
 
-      element = TestUtils.renderIntoDocument(<ParentComponent />);
+      element = renderIntoDocument(<ParentComponent />);
 
       element.setState({
         foo: 'baz'
@@ -158,7 +194,7 @@ describe('Container', () => {
         Marty.createContainer(TestComponent)
       );
 
-      TestUtils.renderIntoDocument(<WrappedComponent />);
+      renderIntoDocument(<WrappedComponent />);
     });
 
     it('should pass the app down through the props', () => {
@@ -224,7 +260,7 @@ describe('Container', () => {
           return this.getInnerComponent();
         }
       });
-      element = TestUtils.renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />);
     });
 
     it('should return the inner component', () => {
@@ -302,7 +338,7 @@ describe('Container', () => {
         }
       });
 
-      var element = TestUtils.renderIntoDocument(<ParentComponent />);
+      var element = renderIntoDocument(<ParentComponent />);
 
       element.replaceState({
         foo: 'baz'
@@ -405,12 +441,12 @@ describe('Container', () => {
         listenTo: 'barStore',
         fetch: {
           bar() {
-            return this.app.barStore.getBar(expectedId);
+            return this.barStore.getBar(expectedId);
           }
         }
       }));
 
-      element = TestUtils.renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />);
 
       finishQuery();
 
@@ -432,7 +468,7 @@ describe('Container', () => {
         }
       });
 
-      element = TestUtils.renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />);
     });
 
     it('should expose the function with the element as the context', () => {
@@ -455,7 +491,7 @@ describe('Container', () => {
         }
       }));
 
-      element = TestUtils.renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />);
     });
 
     it('should make the application accessible on `this.app`', () => {
@@ -586,7 +622,7 @@ describe('Container', () => {
     beforeEach(() => {
       var app = new Marty.Application();
 
-      app.register('foo', Marty.createStore({
+      app.register('fooStore', Marty.createStore({
         getInitialState() {
           return {};
         },
@@ -600,16 +636,16 @@ describe('Container', () => {
       }));
 
       element = render(app.bindTo(wrap(InnerComponent, {
-        listenTo: 'foo',
+        listenTo: 'fooStore',
         fetch: {
           foo() {
-            return this.app.foo.getFoo(123);
+            return this.fooStore.getFoo(123);
           }
         }
       })));
 
       expectedResult = { id: 123 };
-      app.foo.addFoo(expectedResult);
+      app.fooStore.addFoo(expectedResult);
     });
 
     it('should update the inner components props when the store changes', () => {
@@ -627,7 +663,7 @@ describe('Container', () => {
         listenTo: 'store',
         fetch: {
           foo() {
-            return this.app.store.getFoo(123);
+            return this.store.getFoo(123);
           }
         }
       })));
@@ -688,6 +724,6 @@ describe('Container', () => {
       }
     });
 
-    return TestUtils.renderIntoDocument(<ContextContainer />);
+    return renderIntoDocument(<ContextContainer />);
   }
 });

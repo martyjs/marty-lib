@@ -1,4 +1,5 @@
 let _ = require('../mindash');
+let inject = require('../core/inject');
 let uuid = require('../core/utils/uuid');
 let StoreObserver = require('../core/storeObserver');
 let getFetchResult = require('./getFetchResult');
@@ -27,6 +28,8 @@ module.exports = function (React) {
     let contextTypes = _.extend({
       app: React.PropTypes.object,
     }, config.contextTypes);
+
+    inject(InnerComponent.prototype, config);
 
     let Container = React.createClass(_.extend({
       contextTypes: contextTypes,
@@ -83,6 +86,8 @@ module.exports = function (React) {
         }
       },
       getInitialState() {
+        inject(this, config);
+
         Object.defineProperty(this, 'app', {
           get: () => {
             if (this.context) {

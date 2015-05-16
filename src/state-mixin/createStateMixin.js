@@ -1,4 +1,5 @@
 let _ = require('../mindash');
+let inject = require('../core/inject');
 let uuid = require('../core/utils/uuid');
 let StoreObserver = require('../core/storeObserver');
 let reservedKeys = ['listenTo', 'getState', 'getInitialState'];
@@ -57,6 +58,8 @@ module.exports = function (React) {
           }
         });
 
+        inject(this, options);
+
         let el = this._currentElement;
 
         if (!this.displayName && el && el.type) {
@@ -67,7 +70,7 @@ module.exports = function (React) {
         this.__id = uuid.type('Component');
 
         if (options.getInitialState) {
-          this.state = options.getInitialState();
+          this.state = options.getInitialState.call(this);
         }
 
         this.state = _.extend(this.state, this.getState());
