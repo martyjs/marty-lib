@@ -68,13 +68,15 @@ describe('Container', () => {
   });
 
   describe('#inject', () => {
+    var containerFunctionContext;
+
+    beforeEach(() => {
+      app.register('dep1', Marty.Store);
+      app.register('dep2', Marty.Store);
+    });
+
     describe('when I inject in a dependency', () => {
-      var containerFunctionContext;
-
       beforeEach(function () {
-        app.register('dep1', Marty.Store);
-        app.register('dep2', Marty.Store);
-
         var Component = app.bindTo(Marty.createContainer(InnerComponent, {
           inject: ['dep1', 'dep2'],
           fetch: {
@@ -95,10 +97,37 @@ describe('Container', () => {
       it('should make it available in the inner component', () => {
         expect(deps(innerFunctionContext)).to.eql(deps(app));
       });
+    });
 
-      function deps(obj) {
-        return _.pick(obj, 'dep1', 'dep2');
-      }
+    describe('when I inject a dependency to a component that have contextTypes', () => {
+      beforeEach(function () {
+        class _Component extends React.Component {
+          render() {
+            innerFunctionContext = this;
+            return false;
+          }
+        }
+
+        var Component = app.bindTo(Marty.createContainer(_Component, {
+          inject: ['dep1', 'dep2'],
+          fetch: {
+            foo() {
+              containerFunctionContext = this;
+              return {};
+            }
+          }
+        }));
+
+        renderIntoDocument(<Component />);
+      });
+
+      it('should make it available in the container component', () => {
+        expect(deps(containerFunctionContext)).to.eql(deps(app));
+      });
+
+      it('should make it available in the inner component', () => {
+        expect(deps(innerFunctionContext)).to.eql(deps(app));
+      });
     });
   });
 
@@ -706,6 +735,10 @@ describe('Container', () => {
       expect(failed).to.be.calledWith(expectedResult);
     });
   });
+
+  function deps(obj) {
+    return _.pick(obj, 'dep1', 'dep2');
+  }
 
   function withoutApp(props) {
     return _.omit(props, 'app');

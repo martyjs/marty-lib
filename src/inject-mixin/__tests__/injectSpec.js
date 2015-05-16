@@ -12,10 +12,15 @@ describe('Marty.inject()', function () {
     app = new Marty.Application();
 
     app.register('fooStore', Marty.Store);
+    app.register('foo.barStore', Marty.Store);
     app.register('barActions', Marty.ActionCreators);
 
     var Component = app.bindTo(React.createClass({
-      mixins: [Marty.inject('fooStore', 'barActions')],
+      mixins: [Marty.inject(
+        'fooStore',
+        'barActions',
+        'foo.barStore'
+      )],
       render() {
         functionContext = this;
         return false;
@@ -33,6 +38,6 @@ describe('Marty.inject()', function () {
   });
 
   function deps(obj) {
-    return _.pick(obj, 'fooStore', 'barActions');
+    return _.pick(obj, 'fooStore', 'barActions', 'foo');
   }
 });

@@ -16,6 +16,10 @@ let RESERVED_FUNCTIONS = [
 ];
 
 module.exports = function (React) {
+  let DEFAULT_CONTEXT_TYPES = {
+    app: React.PropTypes.object,
+  };
+
   return function createContainer(InnerComponent, config) {
     config = config || {};
 
@@ -25,9 +29,17 @@ module.exports = function (React) {
 
     let id = uuid.type('Component');
     let innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
-    let contextTypes = _.extend({
-      app: React.PropTypes.object,
-    }, config.contextTypes);
+    let contextTypes = _.extend(
+      {},
+      DEFAULT_CONTEXT_TYPES,
+      config.contextTypes
+    );
+
+    InnerComponent.contextTypes = _.extend(
+      {},
+      DEFAULT_CONTEXT_TYPES,
+      InnerComponent.contextTypes
+    );
 
     inject(InnerComponent.prototype, config);
 
