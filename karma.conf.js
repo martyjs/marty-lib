@@ -2,6 +2,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var yaml = require('js-yaml');
 var shell = require('shelljs');
+var babelify = require('babelify');
 
 var SCRIPTS = [
   './src/http-state-source/__tests__/lib/mockServer.js'
@@ -119,7 +120,14 @@ module.exports = function (config) {
       browserNoActivityTimeout: 100000,
       browserify: {
         bare: true,
-        debug: true
+        debug: true,
+        configure: function (bundle) {
+          bundle.transform(babelify.configure({
+            optional: ['es7.decorators', 'es7.classProperties']
+          }));
+
+          bundle.transform('envify');
+        }
       },
       files: [
         'test/browser/setup.js',
