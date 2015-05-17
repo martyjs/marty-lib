@@ -1,10 +1,11 @@
 let _ = require('../mindash');
+let getHandlers = require('./getHandlers');
 
 function handleAction(action) {
   this.__validateHandlers();
 
   let store = this;
-  let handlers = _.object(_.map(store.handlers, getHandlerWithPredicates));
+  let handlers = _.object(_.map(getHandlers(store), getHandlerWithPredicates));
 
   _.each(handlers, function (predicates, handlerName) {
     _.each(predicates, function (predicate) {
