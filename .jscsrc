@@ -17,7 +17,9 @@
     "<="
   ],
   "excludeFiles": [
-    "dist/*"
+    "dist/*",
+    "src/store/__tests__/handlesSpec.js",
+    "src/store/__tests__/storeClassProperties.js"
   ],
   "maximumLineLength": {
     "value": 120,
