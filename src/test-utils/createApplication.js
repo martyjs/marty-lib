@@ -39,7 +39,7 @@ function createApplication(Application, options) {
         _register.call(this, key, value);
       }
     }
-  }
+  };
 
   return new TestApplication();
 }
