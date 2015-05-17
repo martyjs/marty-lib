@@ -170,8 +170,8 @@ module.exports = function (React) {
       });
 
       this.__deferredFetchFinished = deferred();
-      this.__diagnostics = new FetchDiagnostics();
       fetchFinished = this.__deferredFetchFinished.promise;
+      this.__diagnostics = new FetchDiagnostics(options.prevDiagnostics);
 
       try {
         cb.call(this);
@@ -187,7 +187,7 @@ module.exports = function (React) {
 
       return Promise
         .race([fetchFinished, timeout(options.timeout)])
-        .then(() => this.__diagnostics.toJSON());
+        .then(() => this.__diagnostics);
     }
 
     fetchStarted(storeId, fetchId) {

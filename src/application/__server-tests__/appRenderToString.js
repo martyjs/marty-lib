@@ -5,6 +5,7 @@ var uuid = require('../../core/utils/uuid');
 var buildMarty = require('../../../test/lib/buildMarty');
 var es6MessagesFixtures = require('./fixtures/es6Messages');
 var describeStyles = require('../../../test/lib/describeStyles');
+var childComponentsFixtures = require('./fixtures/childComponents');
 var classicMessagesFixtures = require('./fixtures/classicMessages');
 
 var MARTY_STATE_ID = '__marty-state';
@@ -87,6 +88,21 @@ describeStyles('Application#renderToString', function (styles) {
 
     it('should include the serialized state', () => {
       expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+    });
+  });
+
+  describe('when there are child components', () => {
+    beforeEach(() => {
+      var { Application, Component } = childComponentsFixtures(Marty);
+
+      var app = new Application();
+      var WrappedComponent = app.bindTo(Component);
+
+      return app.renderToString(<WrappedComponent/>).then(loadDOM);
+    });
+
+    it('should render both the parent and child component', function () {
+      expect($('#child').text()).to.eql('Child');
     });
   });
 

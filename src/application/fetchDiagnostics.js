@@ -1,12 +1,24 @@
 let _ = require('../mindash');
 
 class FetchDiagnostics {
-  constructor() {
-    this.numberOfPendingFetches = 0;
-    this.fetches = [];
+  constructor(prevDiagnostics) {
+    prevDiagnostics = prevDiagnostics || {
+      fetches: [],
+      numberOfPendingFetches: 0
+    };
+
+    this.numberOfNewFetchesMade = 0;
+    this.fetches = prevDiagnostics.fetches;
+    this.numberOfPendingFetches = prevDiagnostics.numberOfPendingFetches;
   }
 
   fetchStarted(storeId, fetchId) {
+    var fetch = this.getFetch(storeId, fetchId);
+
+    if (!fetch) {
+      this.numberOfNewFetchesMade++;
+    }
+
     this.numberOfPendingFetches++;
     this.fetches.push({
       status: 'PENDING',
@@ -17,10 +29,7 @@ class FetchDiagnostics {
   }
 
   fetchFinished(storeId, fetchId, status, options) {
-    let fetch  = _.find(this.fetches, {
-      storeId: storeId,
-      fetchId: fetchId
-    });
+    var fetch = this.getFetch(storeId, fetchId);
 
     if (fetch) {
       _.extend(fetch, {
@@ -30,6 +39,13 @@ class FetchDiagnostics {
 
       this.numberOfPendingFetches--;
     }
+  }
+
+  getFetch(storeId, fetchId) {
+    return _.find(this.fetches, {
+      storeId: storeId,
+      fetchId: fetchId
+    });
   }
 
   get hasPendingFetches () {
