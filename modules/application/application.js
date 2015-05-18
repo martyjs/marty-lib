@@ -79,8 +79,11 @@ module.exports = function (React) {
           getChildContext: function getChildContext() {
             return { app: app };
           },
+          getInnerComponent: function getInnerComponent() {
+            return this.refs.innerComponent;
+          },
           render: function render() {
-            return React.createElement(InnerComponent, _extends({ ref: 'subject' }, this.props));
+            return React.createElement(InnerComponent, _extends({ ref: 'innerComponent' }, this.props));
           }
         });
       }

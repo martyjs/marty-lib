@@ -1,12 +1,12 @@
-var _ = require('../mindash');
-var DEFAULT_OPTIONS = {
+let _ = require('../mindash');
+let DEFAULT_OPTIONS = {
   include: [],
   exclude: [],
   stub: {}
 };
 
 function createApplication(Application, options) {
-  var {
+  let {
     include,
     exclude,
     stub
@@ -15,7 +15,7 @@ function createApplication(Application, options) {
   // Inherit from application so we modify prototype
   class TestApplication extends Application { }
 
-  var _register = TestApplication.prototype.register;
+  let _register = TestApplication.prototype.register;
 
   if (!_.isArray(include)) {
     include = [include];
@@ -25,11 +25,14 @@ function createApplication(Application, options) {
     exclude = [exclude];
   }
 
+  let stubIds = _.keys(stub);
+
   TestApplication.prototype.register = function stubRegister(key, value) {
     if (!_.isString(key)) {
       _register.apply(this, arguments);
     } else if (stub[key]) {
       this[key] = stub[key];
+      stubIds = _.difference(stubIds, [key]);
     } else if (include.length) {
       if (include.indexOf(key) !== -1) {
         _register.call(this, key, value);
@@ -41,7 +44,13 @@ function createApplication(Application, options) {
     }
   };
 
-  return new TestApplication();
+  let app = new TestApplication();
+
+  // If any properties have not been registered
+  // then just re-assign them
+  _.each(stubIds,  id => app[id] = stub[id]);
+
+  return app;
 }
 
 module.exports = createApplication;

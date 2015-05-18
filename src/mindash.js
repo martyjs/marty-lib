@@ -24,6 +24,7 @@ module.exports = {
   pick: require('lodash/object/pick'),
   toArray: require('lodash/lang/toArray'),
   union: require('lodash/array/union'),
+  keys: require('lodash/object/keys'),
   values: require('lodash/object/values'),
   once: require('lodash/function/once'),
   filter: require('lodash/collection/filter'),

@@ -44,11 +44,14 @@ function createApplication(Application, options) {
     exclude = [exclude];
   }
 
+  var stubIds = _.keys(stub);
+
   TestApplication.prototype.register = function stubRegister(key, value) {
     if (!_.isString(key)) {
       _register.apply(this, arguments);
     } else if (stub[key]) {
       this[key] = stub[key];
+      stubIds = _.difference(stubIds, [key]);
     } else if (include.length) {
       if (include.indexOf(key) !== -1) {
         _register.call(this, key, value);
@@ -60,7 +63,15 @@ function createApplication(Application, options) {
     }
   };
 
-  return new TestApplication();
+  var app = new TestApplication();
+
+  // If any properties have not been registered
+  // then just re-assign them
+  _.each(stubIds, function (id) {
+    return app[id] = stub[id];
+  });
+
+  return app;
 }
 
 module.exports = createApplication;

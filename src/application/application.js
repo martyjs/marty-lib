@@ -80,8 +80,11 @@ module.exports = function (React) {
         getChildContext() {
           return { app: app };
         },
+        getInnerComponent() {
+          return this.refs.innerComponent;
+        },
         render() {
-          return <InnerComponent ref="subject" {...this.props} />;
+          return <InnerComponent ref="innerComponent" {...this.props} />;
         }
       });
     }
