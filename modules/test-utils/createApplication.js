@@ -65,6 +65,11 @@ function createApplication(Application, options) {
 
   var app = new TestApplication();
 
+  app.dispatcher.dispatchedActions = [];
+  app.dispatcher.register(function (action) {
+    app.dispatcher.dispatchedActions.push(action);
+  });
+
   // If any properties have not been registered
   // then just re-assign them
   _.each(stubIds, function (id) {

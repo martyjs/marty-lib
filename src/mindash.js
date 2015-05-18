@@ -11,6 +11,7 @@ module.exports = {
   has: require('lodash/object/has'),
   initial: require('lodash/array/initial'),
   isArray: require('lodash/lang/isArray'),
+  isEqual: require('lodash/lang/isEqual'),
   isFunction: require('lodash/internal/baseIsFunction'),
   isNull: require('lodash/lang/isNull'),
   isObject: require('lodash/lang/isObject'),
