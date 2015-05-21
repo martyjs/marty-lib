@@ -92,7 +92,7 @@ function requestOptions(method, source, options) {
     headers: {}
   });
 
-  options.method = method.toLowerCase();
+  options.method = method.toUpperCase();
 
   if (baseUrl) {
     let separator = '';
