@@ -1,12 +1,13 @@
 'use strict';
 
 var _ = require('../mindash');
+var getHandlers = require('./getHandlers');
 
 function handleAction(action) {
   this.__validateHandlers();
 
   var store = this;
-  var handlers = _.object(_.map(store.handlers, getHandlerWithPredicates));
+  var handlers = _.object(_.map(getHandlers(store), getHandlerWithPredicates));
 
   _.each(handlers, function (predicates, handlerName) {
     _.each(predicates, function (predicate) {

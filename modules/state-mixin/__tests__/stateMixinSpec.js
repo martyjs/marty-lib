@@ -309,6 +309,6 @@ describe('StateMixin', function () {
       }
     }))));
 
-    return element.refs.subject;
+    return element.refs.innerComponent;
   }
 });

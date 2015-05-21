@@ -1,4 +1,7 @@
 module.exports = {
   dispatch: require('./dispatch'),
-  createApplication: require('./createApplication')
+  createStore: require('./createStore'),
+  hasDispatched: require('./hasDispatched'),
+  createApplication: require('./createApplication'),
+  getDispatchedActionsWithType: require('./getDispatchedActionsWithType')
 };

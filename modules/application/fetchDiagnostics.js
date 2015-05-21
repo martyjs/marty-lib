@@ -7,16 +7,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var _ = require('../mindash');
 
 var FetchDiagnostics = (function () {
-  function FetchDiagnostics() {
+  function FetchDiagnostics(prevDiagnostics) {
     _classCallCheck(this, FetchDiagnostics);
 
-    this.numberOfPendingFetches = 0;
-    this.fetches = [];
+    prevDiagnostics = prevDiagnostics || {
+      fetches: [],
+      numberOfPendingFetches: 0
+    };
+
+    this.numberOfNewFetchesMade = 0;
+    this.fetches = prevDiagnostics.fetches;
+    this.numberOfPendingFetches = prevDiagnostics.numberOfPendingFetches;
   }
 
   _createClass(FetchDiagnostics, [{
     key: 'fetchStarted',
     value: function fetchStarted(storeId, fetchId) {
+      var fetch = this.getFetch(storeId, fetchId);
+
+      if (!fetch) {
+        this.numberOfNewFetchesMade++;
+      }
+
       this.numberOfPendingFetches++;
       this.fetches.push({
         status: 'PENDING',
@@ -28,10 +40,7 @@ var FetchDiagnostics = (function () {
   }, {
     key: 'fetchFinished',
     value: function fetchFinished(storeId, fetchId, status, options) {
-      var fetch = _.find(this.fetches, {
-        storeId: storeId,
-        fetchId: fetchId
-      });
+      var fetch = this.getFetch(storeId, fetchId);
 
       if (fetch) {
         _.extend(fetch, {
@@ -41,6 +50,14 @@ var FetchDiagnostics = (function () {
 
         this.numberOfPendingFetches--;
       }
+    }
+  }, {
+    key: 'getFetch',
+    value: function getFetch(storeId, fetchId) {
+      return _.find(this.fetches, {
+        storeId: storeId,
+        fetchId: fetchId
+      });
     }
   }, {
     key: 'hasPendingFetches',
