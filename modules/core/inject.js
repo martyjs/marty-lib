@@ -13,10 +13,8 @@ var map = _require.map;
 var filter = _require.filter;
 
 function inject(obj, options) {
-  Object.defineProperty(obj, 'app', {
-    get: function get() {
-      return findApp(this);
-    }
+  get('app', function () {
+    return findApp(this);
   });
 
   var dependencies = union(toArray(options.inject || []), toArray(options.listenTo || []));
@@ -24,12 +22,18 @@ function inject(obj, options) {
   dependencies = map(filter(dependencies, undefinedValues), topLevelDependency);
 
   each(dependencies, function (dependency) {
-    Object.defineProperty(obj, dependency, {
-      get: function get() {
-        return this.app[dependency];
-      }
+    get(dependency, function () {
+      return this.app[dependency];
     });
   });
+
+  function get(name, getter) {
+    if (!obj.hasOwnProperty(name)) {
+      Object.defineProperty(obj, name, {
+        get: getter
+      });
+    }
+  }
 }
 
 function toArray(obj) {

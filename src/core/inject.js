@@ -10,10 +10,8 @@ let {
 } = require('../mindash');
 
 function inject(obj, options) {
-  Object.defineProperty(obj, 'app', {
-    get() {
-      return findApp(this);
-    }
+  get('app', function () {
+    return findApp(this);
   });
 
   let dependencies = union(
@@ -24,12 +22,18 @@ function inject(obj, options) {
   dependencies = map(filter(dependencies, undefinedValues), topLevelDependency);
 
   each(dependencies, dependency => {
-    Object.defineProperty(obj, dependency, {
-      get() {
-        return this.app[dependency];
-      }
+    get(dependency, function () {
+      return this.app[dependency];
     });
   });
+
+  function get(name, getter) {
+    if (!obj.hasOwnProperty(name)) {
+      Object.defineProperty(obj, name, {
+        get: getter
+      });
+    }
+  }
 }
 
 function toArray(obj) {
