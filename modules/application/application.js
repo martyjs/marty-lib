@@ -44,26 +44,10 @@ module.exports = function (React) {
         this.register(options.register);
       }
 
-      this.__registerStatic(this.constructor);
-
       currentApplicationIs(this);
     }
 
     _createClass(Application, [{
-      key: '__registerStatic',
-      value: function __registerStatic(constructor) {
-        var _this = this;
-
-        var superConstructor = constructor.__proto__;
-        if (_.isFunction(superConstructor.__getRegistrations)) {
-          this.__registerStatic(superConstructor);
-        }
-
-        constructor.__getRegistrations().forEach(function (registration) {
-          return _this.register(registration[0], registration[1]);
-        });
-      }
-    }, {
       key: 'bindTo',
       value: function bindTo(InnerComponent) {
         var app = this;
@@ -100,7 +84,7 @@ module.exports = function (React) {
     }, {
       key: 'register',
       value: function register(id, ctor) {
-        var _this2 = this;
+        var _this = this;
 
         if (!this.dispatcher) {
           throw new Error('`super()` must be called before you can register anything');
@@ -159,7 +143,7 @@ module.exports = function (React) {
                 }
 
                 if (_.isFunction(ctor)) {
-                  _this2.register(id, ctor);
+                  _this.register(id, ctor);
                 } else {
                   registerObject(ctor, id);
                 }
@@ -173,7 +157,7 @@ module.exports = function (React) {
     }, {
       key: 'fetch',
       value: function fetch(cb, options) {
-        var _this3 = this;
+        var _this2 = this;
 
         var fetchFinished = undefined;
 
@@ -198,7 +182,7 @@ module.exports = function (React) {
         }
 
         return Promise.race([fetchFinished, timeout(options.timeout)]).then(function () {
-          return _this3.__diagnostics;
+          return _this2.__diagnostics;
         });
       }
     }, {
@@ -312,20 +296,6 @@ module.exports = function (React) {
       key: '__getCurrentApplication',
       value: function __getCurrentApplication(cb) {
         return getCurrentApplication(cb);
-      }
-    }, {
-      key: 'register',
-      value: function register(id, ctor) {
-        this.__getRegistrations().push([id, ctor]);
-      }
-    }, {
-      key: '__getRegistrations',
-      value: function __getRegistrations() {
-        if (!this.hasOwnProperty('__registrations')) {
-          this.__registrations = [];
-        }
-
-        return this.__registrations;
       }
     }]);
 

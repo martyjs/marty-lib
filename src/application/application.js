@@ -34,36 +34,11 @@ module.exports = function (React) {
         this.register(options.register);
       }
 
-      this.__registerStatic(this.constructor);
-
       currentApplicationIs(this);
     }
 
     static __getCurrentApplication(cb) {
       return getCurrentApplication(cb);
-    }
-
-    static register(id, ctor) {
-      this.__getRegistrations().push([id, ctor]);
-    }
-
-    static __getRegistrations() {
-      if (!this.hasOwnProperty('__registrations')) {
-        this.__registrations = [];
-      }
-
-      return this.__registrations;
-    }
-
-    __registerStatic(constructor) {
-      const superConstructor = constructor.__proto__;
-      if (_.isFunction(superConstructor.__getRegistrations)) {
-        this.__registerStatic(superConstructor);
-      }
-
-      constructor.__getRegistrations().forEach(
-          registration => this.register(registration[0], registration[1])
-      );
     }
 
     bindTo(InnerComponent) {
