@@ -1,18 +1,18 @@
 let _ = require('../mindash');
-let injectDependencies = require('../core/inject');
+let inject = require('../core/inject');
 
 module.exports = function (React) {
-  return function inject(/*...dependencies*/) {
-    let dependencies = _.toArray(arguments);
+  return function (/*...dependencies*/) {
+    let options = {
+      inject: _.toArray(arguments)
+    };
 
     return {
       contextTypes: {
         app: React.PropTypes.object
       },
       getInitialState: function () {
-        injectDependencies(this, {
-          inject: dependencies
-        });
+        inject(this, options);
 
         return {};
       }

@@ -1,5 +1,6 @@
 'use strict';
 
+var findApp = require('./findApp');
 var invariant = require('invariant');
 
 var _require = require('../mindash');
@@ -12,6 +13,12 @@ var map = _require.map;
 var filter = _require.filter;
 
 function inject(obj, options) {
+  Object.defineProperty(obj, 'app', {
+    get: function get() {
+      return findApp(this);
+    }
+  });
+
   var dependencies = union(toArray(options.inject || []), toArray(options.listenTo || []));
 
   dependencies = map(filter(dependencies, undefinedValues), topLevelDependency);
@@ -19,7 +26,7 @@ function inject(obj, options) {
   each(dependencies, function (dependency) {
     Object.defineProperty(obj, dependency, {
       get: function get() {
-        return this.context.app[dependency];
+        return this.app[dependency];
       }
     });
   });

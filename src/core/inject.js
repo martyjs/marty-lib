@@ -1,3 +1,4 @@
+let findApp = require('./findApp');
 let invariant = require('invariant');
 let {
   each,
@@ -9,6 +10,12 @@ let {
 } = require('../mindash');
 
 function inject(obj, options) {
+  Object.defineProperty(obj, 'app', {
+    get() {
+      return findApp(this);
+    }
+  });
+
   let dependencies = union(
     toArray(options.inject || []),
     toArray(options.listenTo || [])
@@ -19,7 +26,7 @@ function inject(obj, options) {
   each(dependencies, dependency => {
     Object.defineProperty(obj, dependency, {
       get() {
-        return this.context.app[dependency];
+        return this.app[dependency];
       }
     });
   });

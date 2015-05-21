@@ -85,18 +85,7 @@ module.exports = function (React) {
         }
       },
       getInitialState: function getInitialState() {
-        var _this = this;
-
         inject(this, config);
-
-        Object.defineProperty(this, 'app', {
-          get: function get() {
-            if (_this.context) {
-              return _this.context.app;
-            }
-          }
-        });
-
         return this.getState();
       },
       getState: function getState() {

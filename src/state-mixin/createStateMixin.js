@@ -50,14 +50,6 @@ module.exports = function (React) {
         return (options.getState || _.noop).call(this);
       },
       getInitialState: function () {
-        Object.defineProperty(this, 'app', {
-          get: () => {
-            if (this.context) {
-              return this.context.app;
-            }
-          }
-        });
-
         inject(this, options);
 
         let el = this._currentElement;

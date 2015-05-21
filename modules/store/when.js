@@ -1,6 +1,5 @@
 'use strict';
 
-var log = require('../core/logger');
 var _ = require('../mindash');
 var StatusConstants = require('./fetchConstants');
 
@@ -20,33 +19,15 @@ function when(handlers, parentContext) {
     WhenContext.prototype = parentContext;
   }
 
-  try {
-    switch (this.status) {
-      case StatusConstants.PENDING:
-        return handler.call(new WhenContext());
-      case StatusConstants.FAILED:
-        return handler.call(new WhenContext(), this.error);
-      case StatusConstants.DONE:
-        return handler.call(new WhenContext(), this.result);
-      default:
-        throw new Error('Unknown fetch result status');
-    }
-  } catch (e) {
-    var errorMessage = 'An error occured when handling the DONE state of ';
-
-    if (this.id) {
-      errorMessage += 'the fetch \'' + this.id + '\'';
-    } else {
-      errorMessage += 'a fetch';
-    }
-
-    if (this.store) {
-      errorMessage += ' from the store ' + this.store;
-    }
-
-    log.error(errorMessage, e);
-
-    throw e;
+  switch (this.status) {
+    case StatusConstants.PENDING:
+      return handler.call(new WhenContext());
+    case StatusConstants.FAILED:
+      return handler.call(new WhenContext(), this.error);
+    case StatusConstants.DONE:
+      return handler.call(new WhenContext(), this.result);
+    default:
+      throw new Error('Unknown fetch result status');
   }
 
   function WhenContext() {

@@ -1,6 +1,5 @@
 'use strict';
 
-var util = require('util');
 var sinon = require('sinon');
 var React = require('react');
 var when = require('../when');
@@ -26,34 +25,6 @@ describe('when', function () {
 
   afterEach(function () {
     logger.restore();
-  });
-
-  describe('when an error occurs in a when handler', function () {
-    var expectedError, expectedFetchId, expectedStore;
-
-    beforeEach(function () {
-      expectedStore = 'Foo';
-      expectedFetchId = '123';
-      expectedError = new Error('bar');
-
-      var doneFetch = fetch.done({}, expectedFetchId, {
-        displayName: expectedStore
-      });
-
-      try {
-        doneFetch.when({
-          done: function done() {
-            throw expectedError;
-          }
-        });
-      } catch (e) {}
-    });
-
-    it('should log the error and any additional metadata', function () {
-      var expectedMessage = util.format('An error occured when handling the DONE state of the fetch \'%s\' from the store %s', expectedFetchId, expectedStore);
-
-      expect(logger.error).to.be.calledWith(expectedMessage, expectedError);
-    });
   });
 
   describe('when I pass in a function context as the second argument', function () {
