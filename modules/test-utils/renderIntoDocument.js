@@ -10,9 +10,9 @@ function renderIntoDocument(_x, _x2) {
   var _again = true;
 
   _function: while (_again) {
-    _again = false;
     var element = _x,
         app = _x2;
+    _again = false;
 
     invariant(element, 'Must specify ReactElement');
     invariant(app, 'Must specify Marty application');

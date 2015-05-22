@@ -10,7 +10,7 @@ function getHtml(url) {
       url: 'http://localhost:' + MOCK_SERVER_PORT + '/' + url,
       type: 'GET',
       accept: 'application/html',
-      success: function success(data, textStatus, jqXHR) {
+      success: function (data, textStatus, jqXHR) {
         var $div = _$('<div />', {
           id: 'server-html' + uuid()
         }).append(_$.parseHTML(data));
