@@ -2,10 +2,7 @@ var invariant = require('invariant');
 var { isArray } = require('../mindash');
 
 module.exports = function (React) {
-  return React.createClass({
-    contextTypes: {
-      app: React.PropTypes.object
-    },
+  var ApplicationContainer = React.createClass({
     childContextTypes: {
       app: React.PropTypes.object
     },
@@ -19,25 +16,24 @@ module.exports = function (React) {
         app: this.props.app
       };
     },
-    getInnerComponent() {
-      return this.refs.innerComponent;
-    },
     render() {
       let { app, children } = this.props;
 
       if (children) {
         if (isArray(children)) {
-          return <span>{React.Children.map(children, cloneElementWithApp)}</span>;
+          return React.Children.map(children, cloneElementWithApp);
         } else {
           return cloneElementWithApp(children);
-        }  
+        }
       }
 
       function cloneElementWithApp(element) {
-        return React.cloneElement(element, {
+        return React.addons.cloneWithProps(element, {
           app: app
         });
       }
     }
   });
+
+  return ApplicationContainer;
 };

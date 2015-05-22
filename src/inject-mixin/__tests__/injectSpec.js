@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var React = require('react');
 var expect = require('chai').expect;
+var { renderIntoDocument } = require('../../test-utils');
 var buildMarty = require('../../../test/lib/buildMarty');
-var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('Marty.inject()', function () {
   var functionContext, Marty, app;
@@ -15,7 +15,7 @@ describe('Marty.inject()', function () {
     app.register('foo.barStore', Marty.Store);
     app.register('barActions', Marty.ActionCreators);
 
-    var Component = app.bindTo(React.createClass({
+    var Component = React.createClass({
       mixins: [Marty.inject(
         'fooStore',
         'barActions',
@@ -28,9 +28,9 @@ describe('Marty.inject()', function () {
       getInitialState() {
         return {};
       }
-    }));
+    });
 
-    renderIntoDocument(<Component />);
+    renderIntoDocument(<Component />, app);
   });
 
   it('should inject in the given dependencies', () => {

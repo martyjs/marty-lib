@@ -3,8 +3,8 @@ var sinon = require('sinon');
 var _ = require('../../mindash');
 var expect = require('chai').expect;
 var fetch = require('../../store/fetch');
+var { renderIntoDocument } = require('../../test-utils');
 var buildMarty = require('../../../test/lib/buildMarty');
-var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('Container', () => {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
@@ -77,7 +77,7 @@ describe('Container', () => {
 
     describe('when I inject in a dependency', () => {
       beforeEach(function () {
-        var Component = app.bindTo(Marty.createContainer(InnerComponent, {
+        var Component = Marty.createContainer(InnerComponent, {
           inject: ['dep1', 'dep2'],
           fetch: {
             foo() {
@@ -85,9 +85,9 @@ describe('Container', () => {
               return {};
             }
           }
-        }));
+        });
 
-        renderIntoDocument(<Component />);
+        renderIntoDocument(<Component />, app);
       });
 
       it('should make it available in the container component', () => {
@@ -101,14 +101,14 @@ describe('Container', () => {
 
     describe('when I inject a dependency to a component that have contextTypes', () => {
       beforeEach(function () {
-        class _Component extends React.Component {
+        class Component extends React.Component {
           render() {
             innerFunctionContext = this;
             return false;
           }
         }
 
-        var Component = app.bindTo(Marty.createContainer(_Component, {
+        var ComponentContainer = Marty.createContainer(Component, {
           inject: ['dep1', 'dep2'],
           fetch: {
             foo() {
@@ -116,9 +116,9 @@ describe('Container', () => {
               return {};
             }
           }
-        }));
+        });
 
-        renderIntoDocument(<Component />);
+        renderIntoDocument(<ComponentContainer />, app);
       });
 
       it('should make it available in the container component', () => {
@@ -219,11 +219,9 @@ describe('Container', () => {
         }
       }
 
-      var WrappedComponent = exectedApplication.bindTo(
-        Marty.createContainer(TestComponent)
-      );
+      var WrappedComponent = Marty.createContainer(TestComponent);
 
-      renderIntoDocument(<WrappedComponent />);
+      renderIntoDocument(<WrappedComponent />, app);
     });
 
     it('should pass the app down through the props', () => {
@@ -466,16 +464,16 @@ describe('Container', () => {
         }
       }));
 
-      ContainerComponent = app.bindTo(wrap(InnerComponent, {
+      ContainerComponent = wrap(InnerComponent, {
         listenTo: 'barStore',
         fetch: {
           bar() {
             return this.barStore.getBar(expectedId);
           }
         }
-      }));
+      });
 
-      element = renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />, app);
 
       finishQuery();
 
@@ -510,7 +508,7 @@ describe('Container', () => {
 
     beforeEach(() => {
       application = new Marty.Application();
-      ContainerComponent = application.bindTo(wrap(InnerComponent, {
+      ContainerComponent = wrap(InnerComponent, {
         fetch: {
           foo() {
             actualApplication = this.app;
@@ -518,9 +516,9 @@ describe('Container', () => {
             return {};
           }
         }
-      }));
+      });
 
-      element = renderIntoDocument(<ContainerComponent />);
+      element = renderIntoDocument(<ContainerComponent />, application);
     });
 
     it('should make the application accessible on `this.app`', () => {
@@ -664,14 +662,14 @@ describe('Container', () => {
         }
       }));
 
-      element = render(app.bindTo(wrap(InnerComponent, {
+      element = render(wrap(InnerComponent, {
         listenTo: 'fooStore',
         fetch: {
           foo() {
             return this.fooStore.getFoo(123);
           }
         }
-      })));
+      }));
 
       expectedResult = { id: 123 };
       app.fooStore.addFoo(expectedResult);
@@ -688,14 +686,14 @@ describe('Container', () => {
     var expectedResult;
 
     beforeEach(() => {
-      element = render(app.bindTo(wrap(InnerComponent, {
+      element = render(wrap(InnerComponent, {
         listenTo: 'store',
         fetch: {
           foo() {
             return this.store.getFoo(123);
           }
         }
-      })));
+      }));
 
       expectedResult = { id: 123 };
       app.store.addFoo(expectedResult);
@@ -757,6 +755,6 @@ describe('Container', () => {
       }
     });
 
-    return renderIntoDocument(<ContextContainer />);
+    return renderIntoDocument(<ContextContainer />, app);
   }
 });

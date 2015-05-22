@@ -1,6 +1,8 @@
 'use strict';
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
+    property = _x2,
+    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -13,9 +15,12 @@ var sinon = require('sinon');
 var _ = require('../../mindash');
 var expect = require('chai').expect;
 var _fetch = require('../../store/fetch');
-var buildMarty = require('../../../test/lib/buildMarty');
 
-var renderIntoDocument = require('react/addons').addons.TestUtils.renderIntoDocument;
+var _require = require('../../test-utils');
+
+var renderIntoDocument = _require.renderIntoDocument;
+
+var buildMarty = require('../../../test/lib/buildMarty');
 
 describe('Container', function () {
   var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
@@ -90,7 +95,7 @@ describe('Container', function () {
 
     describe('when I inject in a dependency', function () {
       beforeEach(function () {
-        var Component = app.bindTo(Marty.createContainer(InnerComponent, {
+        var Component = Marty.createContainer(InnerComponent, {
           inject: ['dep1', 'dep2'],
           fetch: {
             foo: function foo() {
@@ -98,9 +103,9 @@ describe('Container', function () {
               return {};
             }
           }
-        }));
+        });
 
-        renderIntoDocument(React.createElement(Component, null));
+        renderIntoDocument(React.createElement(Component, null), app);
       });
 
       it('should make it available in the container component', function () {
@@ -114,18 +119,18 @@ describe('Container', function () {
 
     describe('when I inject a dependency to a component that have contextTypes', function () {
       beforeEach(function () {
-        var _Component = (function (_React$Component) {
-          function _Component() {
-            _classCallCheck(this, _Component);
+        var Component = (function (_React$Component) {
+          function Component() {
+            _classCallCheck(this, Component);
 
             if (_React$Component != null) {
               _React$Component.apply(this, arguments);
             }
           }
 
-          _inherits(_Component, _React$Component);
+          _inherits(Component, _React$Component);
 
-          _createClass(_Component, [{
+          _createClass(Component, [{
             key: 'render',
             value: function render() {
               innerFunctionContext = this;
@@ -133,10 +138,10 @@ describe('Container', function () {
             }
           }]);
 
-          return _Component;
+          return Component;
         })(React.Component);
 
-        var Component = app.bindTo(Marty.createContainer(_Component, {
+        var ComponentContainer = Marty.createContainer(Component, {
           inject: ['dep1', 'dep2'],
           fetch: {
             foo: function foo() {
@@ -144,9 +149,9 @@ describe('Container', function () {
               return {};
             }
           }
-        }));
+        });
 
-        renderIntoDocument(React.createElement(Component, null));
+        renderIntoDocument(React.createElement(ComponentContainer, null), app);
       });
 
       it('should make it available in the container component', function () {
@@ -263,9 +268,9 @@ describe('Container', function () {
         return TestComponent;
       })(React.Component);
 
-      var WrappedComponent = exectedApplication.bindTo(Marty.createContainer(TestComponent));
+      var WrappedComponent = Marty.createContainer(TestComponent);
 
-      renderIntoDocument(React.createElement(WrappedComponent, null));
+      renderIntoDocument(React.createElement(WrappedComponent, null), app);
     });
 
     it('should pass the app down through the props', function () {
@@ -529,16 +534,16 @@ describe('Container', function () {
         }
       }));
 
-      ContainerComponent = app.bindTo(wrap(InnerComponent, {
+      ContainerComponent = wrap(InnerComponent, {
         listenTo: 'barStore',
         fetch: {
           bar: function bar() {
             return this.barStore.getBar(expectedId);
           }
         }
-      }));
+      });
 
-      element = renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null), app);
 
       finishQuery();
 
@@ -573,7 +578,7 @@ describe('Container', function () {
 
     beforeEach(function () {
       application = new Marty.Application();
-      ContainerComponent = application.bindTo(wrap(InnerComponent, {
+      ContainerComponent = wrap(InnerComponent, {
         fetch: {
           foo: function foo() {
             actualApplication = this.app;
@@ -581,9 +586,9 @@ describe('Container', function () {
             return {};
           }
         }
-      }));
+      });
 
-      element = renderIntoDocument(React.createElement(ContainerComponent, null));
+      element = renderIntoDocument(React.createElement(ContainerComponent, null), application);
     });
 
     it('should make the application accessible on `this.app`', function () {
@@ -727,14 +732,14 @@ describe('Container', function () {
         }
       }));
 
-      element = render(app.bindTo(wrap(InnerComponent, {
+      element = render(wrap(InnerComponent, {
         listenTo: 'fooStore',
         fetch: {
           foo: function foo() {
             return this.fooStore.getFoo(123);
           }
         }
-      })));
+      }));
 
       expectedResult = { id: 123 };
       app.fooStore.addFoo(expectedResult);
@@ -751,14 +756,14 @@ describe('Container', function () {
     var expectedResult;
 
     beforeEach(function () {
-      element = render(app.bindTo(wrap(InnerComponent, {
+      element = render(wrap(InnerComponent, {
         listenTo: 'store',
         fetch: {
           foo: function foo() {
             return this.store.getFoo(123);
           }
         }
-      })));
+      }));
 
       expectedResult = { id: 123 };
       app.store.addFoo(expectedResult);
@@ -822,6 +827,6 @@ describe('Container', function () {
       }
     });
 
-    return renderIntoDocument(React.createElement(ContextContainer, null));
+    return renderIntoDocument(React.createElement(ContextContainer, null), app);
   }
 });

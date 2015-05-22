@@ -4,8 +4,9 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
 var Diagnostics = require('../../core/diagnostics');
-var buildMarty = require('../../../test/lib/buildMarty');
 var ActionPayload = require('../../core/actionPayload');
+var { renderIntoDocument } = require('../../test-utils');
+var buildMarty = require('../../../test/lib/buildMarty');
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('StateMixin', function () {
@@ -290,7 +291,7 @@ describe('StateMixin', function () {
   }
 
   function renderClassWithMixin(mixin, render) {
-    var element = TestUtils.renderIntoDocument(React.createElement(app.bindTo(React.createClass({
+    var element = React.createElement(React.createClass({
       mixins: [mixin],
       displayName: mixin.displayName,
       render: render || function () {
@@ -298,8 +299,10 @@ describe('StateMixin', function () {
         componentFunctionContext = this;
         return React.createElement('div', null, this.state.name);
       }
-    }))));
+    }));
 
-    return element.refs.innerComponent;
+    var component = renderIntoDocument(element, app);
+
+    return component.refs.innerComponent;
   }
 });

@@ -10,6 +10,8 @@ let DEFAULT_TIMEOUT = 1000;
 let SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = function (React) {
+  let ApplicationContainer = require('./applicationContainer')(React);
+
   class Application {
     constructor(options) {
       options = options || {};
@@ -41,6 +43,14 @@ module.exports = function (React) {
       return getCurrentApplication(cb);
     }
 
+    render(element, container, callback) {
+      React.render((
+        <ApplicationContainer app={this}>
+          {element}
+        </ApplicationContainer>
+      ), container, callback);
+    }
+
     bindTo(InnerComponent) {
       let app = this;
 
@@ -53,13 +63,13 @@ module.exports = function (React) {
           app: React.PropTypes.object
         },
         getChildContext() {
-          return { app: app };
+          return { app };
         },
         getInnerComponent() {
           return this.refs.innerComponent;
         },
         render() {
-          return <InnerComponent ref="innerComponent" {...this.props} />;
+          return <InnerComponent ref="innerComponent" app={app} {...this.props} />;
         }
       });
     }

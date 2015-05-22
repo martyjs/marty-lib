@@ -7,10 +7,9 @@ var _require = require('../mindash');
 var isArray = _require.isArray;
 
 module.exports = function (React) {
-  return React.createClass({
-    contextTypes: {
-      app: React.PropTypes.object
-    },
+  var ApplicationContainer = React.createClass({
+    displayName: 'ApplicationContainer',
+
     childContextTypes: {
       app: React.PropTypes.object
     },
@@ -24,9 +23,6 @@ module.exports = function (React) {
         app: this.props.app
       };
     },
-    getInnerComponent: function getInnerComponent() {
-      return this.refs.innerComponent;
-    },
     render: function render() {
       var _props = this.props;
       var app = _props.app;
@@ -34,21 +30,19 @@ module.exports = function (React) {
 
       if (children) {
         if (isArray(children)) {
-          return React.createElement(
-            'span',
-            null,
-            React.Children.map(children, cloneElementWithApp)
-          );
+          return React.Children.map(children, cloneElementWithApp);
         } else {
           return cloneElementWithApp(children);
         }
       }
 
       function cloneElementWithApp(element) {
-        return React.cloneElement(element, {
+        return React.addons.cloneWithProps(element, {
           app: app
         });
       }
     }
   });
+
+  return ApplicationContainer;
 };
