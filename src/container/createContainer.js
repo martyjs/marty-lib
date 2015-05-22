@@ -45,12 +45,6 @@ module.exports = function (React) {
 
     let Container = React.createClass(_.extend({
       contextTypes: contextTypes,
-      childContextTypes: {
-        app: React.PropTypes.object
-      },
-      getChildContext() {
-        return { app: this.props.app };
-      },
       componentDidMount() {
         let component = {
           id: id,
