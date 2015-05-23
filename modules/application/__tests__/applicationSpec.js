@@ -10,10 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var _ = require('lodash');
 var sinon = require('sinon');
-var React = require('react');
 var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
-var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Application', function () {
   var Marty, application;
@@ -176,54 +174,6 @@ describe('Application', function () {
           'some.cool.store': application.some.cool.store,
           'other.store': application.other.store
         });
-      });
-    });
-  });
-
-  describe('#bindTo(InnerComponent)', function () {
-    beforeEach(function () {
-      application = new Marty.Application();
-    });
-
-    describe('when you dont pass in a component', function () {
-      it('should throw an error', function () {
-        expect(bindToNull).to['throw'](Error);
-
-        function bindToNull() {
-          application.bindTo();
-        }
-      });
-    });
-
-    describe('when you pass in a react component', function () {
-      var actualApplication, actualProps, expectedProps;
-
-      beforeEach(function () {
-        application = new Marty.Application();
-        var InnerComponent = React.createClass({
-          displayName: 'InnerComponent',
-
-          contextTypes: Marty.contextTypes,
-          render: function render() {
-            actualProps = this.props;
-            actualApplication = this.context.app;
-
-            return React.createElement('div', null);
-          }
-        });
-
-        expectedProps = { foo: 'bar' };
-        var ContainerComponent = application.bindTo(InnerComponent);
-
-        TestUtils.renderIntoDocument(React.createElement(ContainerComponent, expectedProps));
-      });
-
-      it('should pass the props through to the inner component', function () {
-        expect(actualProps).to.eql(expectedProps);
-      });
-
-      it('should pass the application down through the context', function () {
-        expect(actualApplication).to.equal(application);
       });
     });
   });

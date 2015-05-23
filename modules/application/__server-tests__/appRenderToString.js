@@ -28,7 +28,6 @@ describeStyles('Application#renderToString', function (styles) {
     });
 
     app = new fixture.App();
-    fixture.Message = app.bindTo(fixture.Message);
     app.messageStore.setContextName('local-context');
   });
 
@@ -101,9 +100,8 @@ describeStyles('Application#renderToString', function (styles) {
       var Component = _childComponentsFixtures.Component;
 
       var app = new Application();
-      var WrappedComponent = app.bindTo(Component);
 
-      return app.renderToString(React.createElement(WrappedComponent, null)).then(loadDOM);
+      return app.renderToString(React.createElement(Component, null)).then(loadDOM);
     });
 
     it('should render both the parent and child component', function () {
