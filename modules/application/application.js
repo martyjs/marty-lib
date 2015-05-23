@@ -1,13 +1,12 @@
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _ = require('../mindash');
 var log = require('../core/logger');
+var invariant = require('invariant');
 var timeout = require('../core/utils/timeout');
 var deferred = require('../core/utils/deferred');
 var _renderToString = require('./renderToString');
@@ -48,30 +47,6 @@ module.exports = function (React) {
     }
 
     _createClass(Application, [{
-      key: 'bindTo',
-      value: function bindTo(InnerComponent) {
-        var app = this;
-
-        if (!InnerComponent) {
-          throw new Error('Must specify an inner component');
-        }
-
-        return React.createClass({
-          childContextTypes: {
-            app: React.PropTypes.object
-          },
-          getChildContext: function getChildContext() {
-            return { app: app };
-          },
-          getInnerComponent: function getInnerComponent() {
-            return this.refs.innerComponent;
-          },
-          render: function render() {
-            return React.createElement(InnerComponent, _extends({ ref: 'innerComponent' }, this.props));
-          }
-        });
-      }
-    }, {
       key: 'getAll',
       value: function getAll(type) {
         return this.__types[type] || {};
@@ -285,12 +260,20 @@ module.exports = function (React) {
     }, {
       key: 'renderToString',
       value: function renderToString(element, options) {
-        return _renderToString(this, React.renderToString, element, options);
+        var _this3 = this;
+
+        return _renderToString(this, React.renderToString, function () {
+          return elementWithApp(element, _this3);
+        }, options);
       }
     }, {
       key: 'renderToStaticMarkup',
       value: function renderToStaticMarkup(element, options) {
-        return _renderToString(this, React.renderToStaticMarkup, element, options);
+        var _this4 = this;
+
+        return _renderToString(this, React.renderToStaticMarkup, function () {
+          return elementWithApp(element, _this4);
+        }, options);
       }
     }], [{
       key: '__getCurrentApplication',
@@ -320,6 +303,14 @@ module.exports = function (React) {
     } else {
       currentApplicationRequests.push(cb);
     }
+  }
+
+  function elementWithApp(element, app) {
+    invariant(element && (typeof element.type === 'function' || typeof element.type === 'string'), 'Must pass in a React component');
+
+    return React.cloneElement(element, {
+      app: app
+    });
   }
 
   return Application;

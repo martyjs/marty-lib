@@ -1,8 +1,9 @@
 let _ = require('../mindash');
-let inject = require('../core/inject');
+let findApp = require('../core/findApp');
 let uuid = require('../core/utils/uuid');
-let StoreObserver = require('../core/storeObserver');
 let getFetchResult = require('./getFetchResult');
+let appProperty = require('../core/appProperty');
+let StoreObserver = require('../core/storeObserver');
 let getClassName = require('../core/utils/getClassName');
 
 let RESERVED_FUNCTIONS = [
@@ -41,10 +42,14 @@ module.exports = function (React) {
       InnerComponent.contextTypes
     );
 
-    inject(InnerComponent.prototype, config);
+    appProperty(InnerComponent.prototype);
 
     let Container = React.createClass(_.extend({
       contextTypes: contextTypes,
+      childContextTypes: DEFAULT_CONTEXT_TYPES,
+      getChildContext() {
+        return { app: findApp(this) };
+      },
       componentDidMount() {
         let component = {
           id: id,
@@ -98,7 +103,7 @@ module.exports = function (React) {
         }
       },
       getInitialState() {
-        inject(this, config);
+        appProperty(this);
         return this.getState();
       },
       getState() {

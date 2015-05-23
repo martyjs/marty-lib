@@ -34,11 +34,11 @@ function get(_x, _x2, _x3) {
   var _again = true;
 
   _function: while (_again) {
+    desc = _parent = getter = undefined;
+    _again = false;
     var object = _x,
         property = _x2,
         receiver = _x3;
-    desc = _parent = getter = undefined;
-    _again = false;
 
     var desc = Object.getOwnPropertyDescriptor(object, property);
     if (desc === undefined) {

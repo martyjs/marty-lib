@@ -3,10 +3,11 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _ = require('../mindash');
-var inject = require('../core/inject');
+var findApp = require('../core/findApp');
 var uuid = require('../core/utils/uuid');
-var StoreObserver = require('../core/storeObserver');
 var getFetchResult = require('./getFetchResult');
+var appProperty = require('../core/appProperty');
+var StoreObserver = require('../core/storeObserver');
 var getClassName = require('../core/utils/getClassName');
 
 var RESERVED_FUNCTIONS = ['contextTypes', 'componentDidMount', 'onStoreChanged', 'componentWillUnmount', 'getInitialState', 'getState', 'render'];
@@ -28,10 +29,14 @@ module.exports = function (React) {
 
     InnerComponent.contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, InnerComponent.contextTypes);
 
-    inject(InnerComponent.prototype, config);
+    appProperty(InnerComponent.prototype);
 
     var Container = React.createClass(_.extend({
       contextTypes: contextTypes,
+      childContextTypes: DEFAULT_CONTEXT_TYPES,
+      getChildContext: function getChildContext() {
+        return { app: findApp(this) };
+      },
       componentDidMount: function componentDidMount() {
         var component = {
           id: id,
@@ -85,7 +90,7 @@ module.exports = function (React) {
         }
       },
       getInitialState: function getInitialState() {
-        inject(this, config);
+        appProperty(this);
         return this.getState();
       },
       getState: function getState() {

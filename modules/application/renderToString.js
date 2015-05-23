@@ -2,16 +2,23 @@
 
 var _ = require('../mindash');
 var MAX_NUMBER_OF_ITERATIONS = 10;
+var invariant = require('invariant');
 
-function renderToString(app, render, element, options) {
+function renderToString(app, render, createElement, options) {
   options = _.defaults(options || {}, {
     maxNumberOfIterations: MAX_NUMBER_OF_ITERATIONS
   });
+
+  invariant(app, 'Must specify the application');
+  invariant(render, 'Must specify the render function');
+  invariant(_.isFunction(createElement), 'Must specify the element factory');
 
   var totalIterations = 0;
   var fetchOptions = { timeout: options.timeout };
 
   return new Promise(function (resolve, reject) {
+    var element = createElement();
+
     resolveFetches().then(dehydrateAndRenderHtml);
 
     function dehydrateAndRenderHtml(diagnostics) {

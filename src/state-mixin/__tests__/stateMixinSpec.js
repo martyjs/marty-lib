@@ -1,12 +1,11 @@
-var _ = require('lodash');
 var React = require('react');
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var uuid = require('../../core/utils/uuid');
 var Diagnostics = require('../../core/diagnostics');
-var buildMarty = require('../../../test/lib/buildMarty');
 var ActionPayload = require('../../core/actionPayload');
-var TestUtils = require('react/addons').addons.TestUtils;
+var buildMarty = require('../../../test/lib/buildMarty');
+var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('StateMixin', function () {
   var element, sandbox, mixin, initialState, Marty, app, state, componentFunctionContext;
@@ -30,38 +29,6 @@ describe('StateMixin', function () {
   afterEach(function () {
     Diagnostics.devtoolsEnabled = false;
     sandbox.restore();
-  });
-
-  it('should throw an error if you dont pass in an object literal', function () {
-    expect(function () { Marty.createStateMixin(); }).to.throw(Error);
-  });
-
-  describe('#inject', function () {
-    var mixinFunctionContext;
-    beforeEach(function () {
-      app.register('fooActions', Marty.ActionCreators);
-      app.register('barActions', Marty.ActionCreators);
-
-      renderClassWithMixin(Marty.createStateMixin({
-        inject: ['fooActions', 'barActions'],
-        getInitialState() {
-          mixinFunctionContext = this;
-          return {};
-        }
-      }));
-    });
-
-    it('should make it available in the container component', () => {
-      expect(deps(componentFunctionContext)).to.eql(deps(app));
-    });
-
-    it('should make it available in the inner component', () => {
-      expect(deps(mixinFunctionContext)).to.eql(deps(app));
-    });
-
-    function deps(obj) {
-      return _.pick(obj, 'fooActions', 'barActions');
-    }
   });
 
   describe('when a store changes', function () {
@@ -107,9 +74,6 @@ describe('StateMixin', function () {
       };
 
       app.register('unmountStore', Marty.createStore({
-        getState: function () {
-          return {};
-        },
         getInitialState: function () {
           return {};
         },
@@ -162,7 +126,7 @@ describe('StateMixin', function () {
         }
       });
 
-      element = TestUtils.renderIntoDocument(React.createElement(parent));
+      element = renderIntoDocument(React.createElement(parent));
 
       element.setState({
         user: { name: 'bar' }
@@ -237,7 +201,7 @@ describe('StateMixin', function () {
           mixin = Marty.createStateMixin({
             listenTo: 'store1',
             getState: function () {
-              return this.store1.getState();
+              return this.app.store1.getState();
             }
           });
           element = renderClassWithMixin(mixin);
@@ -261,8 +225,8 @@ describe('StateMixin', function () {
             listenTo: ['store1', 'store2'],
             getState: function () {
               return {
-                store1: this.store1.getState(),
-                store2: this.store2.getState()
+                store1: this.app.store1.getState(),
+                store2: this.app.store2.getState()
               };
             }
           });
@@ -290,7 +254,7 @@ describe('StateMixin', function () {
   }
 
   function renderClassWithMixin(mixin, render) {
-    var element = TestUtils.renderIntoDocument(React.createElement(app.bindTo(React.createClass({
+    var Component = React.createClass({
       mixins: [mixin],
       displayName: mixin.displayName,
       render: render || function () {
@@ -298,8 +262,8 @@ describe('StateMixin', function () {
         componentFunctionContext = this;
         return React.createElement('div', null, this.state.name);
       }
-    }))));
+    });
 
-    return element.refs.innerComponent;
+    return renderIntoDocument(<Component app={app} />);
   }
 });

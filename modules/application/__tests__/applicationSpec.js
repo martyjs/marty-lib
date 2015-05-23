@@ -1,6 +1,8 @@
 'use strict';
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
+    property = _x2,
+    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -8,10 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var _ = require('lodash');
 var sinon = require('sinon');
-var React = require('react');
 var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
-var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Application', function () {
   var Marty, application;
@@ -174,54 +174,6 @@ describe('Application', function () {
           'some.cool.store': application.some.cool.store,
           'other.store': application.other.store
         });
-      });
-    });
-  });
-
-  describe('#bindTo(InnerComponent)', function () {
-    beforeEach(function () {
-      application = new Marty.Application();
-    });
-
-    describe('when you dont pass in a component', function () {
-      it('should throw an error', function () {
-        expect(bindToNull).to['throw'](Error);
-
-        function bindToNull() {
-          application.bindTo();
-        }
-      });
-    });
-
-    describe('when you pass in a react component', function () {
-      var actualApplication, actualProps, expectedProps;
-
-      beforeEach(function () {
-        application = new Marty.Application();
-        var InnerComponent = React.createClass({
-          displayName: 'InnerComponent',
-
-          contextTypes: Marty.contextTypes,
-          render: function render() {
-            actualProps = this.props;
-            actualApplication = this.context.app;
-
-            return React.createElement('div', null);
-          }
-        });
-
-        expectedProps = { foo: 'bar' };
-        var ContainerComponent = application.bindTo(InnerComponent);
-
-        TestUtils.renderIntoDocument(React.createElement(ContainerComponent, expectedProps));
-      });
-
-      it('should pass the props through to the inner component', function () {
-        expect(actualProps).to.eql(expectedProps);
-      });
-
-      it('should pass the application down through the context', function () {
-        expect(actualApplication).to.equal(application);
       });
     });
   });

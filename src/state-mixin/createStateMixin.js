@@ -1,20 +1,25 @@
 let _ = require('../mindash');
-let inject = require('../core/inject');
+let findApp = require('../core/findApp');
 let uuid = require('../core/utils/uuid');
+let appProperty = require('../core/appProperty');
 let StoreObserver = require('../core/storeObserver');
 let reservedKeys = ['listenTo', 'getState', 'getInitialState'];
 
 module.exports = function (React) {
   return function createStateMixin(options) {
-    if (!options) {
-      throw new Error('The state mixin is expecting some options');
-    }
+    options = options || {};
 
     let instanceMethods = _.omit(options, reservedKeys);
 
+    let contextTypes = {
+      app: React.PropTypes.object
+    };
+
     let mixin = _.extend({
-      contextTypes: {
-        app: React.PropTypes.object
+      contextTypes: contextTypes,
+      childContextTypes: contextTypes,
+      getChildContext() {
+        return { app: findApp(this) };
       },
       componentDidMount: function () {
         let component = {
@@ -23,9 +28,9 @@ module.exports = function (React) {
         };
 
         this.__observer = new StoreObserver({
+          app: this.app,
           component: component,
-          app: this.context.app,
-          stores: options.listenTo,
+          stores: options.listenTo || [],
           onStoreChanged: this.onStoreChanged
         });
       },
@@ -50,7 +55,7 @@ module.exports = function (React) {
         return (options.getState || _.noop).call(this);
       },
       getInitialState: function () {
-        inject(this, options);
+        appProperty(this);
 
         let el = this._currentElement;
 

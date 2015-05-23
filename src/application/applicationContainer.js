@@ -1,29 +1,32 @@
-var invariant = require('invariant');
+let { isArray } = require('../mindash');
+let findApp = require('../core/findApp');
 
 module.exports = function (React) {
-  return React.createClass({
-    propTypes: {
-      app: React.PropTypes.object.isRequired
-    },
+  let ApplicationContainer = React.createClass({
     childContextTypes: {
       app: React.PropTypes.object
     },
     getChildContext() {
-      invariant(this.props.app, 'Must specify the application');
-
-      return {
-        app: this.props.app
-      };
-    },
-    getInnerComponent() {
-      return this.refs.innerComponent;
+      return { app: findApp(this) };
     },
     render() {
-      return React.Children.map(this.props.children, (child) => {
-        return React.cloneElement(child, {
-          app: this.props.app
+      let { app, children } = this.props;
+
+      if (children) {
+        if (isArray(children)) {
+          return <span>{React.Children.map(children, cloneElementWithApp)}</span>;
+        } else {
+          return cloneElementWithApp(children);
+        }
+      }
+
+      function cloneElementWithApp(element) {
+        return React.addons.cloneWithProps(element, {
+          app: app
         });
-      });
+      }
     }
   });
+
+  return ApplicationContainer;
 };

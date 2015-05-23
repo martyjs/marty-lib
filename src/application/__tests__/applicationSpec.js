@@ -1,9 +1,7 @@
 var _ = require('lodash');
 var sinon = require('sinon');
-var React = require('react');
 var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
-var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('Application', () => {
   var Marty, application;
@@ -153,52 +151,6 @@ describe('Application', () => {
           'some.cool.store': application.some.cool.store,
           'other.store': application.other.store
         });
-      });
-    });
-  });
-
-  describe('#bindTo(InnerComponent)', () => {
-    beforeEach(() => {
-      application = new Marty.Application();
-    });
-
-    describe('when you dont pass in a component', () => {
-      it('should throw an error', () => {
-        expect(bindToNull).to.throw(Error);
-
-        function bindToNull() {
-          application.bindTo();
-        }
-      });
-    });
-
-    describe('when you pass in a react component', () => {
-      var actualApplication, actualProps, expectedProps;
-
-      beforeEach(() => {
-        application = new Marty.Application();
-        var InnerComponent = React.createClass({
-          contextTypes: Marty.contextTypes,
-          render() {
-            actualProps = this.props;
-            actualApplication = this.context.app;
-
-            return <div/>;
-          }
-        });
-
-        expectedProps = { foo: 'bar' };
-        var ContainerComponent = application.bindTo(InnerComponent);
-
-        TestUtils.renderIntoDocument(<ContainerComponent {...expectedProps} />);
-      });
-
-      it('should pass the props through to the inner component', () => {
-        expect(actualProps).to.eql(expectedProps);
-      });
-
-      it('should pass the application down through the context', () => {
-        expect(actualApplication).to.equal(application);
       });
     });
   });

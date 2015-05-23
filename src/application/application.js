@@ -1,5 +1,6 @@
 let _ = require('../mindash');
 let log = require('../core/logger');
+let invariant = require('invariant');
 let timeout = require('../core/utils/timeout');
 let deferred = require('../core/utils/deferred');
 let renderToString = require('./renderToString');
@@ -39,29 +40,6 @@ module.exports = function (React) {
 
     static __getCurrentApplication(cb) {
       return getCurrentApplication(cb);
-    }
-
-    bindTo(InnerComponent) {
-      let app = this;
-
-      if (!InnerComponent) {
-        throw new Error('Must specify an inner component');
-      }
-
-      return React.createClass({
-        childContextTypes: {
-          app: React.PropTypes.object
-        },
-        getChildContext() {
-          return { app: app };
-        },
-        getInnerComponent() {
-          return this.refs.innerComponent;
-        },
-        render() {
-          return <InnerComponent ref="innerComponent" {...this.props} />;
-        }
-      });
     }
 
     getAll(type) {
@@ -266,7 +244,7 @@ module.exports = function (React) {
       return renderToString(
         this,
         React.renderToString,
-        element,
+        () => elementWithApp(element, this),
         options
       );
     }
@@ -275,7 +253,7 @@ module.exports = function (React) {
       return renderToString(
         this,
         React.renderToStaticMarkup,
-        element,
+        () => elementWithApp(element, this),
         options
       );
     }
@@ -297,6 +275,18 @@ module.exports = function (React) {
     } else {
       currentApplicationRequests.push(cb);
     }
+  }
+
+  function elementWithApp(element, app) {
+    invariant(
+      element &&
+      (typeof element.type === 'function' || typeof element.type === 'string'),
+      'Must pass in a React component'
+    );
+
+    return React.cloneElement(element, {
+      app: app
+    });
   }
 
   return Application;

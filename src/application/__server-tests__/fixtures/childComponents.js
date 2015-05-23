@@ -37,7 +37,7 @@ module.exports = function (Marty) {
     listenTo: 'messageStore',
     fetch: {
       message() {
-        return this.messageStore.getMessage('Child');
+        return this.app.messageStore.getMessage('Child');
       }
     }
   });
@@ -57,7 +57,7 @@ module.exports = function (Marty) {
     listenTo: 'messageStore',
     fetch: {
       message() {
-        return this.messageStore.getMessage('Parent');
+        return this.app.messageStore.getMessage('Parent');
       }
     }
   });
