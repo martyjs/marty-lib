@@ -1,7 +1,7 @@
 let _ = require('../mindash');
-let inject = require('../core/inject');
 let findApp = require('../core/findApp');
 let uuid = require('../core/utils/uuid');
+let appProperty = require('../core/appProperty');
 let StoreObserver = require('../core/storeObserver');
 let reservedKeys = ['listenTo', 'getState', 'getInitialState'];
 
@@ -55,7 +55,7 @@ module.exports = function (React) {
         return (options.getState || _.noop).call(this);
       },
       getInitialState: function () {
-        inject(this, options);
+        appProperty(this);
 
         let el = this._currentElement;
 

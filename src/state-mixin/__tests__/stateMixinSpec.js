@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var React = require('react');
 var sinon = require('sinon');
 var expect = require('chai').expect;
@@ -30,34 +29,6 @@ describe('StateMixin', function () {
   afterEach(function () {
     Diagnostics.devtoolsEnabled = false;
     sandbox.restore();
-  });
-
-  describe('#inject', function () {
-    var mixinFunctionContext;
-    beforeEach(function () {
-      app.register('fooActions', Marty.ActionCreators);
-      app.register('barActions', Marty.ActionCreators);
-
-      renderClassWithMixin(Marty.createStateMixin({
-        inject: ['fooActions', 'barActions'],
-        getInitialState() {
-          mixinFunctionContext = this;
-          return {};
-        }
-      }));
-    });
-
-    it('should make it available in the container component', () => {
-      expect(deps(componentFunctionContext)).to.eql(deps(app));
-    });
-
-    it('should make it available in the inner component', () => {
-      expect(deps(mixinFunctionContext)).to.eql(deps(app));
-    });
-
-    function deps(obj) {
-      return _.pick(obj, 'fooActions', 'barActions');
-    }
   });
 
   describe('when a store changes', function () {
@@ -230,7 +201,7 @@ describe('StateMixin', function () {
           mixin = Marty.createStateMixin({
             listenTo: 'store1',
             getState: function () {
-              return this.store1.getState();
+              return this.app.store1.getState();
             }
           });
           element = renderClassWithMixin(mixin);
@@ -254,8 +225,8 @@ describe('StateMixin', function () {
             listenTo: ['store1', 'store2'],
             getState: function () {
               return {
-                store1: this.store1.getState(),
-                store2: this.store2.getState()
+                store1: this.app.store1.getState(),
+                store2: this.app.store2.getState()
               };
             }
           });

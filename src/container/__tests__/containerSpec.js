@@ -67,70 +67,6 @@ describe('Container', () => {
     });
   });
 
-  describe('#inject', () => {
-    var containerFunctionContext;
-
-    beforeEach(() => {
-      app.register('dep1', Marty.Store);
-      app.register('dep2', Marty.Store);
-    });
-
-    describe('when I inject in a dependency', () => {
-      beforeEach(function () {
-        var Component = Marty.createContainer(InnerComponent, {
-          inject: ['dep1', 'dep2'],
-          fetch: {
-            foo() {
-              containerFunctionContext = this;
-              return {};
-            }
-          }
-        });
-
-        renderIntoDocument(<Component app={app} />);
-      });
-
-      it('should make it available in the container component', () => {
-        expect(deps(containerFunctionContext)).to.eql(deps(app));
-      });
-
-      it('should make it available in the inner component', () => {
-        expect(deps(innerFunctionContext)).to.eql(deps(app));
-      });
-    });
-
-    describe('when I inject a dependency to a component that have contextTypes', () => {
-      beforeEach(function () {
-        class Component extends React.Component {
-          render() {
-            innerFunctionContext = this;
-            return false;
-          }
-        }
-
-        var ComponentContainer = Marty.createContainer(Component, {
-          inject: ['dep1', 'dep2'],
-          fetch: {
-            foo() {
-              containerFunctionContext = this;
-              return {};
-            }
-          }
-        });
-
-        renderIntoDocument(<ComponentContainer app={app} />);
-      });
-
-      it('should make it available in the container component', () => {
-        expect(deps(containerFunctionContext)).to.eql(deps(app));
-      });
-
-      it('should make it available in the inner component', () => {
-        expect(deps(innerFunctionContext)).to.eql(deps(app));
-      });
-    });
-  });
-
   describe('component lifestyle', () => {
     var ParentComponent;
     var componentWillReceiveProps;
@@ -468,7 +404,7 @@ describe('Container', () => {
         listenTo: 'barStore',
         fetch: {
           bar() {
-            return this.barStore.getBar(expectedId);
+            return this.app.barStore.getBar(expectedId);
           }
         }
       });
@@ -666,7 +602,7 @@ describe('Container', () => {
         listenTo: 'fooStore',
         fetch: {
           foo() {
-            return this.fooStore.getFoo(123);
+            return this.app.fooStore.getFoo(123);
           }
         }
       }));
@@ -690,7 +626,7 @@ describe('Container', () => {
         listenTo: 'store',
         fetch: {
           foo() {
-            return this.store.getFoo(123);
+            return this.app.store.getFoo(123);
           }
         }
       }));
@@ -733,10 +669,6 @@ describe('Container', () => {
       expect(failed).to.be.calledWith(expectedResult);
     });
   });
-
-  function deps(obj) {
-    return _.pick(obj, 'dep1', 'dep2');
-  }
 
   function withoutApp(props) {
     return _.omit(props, 'app');

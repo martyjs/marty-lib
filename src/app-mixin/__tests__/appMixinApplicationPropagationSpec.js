@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 var buildMarty = require('../../../test/lib/buildMarty');
 var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
-describe('Inject application Propagation', () => {
+describe('App mixin application Propagation', () => {
   var Marty, app;
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('Inject application Propagation', () => {
 
     beforeEach(() => {
       var Child = React.createClass({
-        mixins: [Marty.inject()],
+        mixins: [Marty.createAppMixin()],
         render() {
           return false;
         },
@@ -28,7 +28,7 @@ describe('Inject application Propagation', () => {
       });
 
       var Parent = React.createClass({
-        mixins: [Marty.inject()],
+        mixins: [Marty.createAppMixin()],
         render() {
           return <Child />;
         }

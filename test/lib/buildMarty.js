@@ -17,7 +17,7 @@ module.exports = function () {
   marty.use(require('../../src/session-storage-state-source'));
   marty.use(require('../../src/store'));
   marty.use(require('../../src/state-mixin'));
-  marty.use(require('../../src/inject-mixin'));
+  marty.use(require('../../src/app-mixin'));
 
   return marty;
 };
