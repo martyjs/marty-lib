@@ -7,15 +7,13 @@ let reservedKeys = ['listenTo', 'getState', 'getInitialState'];
 
 module.exports = function (React) {
   return function createStateMixin(options) {
-    if (!options) {
-      throw new Error('The state mixin is expecting some options');
-    }
+    options = options || {};
+
+    let instanceMethods = _.omit(options, reservedKeys);
 
     let contextTypes = {
       app: React.PropTypes.object
     };
-
-    let instanceMethods = _.omit(options, reservedKeys);
 
     let mixin = _.extend({
       contextTypes: contextTypes,
@@ -32,7 +30,7 @@ module.exports = function (React) {
         this.__observer = new StoreObserver({
           app: this.app,
           component: component,
-          stores: options.listenTo,
+          stores: options.listenTo || [],
           onStoreChanged: this.onStoreChanged
         });
       },

@@ -32,10 +32,6 @@ describe('StateMixin', function () {
     sandbox.restore();
   });
 
-  it('should throw an error if you dont pass in an object literal', function () {
-    expect(function () { Marty.createStateMixin(); }).to.throw(Error);
-  });
-
   describe('#inject', function () {
     var mixinFunctionContext;
     beforeEach(function () {
