@@ -3,6 +3,5 @@ module.exports = {
   createStore: require('./createStore'),
   hasDispatched: require('./hasDispatched'),
   createApplication: require('./createApplication'),
-  renderIntoDocument: require('./renderIntoDocument'),
   getDispatchedActionsWithType: require('./getDispatchedActionsWithType')
 };

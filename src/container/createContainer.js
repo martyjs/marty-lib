@@ -1,5 +1,6 @@
 let _ = require('../mindash');
 let inject = require('../core/inject');
+let findApp = require('../core/findApp');
 let uuid = require('../core/utils/uuid');
 let StoreObserver = require('../core/storeObserver');
 let getFetchResult = require('./getFetchResult');
@@ -45,11 +46,9 @@ module.exports = function (React) {
 
     let Container = React.createClass(_.extend({
       contextTypes: contextTypes,
-      childContextTypes: {
-        app: React.PropTypes.object
-      },
+      childContextTypes: DEFAULT_CONTEXT_TYPES,
       getChildContext() {
-        return { app: this.props.app };
+        return { app: findApp(this) };
       },
       componentDidMount() {
         let component = {

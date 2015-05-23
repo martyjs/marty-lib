@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var React = require('react');
 var expect = require('chai').expect;
-var { renderIntoDocument } = require('../../test-utils');
 var buildMarty = require('../../../test/lib/buildMarty');
+var { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('Marty.inject()', function () {
   var functionContext, Marty, app;
@@ -30,7 +30,7 @@ describe('Marty.inject()', function () {
       }
     });
 
-    renderIntoDocument(<Component />, app);
+    renderIntoDocument(<Component app={app} />);
   });
 
   it('should inject in the given dependencies', () => {

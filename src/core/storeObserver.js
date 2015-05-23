@@ -1,6 +1,7 @@
 let log = require('./logger');
 let _ = require('../mindash');
 
+
 class StoreObserver {
   constructor(options) {
     options = options || {};

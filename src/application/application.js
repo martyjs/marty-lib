@@ -1,5 +1,6 @@
 let _ = require('../mindash');
 let log = require('../core/logger');
+let invariant = require('invariant');
 let timeout = require('../core/utils/timeout');
 let deferred = require('../core/utils/deferred');
 let renderToString = require('./renderToString');
@@ -10,8 +11,6 @@ let DEFAULT_TIMEOUT = 1000;
 let SERIALIZED_WINDOW_OBJECT = '__marty';
 
 module.exports = function (React) {
-  let ApplicationContainer = require('./applicationContainer')(React);
-
   class Application {
     constructor(options) {
       options = options || {};
@@ -41,37 +40,6 @@ module.exports = function (React) {
 
     static __getCurrentApplication(cb) {
       return getCurrentApplication(cb);
-    }
-
-    render(element, container, callback) {
-      React.render((
-        <ApplicationContainer app={this}>
-          {element}
-        </ApplicationContainer>
-      ), container, callback);
-    }
-
-    bindTo(InnerComponent) {
-      let app = this;
-
-      if (!InnerComponent) {
-        throw new Error('Must specify an inner component');
-      }
-
-      return React.createClass({
-        childContextTypes: {
-          app: React.PropTypes.object
-        },
-        getChildContext() {
-          return { app };
-        },
-        getInnerComponent() {
-          return this.refs.innerComponent;
-        },
-        render() {
-          return <InnerComponent ref="innerComponent" app={app} {...this.props} />;
-        }
-      });
     }
 
     getAll(type) {
@@ -276,7 +244,7 @@ module.exports = function (React) {
       return renderToString(
         this,
         React.renderToString,
-        element,
+        () => elementWithApp(element, this),
         options
       );
     }
@@ -285,7 +253,7 @@ module.exports = function (React) {
       return renderToString(
         this,
         React.renderToStaticMarkup,
-        element,
+        () => elementWithApp(element, this),
         options
       );
     }
@@ -307,6 +275,18 @@ module.exports = function (React) {
     } else {
       currentApplicationRequests.push(cb);
     }
+  }
+
+  function elementWithApp(element, app) {
+    invariant(
+      element &&
+      (typeof element.type === 'function' || typeof element.type === 'string'),
+      'Must pass in a React component'
+    );
+
+    return React.cloneElement(element, {
+      app: app
+    });
   }
 
   return Application;
