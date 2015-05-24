@@ -1,5 +1,5 @@
-let { isArray } = require('../mindash');
 let findApp = require('../core/findApp');
+let { isArray, extend } = require('../mindash');
 
 module.exports = function (React) {
   let ApplicationContainer = React.createClass({
@@ -14,16 +14,16 @@ module.exports = function (React) {
 
       if (children) {
         if (isArray(children)) {
-          return <span>{React.Children.map(children, cloneElementWithApp)}</span>;
+          return <span>{React.Children.map(children, cloneWithApp)}</span>;
         } else {
-          return cloneElementWithApp(children);
+          return cloneWithApp(children);
         }
       }
 
-      function cloneElementWithApp(element) {
-        return React.addons.cloneWithProps(element, {
+      function cloneWithApp(element) {
+        return React.createElement(element.type, extend({
           app: app
-        });
+        }, element.props));
       }
     }
   });
