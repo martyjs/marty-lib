@@ -1,10 +1,11 @@
 'use strict';
 
+var findApp = require('../core/findApp');
+
 var _require = require('../mindash');
 
 var isArray = _require.isArray;
-
-var findApp = require('../core/findApp');
+var extend = _require.extend;
 
 module.exports = function (React) {
   var ApplicationContainer = React.createClass({
@@ -23,16 +24,20 @@ module.exports = function (React) {
 
       if (children) {
         if (isArray(children)) {
-          return React.Children.map(children, cloneElementWithApp);
+          return React.createElement(
+            'span',
+            null,
+            React.Children.map(children, cloneWithApp)
+          );
         } else {
-          return cloneElementWithApp(children);
+          return cloneWithApp(children);
         }
       }
 
-      function cloneElementWithApp(element) {
-        return React.addons.cloneWithProps(element, {
+      function cloneWithApp(element) {
+        return React.createElement(element.type, extend({
           app: app
-        });
+        }, element.props));
       }
     }
   });
