@@ -103,7 +103,6 @@ var HttpStateSource = (function (_StateSource) {
   return HttpStateSource;
 })(StateSource);
 
-HttpStateSource.addHook(require('./hooks/parseJSON'));
 HttpStateSource.addHook(require('./hooks/stringifyJSON'));
 HttpStateSource.addHook(require('./hooks/includeCredentials'));
 
