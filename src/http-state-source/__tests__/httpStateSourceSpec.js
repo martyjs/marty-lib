@@ -518,9 +518,12 @@ describeStyles('HttpStateSource', function (styles) {
   }
 
   function storeResponse(res) {
-    response = res.body;
-    accept = response.accept;
-    delete response.accept;
+    return res.json().then(json => {
+      response = json;
+      accept = response.accept;
+      delete response.accept;
+      return json;
+    });
   }
 
   function makeRequest(method) {

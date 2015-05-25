@@ -1,3 +1,5 @@
+window.fetch = undefined;
+
 require('isomorphic-fetch');
 require('es6-promise').polyfill();
 
