@@ -1,14 +1,14 @@
-var React = require('react');
-var sinon = require('sinon');
-var _ = require('../../mindash');
-var expect = require('chai').expect;
-var fetch = require('../../store/fetch');
-var buildMarty = require('../../../test/lib/buildMarty');
-var { renderIntoDocument } = require('react/addons').addons.TestUtils;
+let React = require('react');
+let sinon = require('sinon');
+let _ = require('../../mindash');
+let expect = require('chai').expect;
+let fetch = require('../../store/fetch');
+let buildMarty = require('../../../test/lib/buildMarty');
+let { renderIntoDocument } = require('react/addons').addons.TestUtils;
 
 describe('Container', () => {
-  var Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
-  var initialProps, updatedProps, handler, handlerContext, initialContext, innerFunctionContext;
+  let Marty, InnerComponent, ContainerComponent, expectedProps, element, context, app;
+  let initialProps, updatedProps, handler, handlerContext, initialContext, innerFunctionContext;
 
   beforeEach(() => {
     context = {
@@ -68,13 +68,13 @@ describe('Container', () => {
   });
 
   describe('component lifestyle', () => {
-    var ParentComponent;
-    var componentWillReceiveProps;
-    var componentWillUpdate;
-    var componentDidUpdate;
-    var componentDidMount;
-    var componentWillUnmount;
-    var componentWillMount;
+    let ParentComponent;
+    let componentWillReceiveProps;
+    let componentWillUpdate;
+    let componentDidUpdate;
+    let componentDidMount;
+    let componentWillUnmount;
+    let componentWillMount;
 
     beforeEach(() => {
       componentWillReceiveProps = sinon.spy();
@@ -138,6 +138,58 @@ describe('Container', () => {
     });
   });
 
+  describe.only('when a container transitions from a pending to done state', () => {
+    let output, instance;
+
+    beforeEach(() => {
+      app = new Marty.Application();
+
+      app.register('store', Marty.createStore({
+        getInitialState() {
+          return {
+            message: fetch.pending()
+          };
+        },
+        getMessage() {
+          return this.state.message;
+        },
+        setMessage(message) {
+          this.state.message = fetch.done(message);
+          this.hasChanged();
+        }
+      }));
+
+      let Inner = React.createClass({
+        render() {
+          return <span>done</span>;
+        }
+      });
+
+      let Container = Marty.createContainer(Inner, {
+        listenTo: 'store',
+        fetch: {
+          message() {
+            return this.app.store.getMessage();
+          }
+        },
+        pending() {
+          return <span>pending</span>;
+        }
+      });
+
+      element = renderIntoDocument(<Container app={app} />);
+
+      app.store.setMessage('foo');
+
+      console.log(element.getDOMNode());
+    });
+
+    it('should only show the new state', () => {
+      console.log(output);
+      expect(output).to.not.contain('<span>pending</span>');
+    });
+  });
+
   describe('when the component is bound to an application', () => {
     let actualApplication;
 
@@ -154,7 +206,7 @@ describe('Container', () => {
         }
       }
 
-      var WrappedComponent = Marty.createContainer(TestComponent);
+      let WrappedComponent = Marty.createContainer(TestComponent);
 
       renderIntoDocument(<WrappedComponent app={app} />);
     });
@@ -277,7 +329,7 @@ describe('Container', () => {
   });
 
   describe('when the parent updates its props then it should update its childrens', () => {
-    var ParentComponent, fetch;
+    let ParentComponent, fetch;
 
     beforeEach(() => {
       fetch = sinon.spy();
@@ -301,7 +353,7 @@ describe('Container', () => {
         }
       });
 
-      var element = renderIntoDocument(<ParentComponent app={app} />);
+      let element = renderIntoDocument(<ParentComponent app={app} />);
 
       element.replaceState({
         foo: 'baz'
@@ -371,7 +423,7 @@ describe('Container', () => {
   });
 
   describe('when you are fetching from a store', () => {
-    var finishQuery, expectedId;
+    let finishQuery, expectedId;
 
     beforeEach((done) => {
       expectedId = 456;
@@ -440,7 +492,7 @@ describe('Container', () => {
   });
 
   describe('when the component is bound to an application', () => {
-    var actualApplication;
+    let actualApplication;
 
     beforeEach(() => {
       app = new Marty.Application();
@@ -478,7 +530,7 @@ describe('Container', () => {
     });
 
     it('should call the handler with the results and component', () => {
-      var expectedResults = {
+      let expectedResults = {
         foo: 'bar',
         bar: {
           baz: 'bam'
@@ -520,7 +572,7 @@ describe('Container', () => {
   });
 
   describe('when a fetch failed and there is a failed handler', () => {
-    var fooError, barError;
+    let fooError, barError;
 
     beforeEach(() => {
       fooError = new Error('foo');
@@ -546,7 +598,7 @@ describe('Container', () => {
     });
 
     it('should call the handler with the errors and component', () => {
-      var expectedErrors = {
+      let expectedErrors = {
         foo: fooError,
         bar: barError
       };
@@ -556,7 +608,7 @@ describe('Container', () => {
   });
 
   describe('when a fetch failed and there is no failed handler', () => {
-    var fooError;
+    let fooError;
 
     beforeEach(() => {
       fooError = new Error('foo');
@@ -580,7 +632,7 @@ describe('Container', () => {
   });
 
   describe('when I listen to the id of a store', () => {
-    var expectedResult;
+    let expectedResult;
 
     beforeEach(() => {
       app = new Marty.Application();
@@ -619,7 +671,7 @@ describe('Container', () => {
   });
 
   describe('when I listen to a store', () => {
-    var expectedResult;
+    let expectedResult;
 
     beforeEach(() => {
       element = render(wrap(InnerComponent, {
@@ -643,7 +695,7 @@ describe('Container', () => {
   });
 
   describe('when calling a fetch handler', () => {
-    var expectedResult, failed;
+    let expectedResult, failed;
 
     beforeEach(() => {
       failed = sinon.spy();
