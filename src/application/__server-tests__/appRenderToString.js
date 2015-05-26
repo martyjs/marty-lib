@@ -35,6 +35,29 @@ describeStyles('Application#renderToString', function (styles) {
     });
   });
 
+  describe('when you want to render the individual parts', () => {
+    let body, state;
+
+    beforeEach(() => {
+      app.messageStore.addMessage(expectedId, { text: 'local' });
+
+      return app
+        .renderToStaticMarkup(<fixture.Message id={expectedId} />)
+        .then(res => {
+          body = cheerio.load(res.htmlBody);
+          state = cheerio.load(res.htmlState);
+        });
+    });
+
+    it('should get the state', () => {
+      expect(body('.text').text()).to.equal('local');
+    });
+
+    it('should include the serialized state', () => {
+      expect(state(`#${MARTY_STATE_ID}`).html()).to.equal(app.dehydrate().toString());
+    });
+  });
+
   describe('when all the state is present locally', () => {
     beforeEach(() => {
       app.messageStore.addMessage(expectedId, { text: 'local' });
