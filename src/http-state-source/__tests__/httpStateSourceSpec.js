@@ -17,6 +17,7 @@ describeStyles('HttpStateSource', function (styles) {
   beforeEach(function () {
     Marty = buildMarty();
     HttpStateSource = Marty.HttpStateSource;
+    HttpStateSource.removeHook('parseJSON');
 
     baseUrl = '/stub/';
     xmlContentType = 'application/xml';

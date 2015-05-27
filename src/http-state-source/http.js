@@ -64,7 +64,11 @@ class HttpStateSource extends StateSource {
 
   static removeHook(hook) {
     if (hook) {
-      delete hooks[hook.id];
+      if (_.isString(hook)) {
+        delete hooks[hook];
+      } else if (_.isString(hook.id)) {
+        delete hooks[hook.id];
+      }
     }
   }
 
@@ -73,6 +77,7 @@ class HttpStateSource extends StateSource {
   }
 }
 
+HttpStateSource.addHook(require('./hooks/parseJSON'));
 HttpStateSource.addHook(require('./hooks/stringifyJSON'));
 HttpStateSource.addHook(require('./hooks/includeCredentials'));
 
