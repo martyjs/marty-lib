@@ -1,6 +1,6 @@
 {
   "name": "marty-lib",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "A Javascript library for state management in React applications",
   "scripts": {
     "test": "make test"
