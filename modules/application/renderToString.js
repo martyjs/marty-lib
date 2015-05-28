@@ -24,11 +24,13 @@ function renderToString(app, render, createElement, options) {
     function dehydrateAndRenderHtml(diagnostics) {
       app.fetch(function () {
         try {
-          var html = render(element);
-          html += dehydratedState();
+          var htmlBody = render(element);
+          var htmlState = dehydratedState();
           resolve({
-            html: html,
-            diagnostics: diagnostics.toJSON()
+            diagnostics: diagnostics.toJSON(),
+            html: htmlBody + htmlState,
+            htmlBody: htmlBody,
+            htmlState: htmlState
           });
         } catch (e) {
           reject(e);

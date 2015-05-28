@@ -37,6 +37,28 @@ describeStyles('Application#renderToString', function (styles) {
     });
   });
 
+  describe('when you want to render the individual parts', function () {
+    var body = undefined,
+        state = undefined;
+
+    beforeEach(function () {
+      app.messageStore.addMessage(expectedId, { text: 'local' });
+
+      return app.renderToStaticMarkup(React.createElement(fixture.Message, { id: expectedId })).then(function (res) {
+        body = cheerio.load(res.htmlBody);
+        state = cheerio.load(res.htmlState);
+      });
+    });
+
+    it('should get the state', function () {
+      expect(body('.text').text()).to.equal('local');
+    });
+
+    it('should include the serialized state', function () {
+      expect(state('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate().toString());
+    });
+  });
+
   describe('when all the state is present locally', function () {
     beforeEach(function () {
       app.messageStore.addMessage(expectedId, { text: 'local' });

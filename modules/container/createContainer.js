@@ -10,7 +10,7 @@ var appProperty = require('../core/appProperty');
 var StoreObserver = require('../core/storeObserver');
 var getClassName = require('../core/utils/getClassName');
 
-var RESERVED_FUNCTIONS = ['contextTypes', 'componentDidMount', 'onStoreChanged', 'componentWillUnmount', 'getInitialState', 'getState', 'render'];
+var RESERVED_FUNCTIONS = ['contextTypes', 'componentDidMount', 'componentWillReceiveProps', 'onStoreChanged', 'componentWillUnmount', 'getInitialState', 'getState', 'render'];
 
 module.exports = function (React) {
   var DEFAULT_CONTEXT_TYPES = {
@@ -31,7 +31,7 @@ module.exports = function (React) {
 
     appProperty(InnerComponent.prototype);
 
-    var Container = React.createClass(_.extend({
+    var specification = _.extend({
       contextTypes: contextTypes,
       childContextTypes: DEFAULT_CONTEXT_TYPES,
       getChildContext: function getChildContext() {
@@ -49,33 +49,10 @@ module.exports = function (React) {
           stores: this.listenTo,
           onStoreChanged: this.onStoreChanged
         });
-
-        if (_.isFunction(config.componentDidMount)) {
-          config.componentDidMount.call(this);
-        }
-      },
-      componentWillMount: function componentWillMount() {
-        if (_.isFunction(config.componentWillMount)) {
-          config.componentWillMount.call(this);
-        }
       },
       componentWillReceiveProps: function componentWillReceiveProps(props) {
         this.props = props;
         this.setState(this.getState(props));
-
-        if (_.isFunction(config.componentWillReceiveProps)) {
-          config.componentWillReceiveProps.call(this, props);
-        }
-      },
-      componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-        if (_.isFunction(config.componentWillUpdate)) {
-          config.componentWillUpdate.call(this, nextProps, nextState);
-        }
-      },
-      componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-        if (_.isFunction(config.componentDidUpdate)) {
-          config.componentDidUpdate.call(this, prevProps, prevState);
-        }
       },
       onStoreChanged: function onStoreChanged() {
         this.setState(this.getState());
@@ -83,10 +60,6 @@ module.exports = function (React) {
       componentWillUnmount: function componentWillUnmount() {
         if (this.observer) {
           this.observer.dispose();
-        }
-
-        if (_.isFunction(config.componentWillUnmount)) {
-          config.componentWillUnmount.call(this);
         }
       },
       getInitialState: function getInitialState() {
@@ -132,11 +105,43 @@ module.exports = function (React) {
           }
         });
       }
-    }, _.omit(config, RESERVED_FUNCTIONS)));
+    }, _.omit(config, RESERVED_FUNCTIONS));
+
+    // Include lifecycle methods if specified in config. We don't need to
+    // explicitly handle the ones that aren't in RESERVED_FUNCTIONS.
+    specification.componentDidMount = callBoth(specification.componentDidMount, config.componentDidMount);
+
+    specification.componentWillReceiveProps = callBothWithProps(specification.componentWillReceiveProps, config.componentWillReceiveProps);
+
+    specification.componentWillUnmount = callBoth(specification.componentWillUnmount, config.componentWillUnmount);
+
+    var Container = React.createClass(specification);
 
     Container.InnerComponent = InnerComponent;
     Container.displayName = innerComponentDisplayName + 'Container';
 
     return Container;
+
+    function callBoth(func1, func2) {
+      if (_.isFunction(func2)) {
+        return function () {
+          func1.call(this);
+          func2.call(this);
+        };
+      } else {
+        return func1;
+      }
+    }
+
+    function callBothWithProps(func1, func2) {
+      if (_.isFunction(func2)) {
+        return function (props) {
+          func1.call(this, props);
+          func2.call(this, props);
+        };
+      } else {
+        return func1;
+      }
+    }
   };
 };

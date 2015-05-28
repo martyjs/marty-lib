@@ -25,6 +25,7 @@ describeStyles('HttpStateSource', function (styles) {
   beforeEach(function () {
     Marty = buildMarty();
     HttpStateSource = Marty.HttpStateSource;
+    HttpStateSource.removeHook('parseJSON');
 
     baseUrl = '/stub/';
     xmlContentType = 'application/xml';
@@ -530,9 +531,12 @@ describeStyles('HttpStateSource', function (styles) {
   }
 
   function storeResponse(res) {
-    response = res.body;
-    accept = response.accept;
-    delete response.accept;
+    return res.json().then(function (json) {
+      response = json;
+      accept = response.accept;
+      delete response.accept;
+      return json;
+    });
   }
 
   function makeRequest(method) {

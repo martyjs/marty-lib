@@ -90,7 +90,11 @@ var HttpStateSource = (function (_StateSource) {
     key: 'removeHook',
     value: function removeHook(hook) {
       if (hook) {
-        delete hooks[hook.id];
+        if (_.isString(hook)) {
+          delete hooks[hook];
+        } else if (_.isString(hook.id)) {
+          delete hooks[hook.id];
+        }
       }
     }
   }, {
@@ -103,6 +107,7 @@ var HttpStateSource = (function (_StateSource) {
   return HttpStateSource;
 })(StateSource);
 
+HttpStateSource.addHook(require('./hooks/parseJSON'));
 HttpStateSource.addHook(require('./hooks/stringifyJSON'));
 HttpStateSource.addHook(require('./hooks/includeCredentials'));
 
