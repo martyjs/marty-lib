@@ -57,6 +57,51 @@ describe('Container', () => {
     });
   });
 
+  describe('when there is an error in the component', () => {
+    let expectedError;
+
+    beforeEach(() => expectedError = new Error());
+
+    it.only('should be thrown rather than seeing react error', () => {
+      expect(createComponentThatThrowsError).to.throw(expectedError);
+
+      function createComponentThatThrowsError() {
+        app.register('fooStore', Marty.createStore({
+          setFoo() {
+            this.state.foo = { id: 1 };
+            this.hasChanged();
+          },
+          getFoo() {
+            if (this.state.foo) {
+              return fetch.done(this.state.foo);
+            }
+
+            throw expectedError;
+          }
+        }));
+
+        let Foo = Marty.createContainer(React.createClass({
+          render() {
+            throw expectedError;
+          }
+        }), {
+          listenTo: 'fooStore',
+          fetch: {
+            foo() {
+              return this.app.fooStore.getFoo();
+            }
+          },
+          pending() {
+            return <div>Foo</div>;
+          }
+        });
+
+        renderIntoDocument(<Foo app={app} />);
+        app.fooStore.setFoo();
+      }
+    });
+  });
+
   describe('when I dont pass in an inner component', () => {
     it('should throw an error', () => {
       expect(createContainerWithNoInnerComponent).to.throw(Error);
