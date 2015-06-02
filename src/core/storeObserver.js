@@ -67,12 +67,12 @@ function resolveStores(options) {
     if (!app) {
       throw new Error('Component not bound to an application');
     }
-
-    if (!app[storeId]) {
+    var store = _.get(app, storeId, null);
+    if (!store) {
       throw new Error(`Could not find the store ${storeId}`);
     }
 
-    return app[storeId];
+    return store;
   });
 }
 
