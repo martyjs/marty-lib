@@ -108,7 +108,7 @@ module.exports = function (React) {
 
             if (_.isFunction(ctor)) {
               this.register(id, ctor);
-            } else {
+            } else if(_.isObject(ctor)) {
               registerObject(ctor, id);
             }
           });
