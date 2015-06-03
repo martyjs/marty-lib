@@ -8,6 +8,7 @@ module.exports = {
   findKey: require('lodash/object/findKey'),
   first: require('lodash/array/first'),
   rest: require('lodash/array/rest'),
+  get: require('lodash/object/get'),
   has: require('lodash/object/has'),
   initial: require('lodash/array/initial'),
   isArray: require('lodash/lang/isArray'),
