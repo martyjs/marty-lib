@@ -681,6 +681,19 @@ describe('Container', () => {
     });
   });
 
+  describe('injectApp', () => {
+    it('should inject app as a property on the component', () => {
+      class Component extends React.Component {
+        render() {
+          return null;
+        }
+      }
+      Marty.injectApp(Component);
+
+      expect(render(Component).app).to.eql(app);
+    });
+  });
+
   function withoutApp(props) {
     return _.omit(props, 'app');
   }
