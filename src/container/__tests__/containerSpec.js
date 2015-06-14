@@ -67,7 +67,7 @@ describe('Container', () => {
     });
   });
 
-  describe('component lifestyle', () => {
+  describe('component lifecycle', () => {
     var ParentComponent;
     var componentWillReceiveProps;
     var componentWillUpdate;
@@ -276,7 +276,7 @@ describe('Container', () => {
     });
   });
 
-  describe('when the parent updates its props then it should update its childrens', () => {
+  describe('when the parent updates its props then it should update its children\'s', () => {
     var ParentComponent, fetch;
 
     beforeEach(() => {
@@ -428,6 +428,12 @@ describe('Container', () => {
       ContainerComponent = wrap(InnerComponent, {
         something() {
           return [this, 'foo'];
+        },
+
+        statics: {
+          somethingElse() {
+            return [this, 'bar'];
+          }
         }
       });
 
@@ -436,6 +442,11 @@ describe('Container', () => {
 
     it('should expose the function with the element as the context', () => {
       expect(element.something()).to.eql([element, 'foo']);
+    });
+
+    it('should expose the static function on the component class', () => {
+      expect(ContainerComponent.somethingElse())
+        .to.eql([ContainerComponent, 'bar']);
     });
   });
 

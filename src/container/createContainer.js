@@ -19,7 +19,7 @@ let RESERVED_FUNCTIONS = [
 
 module.exports = function (React) {
   let DEFAULT_CONTEXT_TYPES = {
-    app: React.PropTypes.object,
+    app: React.PropTypes.object
   };
 
   return function createContainer(InnerComponent, config) {
@@ -135,12 +135,15 @@ module.exports = function (React) {
       specification.componentWillUnmount, config.componentWillUnmount
     );
 
-    var Container = React.createClass(specification);
-
-    Container.InnerComponent = InnerComponent;
-    Container.displayName = innerComponentDisplayName + 'Container';
-
-    return Container;
+    const Container = React.createClass(specification);
+    return _.extend(
+      Container,
+      config.statics,
+      {
+        InnerComponent,
+        displayName: `${innerComponentDisplayName}Container`
+      }
+    );
 
     function callBoth(func1, func2) {
       if (_.isFunction(func2)) {
