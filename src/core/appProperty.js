@@ -7,7 +7,7 @@ function appProperty(obj) {
         return findApp(this);
       },
       set: function () {
-        // Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves
+        /* Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves */
       }
     });
   }
