@@ -49,7 +49,7 @@ module.exports = function (React) {
 
     injectApp(InnerComponent);
 
-    let specification = _.extend({
+    const specification = {
       contextTypes: contextTypes,
       childContextTypes: DEFAULT_CONTEXT_TYPES,
       getChildContext() {
@@ -123,7 +123,11 @@ module.exports = function (React) {
           }
         });
       }
-    }, _.omit(config, RESERVED_FUNCTIONS));
+    };
+
+    // This will add in lifecycle hooks, accessors, statics, and other
+    // options to be passed into React.createClass.
+    _.extend(specification, _.omit(config, RESERVED_FUNCTIONS));
 
     // Include lifecycle methods if specified in config. We don't need to
     // explicitly handle the ones that aren't in RESERVED_FUNCTIONS.
@@ -140,14 +144,11 @@ module.exports = function (React) {
     );
 
     const Container = React.createClass(specification);
-    return _.extend(
-      Container,
-      config.statics,
-      {
-        InnerComponent,
-        displayName: `${innerComponentDisplayName}Container`
-      }
-    );
+
+    Container.InnerComponent = InnerComponent;
+    Container.displayName = `${innerComponentDisplayName}Container`;
+
+    return Container;
 
     function callBoth(func1, func2) {
       if (_.isFunction(func2)) {
