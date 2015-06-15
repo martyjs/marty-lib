@@ -14,9 +14,16 @@ var RESERVED_FUNCTIONS = ['contextTypes', 'componentDidMount', 'componentWillRec
 
 module.exports = function (React) {
   var DEFAULT_CONTEXT_TYPES = {
-    app: React.PropTypes.object };
+    app: React.PropTypes.object
+  };
 
-  return function createContainer(InnerComponent, config) {
+  function injectApp(Component) {
+    Component.contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, Component.contextTypes);
+
+    appProperty(Component.prototype);
+  }
+
+  function createContainer(InnerComponent, config) {
     config = config || {};
 
     if (!InnerComponent) {
@@ -27,9 +34,7 @@ module.exports = function (React) {
     var innerComponentDisplayName = InnerComponent.displayName || getClassName(InnerComponent);
     var contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, config.contextTypes);
 
-    InnerComponent.contextTypes = _.extend({}, DEFAULT_CONTEXT_TYPES, InnerComponent.contextTypes);
-
-    appProperty(InnerComponent.prototype);
+    injectApp(InnerComponent);
 
     var specification = _.extend({
       contextTypes: contextTypes,
@@ -116,11 +121,10 @@ module.exports = function (React) {
     specification.componentWillUnmount = callBoth(specification.componentWillUnmount, config.componentWillUnmount);
 
     var Container = React.createClass(specification);
-
-    Container.InnerComponent = InnerComponent;
-    Container.displayName = innerComponentDisplayName + 'Container';
-
-    return Container;
+    return _.extend(Container, config.statics, {
+      InnerComponent: InnerComponent,
+      displayName: '' + innerComponentDisplayName + 'Container'
+    });
 
     function callBoth(func1, func2) {
       if (_.isFunction(func2)) {
@@ -143,5 +147,7 @@ module.exports = function (React) {
         return func1;
       }
     }
-  };
+  }
+
+  return { injectApp: injectApp, createContainer: createContainer };
 };

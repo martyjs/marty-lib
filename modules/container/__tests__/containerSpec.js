@@ -82,7 +82,7 @@ describe('Container', function () {
     });
   });
 
-  describe('component lifestyle', function () {
+  describe('component lifecycle', function () {
     var ParentComponent;
     var componentWillReceiveProps;
     var componentWillUpdate;
@@ -322,7 +322,7 @@ describe('Container', function () {
     });
   });
 
-  describe('when the parent updates its props then it should update its childrens', function () {
+  describe('when the parent updates its props then it should update its children\'s', function () {
     var ParentComponent, fetch;
 
     beforeEach(function () {
@@ -480,6 +480,12 @@ describe('Container', function () {
       ContainerComponent = wrap(InnerComponent, {
         something: function something() {
           return [this, 'foo'];
+        },
+
+        statics: {
+          somethingElse: function somethingElse() {
+            return [this, 'bar'];
+          }
         }
       });
 
@@ -488,6 +494,10 @@ describe('Container', function () {
 
     it('should expose the function with the element as the context', function () {
       expect(element.something()).to.eql([element, 'foo']);
+    });
+
+    it('should expose the static function on the component class', function () {
+      expect(ContainerComponent.somethingElse()).to.eql([ContainerComponent, 'bar']);
     });
   });
 
@@ -719,6 +729,35 @@ describe('Container', function () {
 
     it('should allow me to call anything else in the config', function () {
       expect(_failed).to.be.calledWith(expectedResult);
+    });
+  });
+
+  describe('injectApp', function () {
+    it('should inject app as a property on the component', function () {
+      var Component = (function (_React$Component3) {
+        function Component() {
+          _classCallCheck(this, Component);
+
+          if (_React$Component3 != null) {
+            _React$Component3.apply(this, arguments);
+          }
+        }
+
+        _inherits(Component, _React$Component3);
+
+        _createClass(Component, [{
+          key: 'render',
+          value: function render() {
+            return null;
+          }
+        }]);
+
+        return Component;
+      })(React.Component);
+
+      Marty.injectApp(Component);
+
+      expect(render(Component).app).to.eql(app);
     });
   });
 
