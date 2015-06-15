@@ -15,4 +15,4 @@ function appProperty(obj) {
 
 module.exports = appProperty;
 
-// Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves
+/* Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves */
