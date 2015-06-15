@@ -1,3 +1,5 @@
+const _ = require('../mindash');
+
 module.exports = function (marty, React) {
-  marty.createContainer = require('./createContainer')(React);
+  _.extend(marty, require('./createContainer')(React));
 };
