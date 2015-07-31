@@ -1,6 +1,11 @@
 let _ = require('../mindash');
-let MAX_NUMBER_OF_ITERATIONS = 10;
+let escapeHtml = require('escape-html');
 let invariant = require('invariant');
+
+let MAX_NUMBER_OF_ITERATIONS = 10;
+
+let STATE_ID = '__marty-state';
+let STATE_ATTR = 'data-state';
 
 function renderToString(app, render, createElement, options) {
   options = _.defaults(options || {}, {
@@ -69,9 +74,13 @@ function renderToString(app, render, createElement, options) {
     }
 
     function dehydratedState() {
-      return `<script id="__marty-state">${app.dehydrate()}</script>`;
+      const state = escapeHtml(JSON.stringify(app.dehydrate()));
+      return `<script id="${STATE_ID}" ${STATE_ATTR}="${state}"></script>`;
     }
   });
 }
+
+renderToString.stateId = STATE_ID;
+renderToString.stateAttr = STATE_ATTR;
 
 module.exports = renderToString;
