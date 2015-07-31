@@ -44,7 +44,7 @@ var StoreObserver = (function () {
       return store.addChangeListener(function (state, store) {
         var storeDisplayName = store.displayName || store.id;
 
-        log.trace('' + storeDisplayName + ' store has changed. ' + ('The ' + _this2.component.displayName + ' component (' + _this2.component.id + ') is updating'));
+        log.trace(storeDisplayName + ' store has changed. ' + ('The ' + _this2.component.displayName + ' component (' + _this2.component.id + ') is updating'));
 
         if (store && store.action) {
           store.action.addComponentHandler({

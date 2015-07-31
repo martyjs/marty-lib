@@ -2,11 +2,11 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _ = require('lodash');
 var sinon = require('sinon');
@@ -69,6 +69,8 @@ describeStyles('Store', function (styles, currentStyle) {
       },
       es6: function es6() {
         var TestStore = (function (_Marty$Store) {
+          _inherits(TestStore, _Marty$Store);
+
           function TestStore(options) {
             _classCallCheck(this, TestStore);
 
@@ -77,8 +79,6 @@ describeStyles('Store', function (styles, currentStyle) {
             this.state = initialState;
             this.displayName = 'TestStore';
           }
-
-          _inherits(TestStore, _Marty$Store);
 
           return TestStore;
         })(Marty.Store);
@@ -194,26 +194,24 @@ describeStyles('Store', function (styles, currentStyle) {
 
     beforeEach(function () {
       var App = (function (_Marty$Application) {
+        _inherits(App, _Marty$Application);
+
         function App() {
           _classCallCheck(this, App);
 
           _get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this);
           this.register('store', (function (_Marty$Store2) {
+            _inherits(Store, _Marty$Store2);
+
             function Store() {
               _classCallCheck(this, Store);
 
-              if (_Marty$Store2 != null) {
-                _Marty$Store2.apply(this, arguments);
-              }
+              _get(Object.getPrototypeOf(Store.prototype), 'constructor', this).apply(this, arguments);
             }
-
-            _inherits(Store, _Marty$Store2);
 
             return Store;
           })(Marty.Store));
         }
-
-        _inherits(App, _Marty$Application);
 
         return App;
       })(Marty.Application);
@@ -373,15 +371,13 @@ describeStyles('Store', function (styles, currentStyle) {
           },
           es6: function es6() {
             var TestStore = (function (_Marty$Store3) {
+              _inherits(TestStore, _Marty$Store3);
+
               function TestStore() {
                 _classCallCheck(this, TestStore);
 
-                if (_Marty$Store3 != null) {
-                  _Marty$Store3.apply(this, arguments);
-                }
+                _get(Object.getPrototypeOf(TestStore.prototype), 'constructor', this).apply(this, arguments);
               }
-
-              _inherits(TestStore, _Marty$Store3);
 
               return TestStore;
             })(Marty.Store);
@@ -439,14 +435,14 @@ describeStyles('Store', function (styles, currentStyle) {
           },
           es6: function es6() {
             var TestStore = (function (_Marty$Store4) {
+              _inherits(TestStore, _Marty$Store4);
+
               function TestStore(options) {
                 _classCallCheck(this, TestStore);
 
                 _get(Object.getPrototypeOf(TestStore.prototype), 'constructor', this).call(this, options);
                 this.state = {};
               }
-
-              _inherits(TestStore, _Marty$Store4);
 
               _createClass(TestStore, [{
                 key: 'clear',
@@ -517,6 +513,8 @@ describeStyles('Store', function (styles, currentStyle) {
             },
             es6: function es6() {
               var TestStore = (function (_Marty$Store5) {
+                _inherits(TestStore, _Marty$Store5);
+
                 function TestStore(options) {
                   _classCallCheck(this, TestStore);
 
@@ -526,8 +524,6 @@ describeStyles('Store', function (styles, currentStyle) {
                     foo: 'FOO'
                   };
                 }
-
-                _inherits(TestStore, _Marty$Store5);
 
                 return TestStore;
               })(Marty.Store);
@@ -564,6 +560,8 @@ describeStyles('Store', function (styles, currentStyle) {
             },
             es6: function es6() {
               var TestStore = (function (_Marty$Store6) {
+                _inherits(TestStore, _Marty$Store6);
+
                 function TestStore(options) {
                   _classCallCheck(this, TestStore);
 
@@ -573,8 +571,6 @@ describeStyles('Store', function (styles, currentStyle) {
                     foo: null
                   };
                 }
-
-                _inherits(TestStore, _Marty$Store6);
 
                 return TestStore;
               })(Marty.Store);
@@ -699,15 +695,13 @@ describeStyles('Store', function (styles, currentStyle) {
         },
         es6: function es6() {
           var TestActionCreators = (function (_Marty$ActionCreators) {
+            _inherits(TestActionCreators, _Marty$ActionCreators);
+
             function TestActionCreators() {
               _classCallCheck(this, TestActionCreators);
 
-              if (_Marty$ActionCreators != null) {
-                _Marty$ActionCreators.apply(this, arguments);
-              }
+              _get(Object.getPrototypeOf(TestActionCreators.prototype), 'constructor', this).apply(this, arguments);
             }
-
-            _inherits(TestActionCreators, _Marty$ActionCreators);
 
             _createClass(TestActionCreators, [{
               key: 'sum',
@@ -720,6 +714,8 @@ describeStyles('Store', function (styles, currentStyle) {
           })(Marty.ActionCreators);
 
           var Store1 = (function (_Marty$Store7) {
+            _inherits(Store1, _Marty$Store7);
+
             function Store1(options) {
               _classCallCheck(this, Store1);
 
@@ -727,8 +723,6 @@ describeStyles('Store', function (styles, currentStyle) {
               this.state = 0;
               this.handlers = { sum: 'SUM' };
             }
-
-            _inherits(Store1, _Marty$Store7);
 
             _createClass(Store1, [{
               key: 'sum',
@@ -743,6 +737,8 @@ describeStyles('Store', function (styles, currentStyle) {
           })(Marty.Store);
 
           var Store2 = (function (_Marty$Store8) {
+            _inherits(Store2, _Marty$Store8);
+
             function Store2(options) {
               _classCallCheck(this, Store2);
 
@@ -750,8 +746,6 @@ describeStyles('Store', function (styles, currentStyle) {
               this.state = 0;
               this.handlers = { sum: 'SUM' };
             }
-
-            _inherits(Store2, _Marty$Store8);
 
             _createClass(Store2, [{
               key: 'sum',
@@ -766,6 +760,8 @@ describeStyles('Store', function (styles, currentStyle) {
           })(Marty.Store);
 
           var Store3 = (function (_Marty$Store9) {
+            _inherits(Store3, _Marty$Store9);
+
             function Store3(options) {
               _classCallCheck(this, Store3);
 
@@ -773,8 +769,6 @@ describeStyles('Store', function (styles, currentStyle) {
               this.state = 0;
               this.handlers = { sum: 'SUM' };
             }
-
-            _inherits(Store3, _Marty$Store9);
 
             _createClass(Store3, [{
               key: 'sum',
@@ -880,15 +874,13 @@ describeStyles('Store', function (styles, currentStyle) {
           },
           es6: function es6() {
             return (function (_Marty$Store10) {
+              _inherits(ClearStore, _Marty$Store10);
+
               function ClearStore() {
                 _classCallCheck(this, ClearStore);
 
-                if (_Marty$Store10 != null) {
-                  _Marty$Store10.apply(this, arguments);
-                }
+                _get(Object.getPrototypeOf(ClearStore.prototype), 'constructor', this).apply(this, arguments);
               }
-
-              _inherits(ClearStore, _Marty$Store10);
 
               _createClass(ClearStore, [{
                 key: 'getInitialState',
@@ -943,14 +935,14 @@ describeStyles('Store', function (styles, currentStyle) {
           },
           es6: function es6() {
             return (function (_Marty$Store11) {
+              _inherits(ClearStore, _Marty$Store11);
+
               function ClearStore(options) {
                 _classCallCheck(this, ClearStore);
 
                 _get(Object.getPrototypeOf(ClearStore.prototype), 'constructor', this).call(this, options);
                 this.state = {};
               }
-
-              _inherits(ClearStore, _Marty$Store11);
 
               _createClass(ClearStore, [{
                 key: 'clear',

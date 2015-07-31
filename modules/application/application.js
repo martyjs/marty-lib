@@ -13,8 +13,12 @@ var _renderToString = require('./renderToString');
 var FetchDiagnostics = require('./fetchDiagnostics');
 var createDispatcher = require('../core/createDispatcher');
 var UnknownStoreError = require('../errors/unknownStoreError');
+
 var DEFAULT_TIMEOUT = 1000;
+
 var SERIALIZED_WINDOW_OBJECT = '__marty';
+var WINDOW_STATE_ID = _renderToString.stateId;
+var WINDOW_STATE_ATTR = _renderToString.stateAttr;
 
 module.exports = function (React) {
   var Application = (function () {
@@ -45,6 +49,8 @@ module.exports = function (React) {
 
       currentApplicationIs(this);
     }
+
+    // Internal API used by DevTools to access the current application
 
     _createClass(Application, [{
       key: 'getAll',
@@ -114,7 +120,7 @@ module.exports = function (React) {
             var registerObject = function registerObject(obj, prefix) {
               _.each(obj, function (ctor, id) {
                 if (prefix) {
-                  id = '' + prefix + '.' + id;
+                  id = prefix + '.' + id;
                 }
 
                 if (_.isFunction(ctor)) {
@@ -227,11 +233,31 @@ module.exports = function (React) {
         });
 
         function getStoreStatesFromWindow() {
-          if (!window || !window[SERIALIZED_WINDOW_OBJECT]) {
+          if (!window) {
             return;
           }
 
-          return window[SERIALIZED_WINDOW_OBJECT].stores;
+          // Old-style method of setting up stores.
+          var hasSerializedObjectStores = window[SERIALIZED_WINDOW_OBJECT] && window[SERIALIZED_WINDOW_OBJECT].stores;
+          if (hasSerializedObjectStores) {
+            return window[SERIALIZED_WINDOW_OBJECT].stores;
+          }
+
+          if (!window.document) {
+            return;
+          }
+
+          var stateElement = window.document.getElementById(WINDOW_STATE_ID);
+          if (!stateElement) {
+            return;
+          }
+
+          var serializedState = stateElement.getAttribute(WINDOW_STATE_ATTR);
+          if (!serializedState) {
+            return;
+          }
+
+          return JSON.parse(serializedState);
         }
       }
     }, {
@@ -247,6 +273,7 @@ module.exports = function (React) {
           };
         });
 
+        // TODO: Remove code-based implementation of dehydrate.
         dehydratedStores.toString = function () {
           return '(window.__marty||(window.__marty={})).stores=' + JSON.stringify(dehydratedStores);
         };
@@ -285,7 +312,6 @@ module.exports = function (React) {
     return Application;
   })();
 
-  // Internal API used by DevTools to access the current application
   var currentApplication = undefined;
   var currentApplicationRequests = [];
 

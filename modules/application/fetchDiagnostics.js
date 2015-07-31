@@ -60,11 +60,6 @@ var FetchDiagnostics = (function () {
       });
     }
   }, {
-    key: 'hasPendingFetches',
-    get: function () {
-      return this.numberOfPendingFetches > 0;
-    }
-  }, {
     key: 'toJSON',
     value: function toJSON() {
       return _.map(this.fetches, fetchWithTime);
@@ -78,6 +73,11 @@ var FetchDiagnostics = (function () {
 
         return fetch;
       }
+    }
+  }, {
+    key: 'hasPendingFetches',
+    get: function get() {
+      return this.numberOfPendingFetches > 0;
     }
   }]);
 

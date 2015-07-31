@@ -8,11 +8,11 @@ function appProperty(obj) {
       get: function get() {
         return findApp(this);
       },
-      set: function set() {}
+      set: function set() {
+        /* Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves */
+      }
     });
   }
 }
 
 module.exports = appProperty;
-
-/* Do nothing until https://github.com/gaearon/react-hot-api/pull/16 is resolves */

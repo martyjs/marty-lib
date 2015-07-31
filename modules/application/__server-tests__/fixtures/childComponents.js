@@ -37,7 +37,7 @@ module.exports = function (Marty) {
     render: function render() {
       return React.createElement(
         'span',
-        { id: 'child' },
+        { id: "child" },
         this.props.message
       );
     }
@@ -61,7 +61,7 @@ module.exports = function (Marty) {
         null,
         React.createElement(
           'span',
-          { id: 'parent' },
+          { id: "parent" },
           this.props.message
         ),
         React.createElement(ChildContainer, null)

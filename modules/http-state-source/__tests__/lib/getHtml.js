@@ -10,7 +10,7 @@ function getHtml(url) {
       url: 'http://localhost:' + MOCK_SERVER_PORT + '/' + url,
       type: 'GET',
       accept: 'application/html',
-      success: function (data, textStatus, jqXHR) {
+      success: function success(data, textStatus, jqXHR) {
         var $div = _$('<div />', {
           id: 'server-html' + uuid()
         }).append(_$.parseHTML(data));
@@ -42,7 +42,7 @@ function uuid() {
 }
 
 function s4() {
-  return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 }
 
 module.exports = getHtml;

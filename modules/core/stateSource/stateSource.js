@@ -27,13 +27,13 @@ var StateSource = (function () {
   }
 
   _createClass(StateSource, [{
-    key: 'app',
-    get: function () {
-      return this.__app;
-    }
-  }, {
     key: 'dispose',
     value: function dispose() {}
+  }, {
+    key: 'app',
+    get: function get() {
+      return this.__app;
+    }
   }]);
 
   return StateSource;

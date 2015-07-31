@@ -35,7 +35,7 @@ function when(handlers, parentContext) {
   }
 }
 
-function join() {
+function join() /* fetchResults, handlers */{
   var parentContext = undefined;
   var handlers = _.last(arguments);
   var fetchResults = _.initial(arguments);
@@ -103,4 +103,3 @@ function aggregateStatus(fetchResults) {
 }
 
 module.exports = when;
-/* fetchResults, handlers */
