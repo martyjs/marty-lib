@@ -16,6 +16,7 @@
   "dependencies": {
     "cookies-js": "^1.2.1",
     "envify": "^3.4.0",
+    "escape-html": "^1.0.2",
     "flux": "^2.0.1",
     "invariant": "^2.0.0",
     "lodash": "^3.5.0",

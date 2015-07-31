@@ -99,6 +99,7 @@ describe('Application#rehydrate()', function () {
 
   describe('when there is state on the window object', function () {
     beforeEach(function () {
+      // TODO: Remove code-based implementation of dehydrate.
       eval(dehydratedState.toString()); // jshint ignore:line
       browserApp.rehydrate();
     });
@@ -112,6 +113,7 @@ describe('Application#rehydrate()', function () {
   describe('when there is only state for some stores', function () {
     beforeEach(function () {
       delete dehydratedState.store1;
+      // TODO: Remove code-based implementation of dehydrate.
       eval(dehydratedState.toString()); // jshint ignore:line
       browserApp.rehydrate();
     });

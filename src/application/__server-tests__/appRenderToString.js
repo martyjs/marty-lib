@@ -54,7 +54,7 @@ describeStyles('Application#renderToString', function (styles) {
     });
 
     it('should include the serialized state', () => {
-      expect(state(`#${MARTY_STATE_ID}`).html()).to.equal(app.dehydrate().toString());
+      expect(state(`#${MARTY_STATE_ID}`).attr('data-state')).to.equal(JSON.stringify(app.dehydrate()));
     });
   });
 
@@ -73,7 +73,7 @@ describeStyles('Application#renderToString', function (styles) {
     });
 
     it('should include the serialized state', () => {
-      expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+      expect($('#' + MARTY_STATE_ID).attr('data-state')).to.equal(JSON.stringify(app.dehydrate(context)));
     });
   });
 
@@ -91,7 +91,7 @@ describeStyles('Application#renderToString', function (styles) {
     });
 
     it('should include the serialized state', () => {
-      expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+      expect($('#' + MARTY_STATE_ID).attr('data-state')).to.equal(JSON.stringify(app.dehydrate(context)));
     });
   });
 
@@ -109,7 +109,7 @@ describeStyles('Application#renderToString', function (styles) {
     });
 
     it('should include the serialized state', () => {
-      expect($('#' + MARTY_STATE_ID).html()).to.equal(app.dehydrate(context).toString());
+      expect($('#' + MARTY_STATE_ID).attr('data-state')).to.equal(JSON.stringify(app.dehydrate(context)));
     });
   });
 
@@ -138,6 +138,20 @@ describeStyles('Application#renderToString', function (styles) {
 
     it('should render after the timeout regardless of whether fetches are complete', () => {
       expect($('.text').text()).to.equal('pending');
+    });
+  });
+
+  describe('sanitizing HTML in state', () => {
+    beforeEach(() => {
+      app.messageStore.addMessage(expectedId, { text: 'local</script>' });
+
+      return app
+        .renderToStaticMarkup(<fixture.Message id={expectedId} />)
+        .then(loadDOM);
+    });
+
+    it('should include the correct state', () => {
+      expect($('#' + MARTY_STATE_ID).attr('data-state')).to.equal(JSON.stringify(app.dehydrate(context)));
     });
   });
 
