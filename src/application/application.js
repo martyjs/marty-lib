@@ -14,7 +14,7 @@ let SERIALIZED_WINDOW_OBJECT = '__marty';
 let WINDOW_STATE_ID = renderToString.stateId;
 let WINDOW_STATE_ATTR = renderToString.stateAttr;
 
-module.exports = function (React) {
+module.exports = function (React, ReactDOMServer) {
   class Application {
     constructor(options) {
       options = options || {};
@@ -270,7 +270,7 @@ module.exports = function (React) {
     renderToString(element, options) {
       return renderToString(
         this,
-        React.renderToString,
+        ReactDOMServer.renderToString,
         () => elementWithApp(element, this),
         options
       );
@@ -279,7 +279,7 @@ module.exports = function (React) {
     renderToStaticMarkup(element, options) {
       return renderToString(
         this,
-        React.renderToStaticMarkup,
+        ReactDOMServer.renderToStaticMarkup,
         () => elementWithApp(element, this),
         options
       );

@@ -1,7 +1,9 @@
 var Marty = require('../../src/core/marty');
 
 module.exports = function () {
-  var marty = new Marty('vNext', require('react'));
+  var marty = new Marty(
+    'vNext', require('react'), require('react-dom/server')
+  );
 
   marty.use(require('../../src/core'));
   marty.use(require('../../src/action-creators'));

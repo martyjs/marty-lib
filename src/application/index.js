@@ -1,5 +1,5 @@
-module.exports = function (marty, React) {
-  let Application = require('./application')(React);
+module.exports = function (marty, React, ReactDOMServer) {
+  let Application = require('./application')(React, ReactDOMServer);
 
   marty.ApplicationContainer = require('./applicationContainer')(React);
   marty.createApplication = require('./createApplication')(Application);
