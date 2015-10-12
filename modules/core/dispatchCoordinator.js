@@ -45,7 +45,7 @@ var DispatchCoordinator = (function () {
     }
   }, {
     key: 'app',
-    get: function get() {
+    get: function () {
       return this.__app;
     }
   }]);

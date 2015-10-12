@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _ = require('../mindash');
 
-var Marty = function Marty(version, react) {
+var Marty = function Marty(version, react, reactDomServer) {
   _classCallCheck(this, Marty);
 
   this.version = version;
@@ -15,7 +15,7 @@ var Marty = function Marty(version, react) {
       throw new Error('Must pass in a function');
     }
 
-    cb(this, react);
+    cb(this, react, reactDomServer);
   };
 };
 

@@ -54,6 +54,19 @@ var Store = (function () {
   }
 
   _createClass(Store, [{
+    key: 'app',
+    get: function () {
+      return this.__app;
+    }
+  }, {
+    key: 'state',
+    get: function () {
+      return this.getState();
+    },
+    set: function (newState) {
+      this.replaceState(newState);
+    }
+  }, {
     key: 'getInitialState',
     value: function getInitialState() {
       return {};
@@ -207,19 +220,6 @@ var Store = (function () {
 
         return tokens;
       }
-    }
-  }, {
-    key: 'app',
-    get: function get() {
-      return this.__app;
-    }
-  }, {
-    key: 'state',
-    get: function get() {
-      return this.getState();
-    },
-    set: function set(newState) {
-      this.replaceState(newState);
     }
   }]);
 

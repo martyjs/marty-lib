@@ -3,8 +3,7 @@
 var diagnostics = {
   trace: trace,
   enabled: false,
-  devtoolsEnabled: false
-};
+  devtoolsEnabled: false };
 
 module.exports = diagnostics;
 

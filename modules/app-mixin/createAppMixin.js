@@ -4,7 +4,7 @@ var findApp = require('../core/findApp');
 var appProperty = require('../core/appProperty');
 
 module.exports = function (React) {
-  return function () /*...dependencies*/{
+  return function () {
     var contextTypes = {
       app: React.PropTypes.object
     };
@@ -23,3 +23,4 @@ module.exports = function (React) {
     };
   };
 };
+/*...dependencies*/

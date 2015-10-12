@@ -26,8 +26,7 @@ describe('ActionPayload', function () {
       addChangeListener: sinon.spy(),
       getState: function getState() {
         return storeState;
-      }
-    };
+      } };
 
     action = new ActionPayload({
       id: id,

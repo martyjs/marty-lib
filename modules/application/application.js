@@ -20,7 +20,7 @@ var SERIALIZED_WINDOW_OBJECT = '__marty';
 var WINDOW_STATE_ID = _renderToString.stateId;
 var WINDOW_STATE_ATTR = _renderToString.stateAttr;
 
-module.exports = function (React) {
+module.exports = function (React, ReactDOMServer) {
   var Application = (function () {
     function Application(options) {
       _classCallCheck(this, Application);
@@ -49,8 +49,6 @@ module.exports = function (React) {
 
       currentApplicationIs(this);
     }
-
-    // Internal API used by DevTools to access the current application
 
     _createClass(Application, [{
       key: 'getAll',
@@ -120,7 +118,7 @@ module.exports = function (React) {
             var registerObject = function registerObject(obj, prefix) {
               _.each(obj, function (ctor, id) {
                 if (prefix) {
-                  id = prefix + '.' + id;
+                  id = '' + prefix + '.' + id;
                 }
 
                 if (_.isFunction(ctor)) {
@@ -289,7 +287,7 @@ module.exports = function (React) {
       value: function renderToString(element, options) {
         var _this3 = this;
 
-        return _renderToString(this, React.renderToString, function () {
+        return _renderToString(this, ReactDOMServer.renderToString, function () {
           return elementWithApp(element, _this3);
         }, options);
       }
@@ -298,7 +296,7 @@ module.exports = function (React) {
       value: function renderToStaticMarkup(element, options) {
         var _this4 = this;
 
-        return _renderToString(this, React.renderToStaticMarkup, function () {
+        return _renderToString(this, ReactDOMServer.renderToStaticMarkup, function () {
           return elementWithApp(element, _this4);
         }, options);
       }
@@ -312,6 +310,7 @@ module.exports = function (React) {
     return Application;
   })();
 
+  // Internal API used by DevTools to access the current application
   var currentApplication = undefined;
   var currentApplicationRequests = [];
 

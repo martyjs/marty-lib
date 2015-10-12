@@ -26,8 +26,7 @@ module.exports = function (React) {
       componentDidMount: function componentDidMount() {
         var component = {
           id: this.__id,
-          displayName: this.displayName || this.constructor.displayName
-        };
+          displayName: this.displayName || this.constructor.displayName };
 
         this.__observer = new StoreObserver({
           app: this.app,

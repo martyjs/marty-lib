@@ -35,5 +35,4 @@ module.exports = {
   invoke: require('lodash/collection/invoke'),
   sortBy: require('lodash/collection/sortBy'),
   functions: require('lodash/object/functions'),
-  difference: require('lodash/array/difference')
-};
+  difference: require('lodash/array/difference') };

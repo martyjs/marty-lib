@@ -218,8 +218,7 @@ describe('Store#fetch()', function () {
                 });
               }
             });
-          }
-        }));
+          } }));
 
         app.register('store2', Marty.createStore({
           singleDependency: function singleDependency() {

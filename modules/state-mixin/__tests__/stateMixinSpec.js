@@ -51,8 +51,7 @@ describe('StateMixin', function () {
         getInitialState: function getInitialState() {
           return {};
         },
-        getState: sinon.stub().returns(expectedState)
-      }));
+        getState: sinon.stub().returns(expectedState) }));
 
       mixin = Marty.createStateMixin({
         listenTo: 'store',

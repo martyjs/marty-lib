@@ -77,7 +77,7 @@ module.exports = function (React) {
         };
       },
       done: function done(results) {
-        return React.createElement(InnerComponent, _extends({ ref: "innerComponent" }, this.props, results, { app: this.app }));
+        return React.createElement(InnerComponent, _extends({ ref: 'innerComponent' }, this.props, results, { app: this.app }));
       },
       getInnerComponent: function getInnerComponent() {
         return this.refs.innerComponent;
@@ -127,7 +127,7 @@ module.exports = function (React) {
     var Container = React.createClass(specification);
 
     Container.InnerComponent = InnerComponent;
-    Container.displayName = innerComponentDisplayName + 'Container';
+    Container.displayName = '' + innerComponentDisplayName + 'Container';
 
     return Container;
 
