@@ -1,7 +1,7 @@
 let _ = require('../mindash');
 
 class Marty {
-  constructor(version, react) {
+  constructor(version, react, reactDomServer) {
     this.version = version;
     this.stateSources = {};
 
@@ -10,7 +10,7 @@ class Marty {
         throw new Error('Must pass in a function');
       }
 
-      cb(this, react);
+      cb(this, react, reactDomServer);
     };
   }
 }
