@@ -1,6 +1,7 @@
 examples
 node_modules
 test
+.babelrc
 .gitattributes
 .gitignore
 .jscsrc
